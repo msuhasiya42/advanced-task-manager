@@ -1,0 +1,14 @@
+{
+  "name": "food-delivery",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/msuhasiya42/food-delivery-app.git",
+  "author": "Mayur Suhasiya <mayursuhasiya136@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongodb": "^5.6.0",
+    "react": "^18.2.0",
+    "react-router-dom": "^6.11.2"
+  }
+}
