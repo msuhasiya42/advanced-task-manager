@@ -12,13 +12,13 @@ const AboutUs = () => {
       <div>
         One year back, when two people join the same company and later became
         good friends. They started working together,chit chatting, sharing their
-        feeling. They wanted to progress in life together,help each other so
-        wanted to build a project as their first step to success. We started
-        woring on this new food delivery app which will help us understand more
-        about MERN technology specially Mongodb and Express, and may be node.js
-        too.
+        feeling. They wanted to progress in life together,and wanted to help
+        each other so they built this project as their first step to success. We
+        started woring on this new food delivery app which will help us
+        understand more about MERN technology specially Mongodb, Express, and
+        Node.js.
       </div>
-    <Footer />
+      <Footer />
     </div>
   );
 };

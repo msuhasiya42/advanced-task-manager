@@ -14,10 +14,6 @@ const UserDashboard = () => {
             <p className=" mt-24  text-lg text-blue-400 ">
               Welcome to Home page
             </p>
-            <a href="/login">Login</a> <br />
-            <a href="/signup">Sign Up</a> <br />
-            <a href="/aboutus">About Us</a> <br />
-            <a href="/contactus">Contact Us</a> <br />
           </div>
         </header>
       </div>
