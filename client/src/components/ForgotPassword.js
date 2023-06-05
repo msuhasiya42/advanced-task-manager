@@ -27,7 +27,7 @@ const ForgotPassword = () => {
             <form className="mt-4 space-y-4 lg:mt-5 md:space-y-5" action="#">
               <div>
                 <label
-                  for="email"
+                  htmlFor="email"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
                   Your email
@@ -53,7 +53,7 @@ const ForgotPassword = () => {
                 </div>
                 <div className="ml-3 text-sm">
                   <label
-                    for="terms"
+                    htmlFor="terms"
                     className="font-light text-primary-600 dark:text-gray-300"
                   >
                     I accept the Terms and Conditions
