@@ -2,12 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
-
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
-
-
+.App-footer {
+  position: relative;
+  margin: 0 auto;
+  padding-top: 76px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0 20px;
+  z-index: 10;
+  background-color: white;
+  min-height: 100px;
+  width: 100%;
+  color: black;
+}
