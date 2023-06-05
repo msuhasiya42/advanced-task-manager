@@ -1,5 +1,6 @@
 import React from "react";
 import NavBar from "./NavBar";
+import Footer from "./Footer";
 const AboutUs = () => {
   return (
     <div>
@@ -17,6 +18,7 @@ const AboutUs = () => {
         about MERN technology specially Mongodb and Express, and may be node.js
         too.
       </div>
+    <Footer />
     </div>
   );
 };

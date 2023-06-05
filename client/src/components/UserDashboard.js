@@ -2,6 +2,7 @@ import "../App.css";
 
 import React from "react";
 import NavBar from "./NavBar";
+import Footer from "./Footer";
 
 const UserDashboard = () => {
   return (
@@ -26,6 +27,7 @@ const UserDashboard = () => {
           </div>
         </footer>
       </div>
+      <Footer />
     </div>
   );
 };
