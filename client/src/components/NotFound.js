@@ -1,5 +1,6 @@
 import React from "react";
 import NavBar from "./NavBar";
+import Footer from "./Footer";
 
 const NotFound = () => {
   return (
@@ -7,6 +8,7 @@ const NotFound = () => {
       <div>
         <NavBar />
         <h3 className="text-lg text-center mt-28 ">404 Page Not Found</h3>
+        <Footer />
       </div>
     </>
   );
