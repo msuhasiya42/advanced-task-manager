@@ -1,15 +1,27 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
 
 // Body parser middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cors());
+
+const bodyParser = require("body-parser");
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Define your routes and logic here
 
 // Sample user data
 const users = [
   { name: "Mayur Suhasiya", email: "mayur@gmail.com", password: "mayur" },
   { name: "Raksha Jain", email: "raksha@gmail.com", password: "raksha" },
 ];
+
+app.get("/", (req, res) => {
+  res.send("Hello, World!");
+});
 
 // Login route
 app.post("/login", (req, res) => {
@@ -33,7 +45,8 @@ app.post("/login", (req, res) => {
 
 // Sign up route
 app.post("/signup", (req, res) => {
-  const { name, email, password } = req.body;
+  console.log(req.body);
+  const { email, password } = req.body;
 
   // Check if user already exists
   const userExists = users.some((user) => user.email === email);
@@ -44,7 +57,6 @@ app.post("/signup", (req, res) => {
 
   // Create new user
   const newUser = {
-    name,
     email,
     password,
   };

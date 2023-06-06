@@ -1,46 +1,69 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import React from "react";
 import NavBar from "./NavBar";
+// import axios from "axios";
 //import Footer from "./Footer";
 
 const SignUp = () => {
+  const url = "http://localhost:5000";
+  // const serverPath = "localhost:5000";
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [passErrorMessage, setPassErrorMessage] = useState("");
   const [conPassword, setConPassword] = useState("");
-  const [conErrorMessage, setConErrorMessage] = useState("");
-  function handlePassword(event) {
-    let new_pass = event.target.value;
-    setPassword(new_pass);
+  const [errMsg, setErrMsg] = useState("");
+  const [showErrMsg, setShowErrMsg] = useState(false);
+
+  useEffect(() => {}, []);
+  // regex for password and email
+  const passRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/;
+  const token = "signup hojao";
+  // handle submit
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // validation should be after user clicks on submit
+    console.log("submit");
     // regular expressions to validate password
-    var lowerCase = /[a-z]/g;
-    var upperCase = /[A-Z]/g;
-    var numbers = /[0-9]/g;
-    if (!new_pass.match(lowerCase)) {
-      setPassErrorMessage("Password should contains lowercase letters!");
-    } else if (!new_pass.match(upperCase)) {
-      setPassErrorMessage("Password should contain uppercase letters!");
-    } else if (!new_pass.match(numbers)) {
-      setPassErrorMessage("Password should contains numbers also!");
-    } else if (new_pass.length < 10) {
-      setPassErrorMessage("Password length should be more than 10.");
+    if (password.length !== 0 && !password.match(passRegex)) {
+      setErrMsg(
+        "Password must contain eight characters, at least one letter, one number and one special character:"
+      );
+      setShowErrMsg(true);
+    } else if (password !== conPassword) {
+      setErrMsg("Password does not match!!");
+      setShowErrMsg(true);
     } else {
-      setPassErrorMessage("Password is strong!");
+      setErrMsg("");
+      setShowErrMsg(false);
+
+      // api call for sign up
+      const response = await fetch(url, "/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        Authorization: `Bearer ${token}`,
+        body: JSON.stringify({ email: email, password: password }),
+      });
+
+      // Handle the response
+      if (response.ok) {
+        // Display success message or redirect to a success page
+        console.log("Sign-up successful");
+      } else {
+        // Display error message or handle the specific error
+        console.error("Sign-up failed");
+      }
     }
-  }
-  function matchpassword(event) {
-    let con_pass = event.target.value;
-    setConPassword(con_pass);
-    if (password === con_pass) {
-      setConErrorMessage("Password matches :)");
-    } else setConErrorMessage("Password does not match!!");
-  }
+  };
+
   document.addEventListener("DOMContentLoaded", function (event) {
     document.getElementById("successButton").click();
   });
   return (
     <div>
       <NavBar />
-      <section className="bg-gray-50 dark:bg-gray-900">
+      <section className="bg-gray-900">
         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
           <a
             href="/signup"
@@ -56,9 +79,12 @@ const SignUp = () => {
           <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                Create and account
+                Create an account
               </h1>
               <form className="space-y-4 md:space-y-6" action="#">
+                <p className="text-red-400">
+                  {showErrMsg === true ? errMsg : ""}
+                </p>
                 <div>
                   <label
                     htmlFor="email"
@@ -73,6 +99,10 @@ const SignUp = () => {
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="name@company.com"
                     required=""
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                    }}
                   />
                 </div>
                 <div>
@@ -87,13 +117,20 @@ const SignUp = () => {
                     name="password"
                     id="password"
                     value={password}
-                    onChange={handlePassword}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                    }}
                     placeholder="••••••••"
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required=""
                   />
                 </div>
-                <div style={{ color: "red" }}> {passErrorMessage} </div>
+                {/* {password.length !== 0 && showErrMsg ? (
+                  <div className="text-red-500 "> {passErrorMessage} </div>
+                ) : (
+                  ""
+                )} */}
+
                 <div>
                   <label
                     htmlFor="confirm-password"
@@ -106,14 +143,20 @@ const SignUp = () => {
                     name="confirm-password"
                     id="confirm-password"
                     value={conPassword}
-                    onChange={matchpassword}
+                    onChange={(e) => {
+                      setConPassword(e.target.value);
+                    }}
                     placeholder="••••••••"
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required=""
                   />
                 </div>
+                {/* {conPassword.length !== 0 && showErrMsg ? (
+                  <div className="text-red-500 "> {conErrorMessage} </div>
+                ) : (
+                  ""
+                )} */}
 
-                <div style={{ color: "red" }}> {conErrorMessage} </div>
                 <div className="flex items-start">
                   <div className="flex items-center h-5">
                     <input
@@ -146,8 +189,13 @@ const SignUp = () => {
                   <button
                     id="successButton"
                     data-modal-toggle="successModal"
-                    type="button"
-                    className="w-full text-white bg-cyan-600 hover:bg-cyan-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                    className="w-full text-white bg-cyan-600 hover:bg-cyan-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 disabled: bg-cyan-400"
+                    onClick={(e) => handleSubmit(e)}
+                    disabled={
+                      email.length === 0 ||
+                      password.length === 0 ||
+                      conPassword.length === 0
+                    }
                   >
                     Create an account
                   </button>

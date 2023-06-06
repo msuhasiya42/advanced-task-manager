@@ -5,7 +5,7 @@ const Login = () => {
   return (
     <div>
       <NavBar />
-      <div className="h-screen flex  justify-center items-center bg-gray-100 ">
+      <div className="h-screen flex  justify-center items-center bg-gray-900 ">
         <div className="w-full max-w-xs">
           <a
             href="/login"
