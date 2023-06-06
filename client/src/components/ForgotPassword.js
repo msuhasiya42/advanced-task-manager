@@ -1,6 +1,6 @@
 import React from "react";
 import NavBar from "./NavBar";
-import Footer from "./Footer";
+//import Footer from "./Footer";
 
 const ForgotPassword = () => {
   return (
@@ -70,7 +70,7 @@ const ForgotPassword = () => {
           </div>
         </div>
       </section>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };

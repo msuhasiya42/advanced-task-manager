@@ -1,6 +1,6 @@
 import React from "react";
 import NavBar from "./NavBar";
-import Footer from "./Footer";
+//import Footer from "./Footer";
 
 const ContactUs = () => {
   return (
@@ -69,7 +69,7 @@ const ContactUs = () => {
           </form>
         </div>
       </section>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };

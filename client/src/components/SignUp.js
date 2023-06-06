@@ -1,7 +1,7 @@
 import { useState } from "react";
 import React from "react";
 import NavBar from "./NavBar";
-import Footer from "./Footer";
+//import Footer from "./Footer";
 
 const SignUp = () => {
   const [password, setPassword] = useState("");
@@ -227,7 +227,7 @@ const SignUp = () => {
           </div>
         </div>
       </section>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };
