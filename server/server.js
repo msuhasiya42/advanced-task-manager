@@ -1,4 +1,5 @@
 // import User from "./users";
+require("dotenv").config();
 
 const express = require("express");
 const mongoose = require("mongoose");
@@ -15,9 +16,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // mongodb connections
-const DB =
-  "mongodb+srv://mayursuhasiya:mayur123@cluster0.0wbcu84.mongodb.net/Users?retryWrites=true&w=majority";
 // Define your routes and logic here
+
+const DB = process.env.MONGODB_URL;
 mongoose
   .connect(DB, {
     useNewUrlParser: true,
