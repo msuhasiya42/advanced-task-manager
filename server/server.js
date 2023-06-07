@@ -1,4 +1,7 @@
+// import User from "./users";
+
 const express = require("express");
+const mongoose = require("mongoose");
 const app = express();
 const cors = require("cors");
 
@@ -11,17 +14,38 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// mongodb connections
+const DB =
+  "mongodb+srv://mayursuhasiya:mayur123@cluster0.0wbcu84.mongodb.net/Users?retryWrites=true&w=majority";
 // Define your routes and logic here
+mongoose
+  .connect(DB, {
+    useNewUrlParser: true,
+    // useCreateIndex: true,
+    useUnifiedTopology: true,
+    // useFindAndModify: false,
+  })
+  .then(() => {
+    console.log("connection successfull");
+  })
+  .catch((err) => {
+    console.log(err + "connection failed");
+  });
 
-// Sample user data
-const users = [
-  { name: "Mayur Suhasiya", email: "mayur@gmail.com", password: "mayur" },
-  { name: "Raksha Jain", email: "raksha@gmail.com", password: "raksha" },
-];
-
-app.get("/", (req, res) => {
-  res.send("Hello, World!");
+// User model
+const userSchema = new mongoose.Schema({
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
 });
+
+const User = mongoose.model("User", userSchema);
 
 // Login route
 app.post("/login", (req, res) => {
@@ -43,28 +67,29 @@ app.post("/login", (req, res) => {
   return res.json({ message: "Login successful" });
 });
 
-// Sign up route
-app.post("/signup", (req, res) => {
-  console.log(req.body);
-  const { email, password } = req.body;
+// Sign up
+app.post("/signup", async (req, res) => {
+  const { email } = req.body;
 
   // Check if user already exists
-  const userExists = users.some((user) => user.email === email);
+  // const userExists = User.find((user) => user.email === email);
 
-  if (userExists) {
-    return res.status(409).json({ message: "User already exists" });
-  }
+  // if (userExists) {
+  //   return res.status(409).json({ message: "User already exists" });
+  // }
 
   // Create new user
-  const newUser = {
-    email,
-    password,
-  };
-
-  users.push(newUser);
+  try {
+    const { email, password } = req.body;
+    const user = new User({ email, password });
+    await user.save();
+    res.json(user);
+  } catch (error) {
+    console.error("Error creating user:", error);
+    res.status(500).send("Internal Server Error");
+  }
 
   // User registration successful
-  return res.status(201).json({ message: "User registered successfully" });
 });
 
 // Start the server

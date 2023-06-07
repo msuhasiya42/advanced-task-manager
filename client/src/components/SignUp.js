@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import React from "react";
 import NavBar from "./NavBar";
+import axios from "axios";
 // import axios from "axios";
 //import Footer from "./Footer";
 
 const SignUp = () => {
-  const url = "http://localhost:5000";
-  // const serverPath = "localhost:5000";
+  const url = "http://localhost:5000/signup";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [conPassword, setConPassword] = useState("");
@@ -17,44 +17,49 @@ const SignUp = () => {
   // regex for password and email
   const passRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/;
-  const token = "signup hojao";
   // handle submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // validation should be after user clicks on submit
-    console.log("submit");
-    // regular expressions to validate password
-    if (password.length !== 0 && !password.match(passRegex)) {
-      setErrMsg(
-        "Password must contain eight characters, at least one letter, one number and one special character:"
-      );
-      setShowErrMsg(true);
-    } else if (password !== conPassword) {
-      setErrMsg("Password does not match!!");
-      setShowErrMsg(true);
-    } else {
-      setErrMsg("");
-      setShowErrMsg(false);
 
-      // api call for sign up
-      const response = await fetch(url, "/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        Authorization: `Bearer ${token}`,
-        body: JSON.stringify({ email: email, password: password }),
-      });
+    try {
+      const response = await axios.post(url, { email, password });
 
-      // Handle the response
-      if (response.ok) {
-        // Display success message or redirect to a success page
-        console.log("Sign-up successful");
-      } else {
-        // Display error message or handle the specific error
-        console.error("Sign-up failed");
-      }
+      console.log("Sign-up successful:", response.data);
+      // Perform any additional actions upon successful sign-up
+    } catch (error) {
+      console.error("Sign-up error:", error);
+      // Handle sign-up error
     }
+
+    // number 2
+    // validation should be after user clicks on submit
+    // regular expressions to validate password
+    // if (password.length !== 0 && !password.match(passRegex)) {
+    //   setErrMsg(
+    //     "Password must contain eight characters, at least one letter, one number and one special character:"
+    //   );
+    //   setShowErrMsg(true);
+    // } else if (password !== conPassword) {
+    //   setErrMsg("Password does not match!!");
+    //   setShowErrMsg(true);
+    // }
+    // setErrMsg("");
+    // setShowErrMsg(false);
+
+    // api call for sign up
+    // const response = await fetch(url, "/signup", {
+    //   email: email,
+    //   password: password,
+    // });
+
+    // // Handle the response
+    // if (response.ok) {
+    //   // Display success message or redirect to a success page
+    //   console.log("Sign-up successful");
+    // } else {
+    //   // Display error message or handle the specific error
+    //   console.error("Sign-up failed");
+    // }
   };
 
   document.addEventListener("DOMContentLoaded", function (event) {
@@ -64,6 +69,7 @@ const SignUp = () => {
     <div>
       <NavBar />
       <section className="bg-gray-900">
+        {/* <form onSubmit={handleSubmit}> */}
         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
           <a
             href="/signup"
@@ -187,6 +193,7 @@ const SignUp = () => {
                 </div>
                 <div>
                   <button
+                    type="submit"
                     id="successButton"
                     data-modal-toggle="successModal"
                     className="w-full text-white bg-cyan-600 hover:bg-cyan-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 disabled: bg-cyan-400"
@@ -274,6 +281,7 @@ const SignUp = () => {
             </div>
           </div>
         </div>
+        {/* </form> */}
       </section>
       {/* <Footer /> */}
     </div>
