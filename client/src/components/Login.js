@@ -1,7 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import NavBar from "./NavBar";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 //import Footer from "./Footer";
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // process.env.REACT_APP_LOGIN_URL
+    try {
+      const response = await axios.post("http://localhost:5000/login", {
+        email,
+        password,
+      });
+      localStorage.setItem("token", response.data);
+      navigate("/");
+
+      // Perform any additional actions upon successful sign-up
+    } catch (error) {
+      console.error("Login error:", error);
+      // Handle sign-up error
+    }
+  };
   return (
     <div>
       <NavBar />
@@ -24,13 +49,15 @@ const Login = () => {
                 className="block text-gray-700 text-sm font-bold mb-2"
                 htmlFor="username"
               >
-                Username
+                Email
               </label>
               <input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="username"
-                type="text"
-                placeholder="Username"
+                id="email"
+                type="email"
+                placeholder="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div className="mb-6">
@@ -45,6 +72,8 @@ const Login = () => {
                 id="password"
                 type="password"
                 placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
               {/* <p className="text-red-500 text-xs italic">Please choose a password.</p> */}
             </div>
@@ -52,6 +81,7 @@ const Login = () => {
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 type="button"
+                onClick={handleSubmit}
               >
                 Sign In
               </button>
