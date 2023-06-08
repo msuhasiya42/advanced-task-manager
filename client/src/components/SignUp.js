@@ -6,7 +6,6 @@ import axios from "axios";
 //import Footer from "./Footer";
 
 const SignUp = () => {
-  const url = "http://localhost:5000/signup";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [conPassword, setConPassword] = useState("");
@@ -20,9 +19,12 @@ const SignUp = () => {
   // handle submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    // process.env.REACT_APP_SIGNUP_URL
     try {
-      const response = await axios.post(url, { email, password });
+      const response = await axios.post("http://localhost:5000/signup", {
+        email,
+        password,
+      });
 
       console.log("Sign-up successful:", response.data);
       // Perform any additional actions upon successful sign-up
