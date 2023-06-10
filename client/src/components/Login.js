@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import NavBar from "./NavBar";
+import NavBar from "./NavBarHomePage";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -19,7 +19,7 @@ const Login = () => {
         password,
       });
       localStorage.setItem("token", response.data);
-      navigate("/");
+      navigate("/user-dashboard");
 
       // Perform any additional actions upon successful sign-up
     } catch (error) {

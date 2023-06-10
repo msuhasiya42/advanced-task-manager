@@ -1,13 +1,13 @@
 import "../App.css";
 
 import React from "react";
-import NavBar from "./NavBar";
+import Header from "./Header";
 //import Footer from "./Footer";
 
 const UserDashboard = () => {
   return (
     <div>
-      <NavBar />
+      <Header />
       <div className="App  justify-center items-center ">
         <header className="App-header">
           <div className="text-center text-white">

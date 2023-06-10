@@ -7,6 +7,7 @@ import AboutUs from "./components/AboutUs";
 import ContactUs from "./components/ContactUs";
 import ForgotPassword from "./components/ForgotPassword";
 import ProtectedRoute from "./components/Protected";
+import Home from "./components/Home";
 // import Auth from "./components/auth";
 
 function App() {
@@ -16,10 +17,11 @@ function App() {
         {/* <Route path="/" element={<Auth />}> */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/" element={<Home />} />
 
         {/* </Route> */}
         <Route
-          path="/"
+          path="/user-dashboard"
           element={
             <ProtectedRoute>
               <UserDashboard />

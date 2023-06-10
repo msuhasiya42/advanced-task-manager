@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import React from "react";
-import NavBar from "./NavBar";
+import NavBar from "./NavBarHomePage";
 import axios from "axios";
 // import axios from "axios";
 //import Footer from "./Footer";
@@ -11,14 +11,35 @@ const SignUp = () => {
   const [conPassword, setConPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const [showErrMsg, setShowErrMsg] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {}, []);
-  // regex for password and email
+  // regex for emiall and password
   const passRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   // handle submit
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!email.match(emailRegex)) {
+      setErrMsg("Invalid Email!");
+      setShowErrMsg(true);
+      setSuccess(false);
+      return;
+    } else if (!password.match(passRegex)) {
+      setErrMsg(
+        "Password must contain eight characters, at least one letter, one number and one special character:"
+      );
+      setShowErrMsg(true);
+      setSuccess(false);
+      return;
+    } else if (password !== conPassword) {
+      setErrMsg("Password not matched");
+      setShowErrMsg(true);
+      setSuccess(false);
+      return;
+    }
     // process.env.REACT_APP_SIGNUP_URL
     try {
       const response = await axios.post("http://localhost:5000/signup", {
@@ -26,47 +47,19 @@ const SignUp = () => {
         password,
       });
 
-      console.log("Sign-up successful:", response.data);
-      // Perform any additional actions upon successful sign-up
-    } catch (error) {
-      console.error("Sign-up error:", error);
-      // Handle sign-up error
+      if (response.status === 200) {
+        setSuccess(true);
+        setShowErrMsg(false);
+      }
+      // console.log("Sign-up successful:", response.data);
+    } catch (err) {
+      setSuccess(false);
+      setErrMsg("Email Already Registered");
+      setShowErrMsg(true);
+      // console.error("Sign-up error:", err);
     }
-
-    // number 2
-    // validation should be after user clicks on submit
-    // regular expressions to validate password
-    // if (password.length !== 0 && !password.match(passRegex)) {
-    //   setErrMsg(
-    //     "Password must contain eight characters, at least one letter, one number and one special character:"
-    //   );
-    //   setShowErrMsg(true);
-    // } else if (password !== conPassword) {
-    //   setErrMsg("Password does not match!!");
-    //   setShowErrMsg(true);
-    // }
-    // setErrMsg("");
-    // setShowErrMsg(false);
-
-    // api call for sign up
-    // const response = await fetch(url, "/signup", {
-    //   email: email,
-    //   password: password,
-    // });
-
-    // // Handle the response
-    // if (response.ok) {
-    //   // Display success message or redirect to a success page
-    //   console.log("Sign-up successful");
-    // } else {
-    //   // Display error message or handle the specific error
-    //   console.error("Sign-up failed");
-    // }
   };
 
-  document.addEventListener("DOMContentLoaded", function (event) {
-    document.getElementById("successButton").click();
-  });
   return (
     <div>
       <NavBar />
@@ -90,9 +83,64 @@ const SignUp = () => {
                 Create an account
               </h1>
               <form className="space-y-4 md:space-y-6" action="#">
-                <p className="text-red-400">
-                  {showErrMsg === true ? errMsg : ""}
-                </p>
+                {/*error message */}
+                {showErrMsg === true ? (
+                  <div
+                    class="flex p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800"
+                    role="alert"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="flex-shrink-0 inline w-5 h-5 mr-3"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                        clip-rule="evenodd"
+                      ></path>
+                    </svg>
+                    <span class="sr-only">Info</span>
+                    <div>
+                      <span class="font-medium">Error :</span> {errMsg}
+                    </div>
+                  </div>
+                ) : (
+                  ""
+                )}
+
+                {/* success message */}
+                {success === true ? (
+                  <div
+                    class="flex p-4 mb-4 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:border-green-800"
+                    role="alert"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="flex-shrink-0 inline w-5 h-5 mr-3"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                        clip-rule="evenodd"
+                      ></path>
+                    </svg>
+                    <span class="sr-only">Info</span>
+                    <div>
+                      <span class="font-medium">
+                        Account Created Successfully!
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  ""
+                )}
+
                 <div>
                   <label
                     htmlFor="email"
@@ -209,66 +257,6 @@ const SignUp = () => {
                     Create an account
                   </button>
                 </div>
-
-                {/* modal for success message */}
-                <div
-                  id="successModal"
-                  tabIndex="-1"
-                  aria-hidden="true"
-                  className="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full"
-                >
-                  <div className="relative p-4 w-full max-w-md h-full md:h-auto">
-                    <div className="relative p-4 text-center bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
-                      <button
-                        type="button"
-                        className="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                        data-modal-toggle="successModal"
-                      >
-                        <svg
-                          aria-hidden="true"
-                          className="w-5 h-5"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                            clipRule="evenodd"
-                          ></path>
-                        </svg>
-                        <span className="sr-only">Close modal</span>
-                      </button>
-                      <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900 p-2 flex items-center justify-center mx-auto mb-3.5">
-                        <svg
-                          aria-hidden="true"
-                          className="w-8 h-8 text-green-500 dark:text-green-400"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clipRule="evenodd"
-                          ></path>
-                        </svg>
-                        <span className="sr-only">Success</span>
-                      </div>
-                      <p className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
-                        Successfully removed product.
-                      </p>
-                      <button
-                        data-modal-toggle="successModal"
-                        type="button"
-                        className="py-2 px-3 text-sm font-medium text-center text-white rounded-lg bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:focus:ring-primary-900"
-                      >
-                        Continue
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                {/* modal end */}
 
                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                   Already have an account?{" "}

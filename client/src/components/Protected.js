@@ -1,22 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
 
-// protected route logic can be changed
-// because it loads page
-const ProtectedRoute = (props) => {
-  const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const checkUserToken = () => {
-    const userToken = localStorage.getItem("token");
-    if (!userToken || userToken === "undefined") {
-      setIsLoggedIn(false);
-      return navigate("/login");
-    }
-    setIsLoggedIn(true);
-  };
-  useEffect(() => {
-    checkUserToken();
-  }, [isLoggedIn]);
-  return <React.Fragment>{isLoggedIn ? props.children : null}</React.Fragment>;
+import { Navigate } from "react-router-dom";
+
+const ProtectedRoute = ({ children }) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    return <Navigate to="/" replace />;
+  }
+  return children;
 };
 export default ProtectedRoute;
