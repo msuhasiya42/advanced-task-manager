@@ -11,6 +11,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // login api call
     login(email, password)
       .then((response) => {
         localStorage.setItem("token", response.data);

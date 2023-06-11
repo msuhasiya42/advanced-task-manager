@@ -5,7 +5,7 @@ const API = axios.create({
 });
 
 export function createUser(name, email, password) {
-  return API.post("/signup", {
+  return API.post("users/signup", {
     name,
     email,
     password,
@@ -13,12 +13,12 @@ export function createUser(name, email, password) {
 }
 
 export function login(email, password) {
-  return API.post("/login", {
+  return API.post("users/login", {
     email,
     password,
   });
 }
 
 export function getUserData(userId) {
-  return axios.get(`/api/users/${userId}`);
+  return API.get(`/users/${userId}`);
 }
