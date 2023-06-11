@@ -14,7 +14,8 @@ const Login = () => {
     // login api call
     login(email, password)
       .then((response) => {
-        localStorage.setItem("token", response.data);
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("userId", response.data.userId);
         navigate("/user-dashboard");
       })
       .catch((err) => {

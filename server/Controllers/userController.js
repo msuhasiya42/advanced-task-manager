@@ -39,11 +39,34 @@ const login = async (req, res) => {
       if (passwordMatch) {
         // Create a JWT token
         const token = jwt.sign({ userId: user._id }, "secret_key");
-
-        res.json({ token });
+        const userId = user._id;
+        res.json({ token, userId });
       } else {
         res.status(401).json({ error: "Invalid credentials" });
       }
+    } else {
+      res.status(404).json({ error: "User not found" });
+    }
+  } catch (error) {
+    console.error("An error occurred:", error);
+    res.status(500).json({ error: "An error occurred" });
+  }
+};
+
+// get user by id
+const getUserById = async (req, res) => {
+  // Logic to get a user by ID
+  const { id } = req.body;
+  try {
+    // Find the user with the given username
+    const user = await User.findOne({ id });
+    // const objectId = new ObjectID(userId);
+
+    if (user) {
+      // Compare the provided password with the stored hashed password
+      const name = user.name;
+      const email = user.email;
+      res.json({ name, email });
     } else {
       res.status(404).json({ error: "User not found" });
     }
@@ -65,10 +88,6 @@ const deleteUser = (req, res) => {
 
 const getAllUsers = (req, res) => {
   // Logic to get all users
-};
-
-const getUserById = (req, res) => {
-  // Logic to get a user by ID
 };
 
 module.exports = {

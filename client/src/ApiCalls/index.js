@@ -20,5 +20,5 @@ export function login(email, password) {
 }
 
 export function getUserData(userId) {
-  return API.get(`/users/${userId}`);
+  return API.get(`/users/getUserById/${userId}`);
 }

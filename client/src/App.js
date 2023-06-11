@@ -8,6 +8,7 @@ import ContactUs from "./components/ContactUs";
 import ForgotPassword from "./components/ForgotPassword";
 import ProtectedRoute from "./components/Protected";
 import Home from "./components/Home";
+import UserProfile from "./components/UserProfile";
 // import Auth from "./components/auth";
 
 function App() {
@@ -25,6 +26,15 @@ function App() {
           element={
             <ProtectedRoute>
               <UserDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/user-profile"
+          element={
+            <ProtectedRoute>
+              <UserProfile />
             </ProtectedRoute>
           }
         />

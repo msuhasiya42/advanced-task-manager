@@ -13,6 +13,7 @@ const SignUp = () => {
   const [errMsg, setErrMsg] = useState("");
   const [showErrMsg, setShowErrMsg] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [isSubscribed, setIsSubscribed] = useState(false);
 
   useEffect(() => {}, []);
 
@@ -65,6 +66,11 @@ const SignUp = () => {
         setShowErrMsg(true);
         console.error(error);
       });
+  };
+
+  // handle checkbox
+  const handleCheckbox = () => {
+    setIsSubscribed((current) => !current);
   };
 
   return (
@@ -249,6 +255,8 @@ const SignUp = () => {
                       type="checkbox"
                       className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
                       required=""
+                      value={isSubscribed}
+                      onChange={handleCheckbox}
                     />
                   </div>
                   <div className="ml-3 text-sm">
@@ -256,16 +264,14 @@ const SignUp = () => {
                       htmlFor="terms"
                       className="font-light text-gray-500 dark:text-gray-300"
                     >
-                      I accept the{" "}
+                      I accept the Terms and Conditions
+                      {/* <p className="font-medium text-primary-600 "></p> */}
                       {/* <a
                         className="font-medium text-primary-600 hover:underline dark:text-primary-500"
                         href="#"
                       >
                         Terms and Conditions
                       </a> */}
-                      <p className="font-medium text-primary-600 ">
-                        Terms and Conditions
-                      </p>
                     </label>
                   </div>
                 </div>
@@ -279,7 +285,8 @@ const SignUp = () => {
                     disabled={
                       email.length === 0 ||
                       password.length === 0 ||
-                      conPassword.length === 0
+                      conPassword.length === 0 ||
+                      !isSubscribed
                     }
                   >
                     Create an account
