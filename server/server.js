@@ -1,4 +1,4 @@
-// import User from "./users";
+const User = require("./Models/users");
 require("dotenv").config();
 
 const express = require("express");
@@ -34,24 +34,9 @@ mongoose
     console.log(err + "connection failed");
   });
 
-// User model
-const userSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-});
-
-const User = mongoose.model("User", userSchema);
-
 // Sign up route
 app.post("/signup", async (req, res) => {
-  const { email, password } = req.body;
+  const { name, email, password } = req.body;
 
   try {
     // Check if the username is already taken
@@ -63,7 +48,7 @@ app.post("/signup", async (req, res) => {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
     // Create a new user
-    const user = new User({ email, password: hashedPassword });
+    const user = new User({ name, email, password: hashedPassword });
     await user.save();
 
     res.json({ message: "Registration successful" });

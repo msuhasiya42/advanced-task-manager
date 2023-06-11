@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import React from "react";
 import NavBar from "./NavBarHomePage";
-import axios from "axios";
+import { createUser } from "../ApiCalls";
 // import axios from "axios";
 //import Footer from "./Footer";
 
 const SignUp = () => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [conPassword, setConPassword] = useState("");
@@ -22,6 +23,7 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // form validation
     if (!email.match(emailRegex)) {
       setErrMsg("Invalid Email!");
       setShowErrMsg(true);
@@ -41,23 +43,26 @@ const SignUp = () => {
       return;
     }
     // process.env.REACT_APP_SIGNUP_URL
-    try {
-      const response = await axios.post("http://localhost:5000/signup", {
-        email,
-        password,
-      });
 
-      if (response.status === 200) {
-        setSuccess(true);
-        setShowErrMsg(false);
-      }
-      // console.log("Sign-up successful:", response.data);
-    } catch (err) {
-      setSuccess(false);
-      setErrMsg("Email Already Registered");
-      setShowErrMsg(true);
-      // console.error("Sign-up error:", err);
-    }
+    // api call for sign up
+    createUser(name, email, password)
+      .then((response) => {
+        // Handle the API response
+        if (response.status === 200) {
+          setSuccess(true);
+          setShowErrMsg(false);
+        }
+        console.log(response.data);
+      })
+      .catch((error) => {
+        // Handle errors
+        // handling internal server err
+        // is remaining : status code : 500
+        setSuccess(false);
+        setErrMsg("Email Already Registered");
+        setShowErrMsg(true);
+        console.error(error);
+      });
   };
 
   return (
@@ -86,25 +91,25 @@ const SignUp = () => {
                 {/*error message */}
                 {showErrMsg === true ? (
                   <div
-                    class="flex p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800"
+                    className="flex p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800"
                     role="alert"
                   >
                     <svg
                       aria-hidden="true"
-                      class="flex-shrink-0 inline w-5 h-5 mr-3"
+                      className="flex-shrink-0 inline w-5 h-5 mr-3"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        fill-rule="evenodd"
+                        fillRule="evenodd"
                         d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                        clip-rule="evenodd"
+                        clipRule="evenodd"
                       ></path>
                     </svg>
-                    <span class="sr-only">Info</span>
+                    <span className="sr-only">Info</span>
                     <div>
-                      <span class="font-medium">Error :</span> {errMsg}
+                      <span className="font-medium">Error :</span> {errMsg}
                     </div>
                   </div>
                 ) : (
@@ -114,25 +119,25 @@ const SignUp = () => {
                 {/* success message */}
                 {success === true ? (
                   <div
-                    class="flex p-4 mb-4 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:border-green-800"
+                    className="flex p-4 mb-4 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:border-green-800"
                     role="alert"
                   >
                     <svg
                       aria-hidden="true"
-                      class="flex-shrink-0 inline w-5 h-5 mr-3"
+                      className="flex-shrink-0 inline w-5 h-5 mr-3"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        fill-rule="evenodd"
+                        fillRule="evenodd"
                         d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                        clip-rule="evenodd"
+                        clipRule="evenodd"
                       ></path>
                     </svg>
-                    <span class="sr-only">Info</span>
+                    <span className="sr-only">Info</span>
                     <div>
-                      <span class="font-medium">
+                      <span className="font-medium">
                         Account Created Successfully!
                       </span>
                     </div>
@@ -141,6 +146,27 @@ const SignUp = () => {
                   ""
                 )}
 
+                {/* form starts here */}
+                <div>
+                  <label
+                    htmlFor="name"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    Your Name
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    id="name"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="tom Cruise"
+                    required=""
+                    value={name}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                    }}
+                  />
+                </div>
                 <div>
                   <label
                     htmlFor="email"
