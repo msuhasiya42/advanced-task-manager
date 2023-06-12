@@ -40,7 +40,9 @@ const login = async (req, res) => {
         // Create a JWT token
         const token = jwt.sign({ userId: user._id }, "secret_key");
         const userId = user._id;
-        res.json({ token, userId });
+        const name = user.name;
+        const email = user.email;
+        res.json({ token, userId, email, name });
       } else {
         res.status(401).json({ error: "Invalid credentials" });
       }
