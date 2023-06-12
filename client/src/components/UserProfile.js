@@ -129,9 +129,9 @@ const UserProfile = () => {
       </div>
       <div className="flex flex-col items-center -mt-20">
         <img
-          src="https://vojislavd.com/ta-template-demo/assets/img/profile.jpg"
+          src="https://img.freepik.com/premium-vector/young-smiling-man-avatar-man-with-brown-beard-mustache-hair-wearing-yellow-sweater-sweatshirt-3d-vector-people-character-illustration-cartoon-minimal-style_365941-860.jpg?w=2000"
           className="w-40 border-4 border-white rounded-full"
-          alt="Amanda"
+          alt="User name"
         />
         <div className="flex items-center space-x-2 mt-2">
           <p className="text-2xl">{user.name}</p>
@@ -176,9 +176,9 @@ const UserProfile = () => {
               fill="currentColor"
             >
               <path
-                fill-rule="evenodd"
+                fillRule="evenodd"
                 d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z"
-                clip-rule="evenodd"
+                clipRule="evenodd"
               ></path>
             </svg>
             <span>Message</span>

@@ -1,7 +1,12 @@
 import React from "react";
+// import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+  // const [isOpen, setOpen] = useState(false);
+  // const handleDropDown = () => {
+  //   setOpen(!isOpen);
+  // };
   const navigate = useNavigate();
   const logout = () => {
     localStorage.removeItem("token");
@@ -80,7 +85,7 @@ const Header = () => {
                     type="search"
                     id="default-search"
                     className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Search..."
+                    placeholder="Search Task..."
                     required
                   />
                   <button
@@ -91,65 +96,29 @@ const Header = () => {
                   </button>
                 </div>
               </form>
-              {/* <li>
-                <a
-                  href="/user-dashboard"
-                  className="mt-4 block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500 dark:bg-blue-600 md:dark:bg-transparent"
-                  aria-current="page"
-                >
-                  Home
-                </a>
-              </li> */}
-              {/* <li>
-                <a
-                  href="/login"
-                  className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                >
-                  Login
-                </a>
-              </li> */}
-
-              {/* <li>
-                <a
-                  href="/signup"
-                  className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                >
-                  Sign Up
-                </a>
-              </li> */}
-
-              {/* remember: contact us and about us will go in the footer */}
-              {/* <li>
-                <a
-                  href="/contactus"
-                  className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                >
-                  Contact
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/aboutus"
-                  className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                >
-                  About
-                </a>
-              </li> */}
 
               {/* user photo with options on it */}
-              <a href="/user-profile">
-                <img
-                  className="mt-2 -w-10 h-10 rounded-full"
-                  src="https://vojislavd.com/ta-template-demo/assets/img/profile.jpg"
-                  alt="Rounded avatar"
-                />
-              </a>
+
+              <li>
+                <a href="/user-profile">
+                  <div className="flex mt-1 items-center space-x-4 ring-2 p-2 rounded-lg bg-slate-800">
+                    <img
+                      className=" w-8 h-8 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
+                      src="https://images.all-free-download.com/images/graphiclarge/girl_avatar_template_handdrawn_cartoon_character_sketch_6849754.jpg"
+                      alt="Rounded avatar"
+                    />
+                    <div className="font-medium dark:text-white">
+                      <div>Raksha</div>
+                    </div>
+                  </div>
+                </a>
+              </li>
 
               <li>
                 <a
                   href="/login"
                   onClick={logout}
-                  className="mt-4 block pl-2 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                  className="mt-4 block  text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
                 >
                   Logout
                 </a>
