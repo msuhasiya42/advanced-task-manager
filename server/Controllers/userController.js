@@ -40,9 +40,7 @@ const login = async (req, res) => {
         // Create a JWT token
         const token = jwt.sign({ userId: user._id }, "secret_key");
         const userId = user._id;
-        const name = user.name;
-        const email = user.email;
-        res.json({ token, userId, email, name });
+        res.json({ token, userId });
       } else {
         res.status(401).json({ error: "Invalid credentials" });
       }
@@ -55,27 +53,23 @@ const login = async (req, res) => {
   }
 };
 
-// get user by id
+// Get user by id
 const getUserById = async (req, res) => {
   // Logic to get a user by ID
-  const { id } = req.body;
-  try {
-    // Find the user with the given username
-    const user = await User.findOne({ id });
-    // const objectId = new ObjectID(userId);
-
-    if (user) {
-      // Compare the provided password with the stored hashed password
-      const name = user.name;
-      const email = user.email;
-      res.json({ name, email });
-    } else {
-      res.status(404).json({ error: "User not found" });
-    }
-  } catch (error) {
-    console.error("An error occurred:", error);
-    res.status(500).json({ error: "An error occurred" });
-  }
+  const userId = req.params.id; // Retrieve the user ID from the route parameters
+  // Query the database to retrieve the user data based on the user ID
+  await User.findById(userId)
+    .then((user) => {
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      // User data retrieved successfully
+      res.json(user);
+    })
+    .catch((err) => {
+      console.error("Error retrieving user data:", err);
+      res.status(500).json({ error: "Failed to retrieve user data" });
+    });
 };
 
 // update the user

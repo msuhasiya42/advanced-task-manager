@@ -17,13 +17,10 @@ const UserProfile = () => {
     getUserData(userId)
       .then((response) => {
         setUser(response.data);
-        console.log(response.data.name, response.data.email);
       })
       .catch((error) => {
         console.error("Error retrieving user data:", error);
       });
-
-    console.log(userId);
   }, [userId]);
 
   if (!user) {
