@@ -41,7 +41,10 @@ const Login = () => {
             Log In
           </a>
           <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-            <form className=" space-y-4 shadow-lg border rounded px-10 pt-12 pb-10 ">
+            <form
+              onSubmit={handleSubmit}
+              className=" space-y-4 shadow-lg border rounded px-10 pt-12 pb-10 "
+            >
               {showErrMsg === true ? (
                 <div
                   className="flex p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800"
@@ -102,7 +105,7 @@ const Login = () => {
               <div className="flex items-center justify-between">
                 <button
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                  type="button"
+                  type="submit"
                   onClick={handleSubmit}
                 >
                   Sign In
