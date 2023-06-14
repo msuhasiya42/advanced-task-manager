@@ -1,20 +1,37 @@
 import React from "react";
 // import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getUserData } from "../ApiCalls";
 
 const Header = () => {
   // const [isOpen, setOpen] = useState(false);
   // const handleDropDown = () => {
   //   setOpen(!isOpen);
   // };
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  const userId = localStorage.getItem("userId");
+
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
-    localStorage.clear();
-
     navigate("/login");
   };
+
+  useEffect(() => {
+    getUserData(userId)
+      .then((response) => {
+        setUser(response.data);
+      })
+      .catch((error) => {
+        console.error("Error retrieving user data:", error);
+      });
+  }, [userId]);
+
+  if (!user) {
+    return <div>Loading...</div>;
+  }
   return (
     <div>
       <nav className="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
@@ -104,11 +121,11 @@ const Header = () => {
                   <div className="flex mt-1 items-center space-x-4 ring-2 p-2 rounded-lg bg-slate-800">
                     <img
                       className=" w-8 h-8 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
-                      src="https://images.all-free-download.com/images/graphiclarge/girl_avatar_template_handdrawn_cartoon_character_sketch_6849754.jpg"
+                      src="https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-PNG-Images.png"
                       alt="Rounded avatar"
                     />
                     <div className="font-medium dark:text-white">
-                      <div>Raksha</div>
+                      <div>{user.name.split(" ")[0]}</div>
                     </div>
                   </div>
                 </a>

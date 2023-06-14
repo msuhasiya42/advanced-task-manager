@@ -4,15 +4,19 @@ import "./index.css";
 import App from "./App";
 import { QueryClient, QueryClientProvider } from "react-query";
 
+import { Provider } from "react-redux";
+import store from "./redux/index";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const queryClient = new QueryClient();
 
 root.render(
-  <QueryClientProvider client={queryClient}>
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  </QueryClientProvider>
+  <React.StrictMode>
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
+    </Provider>
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
