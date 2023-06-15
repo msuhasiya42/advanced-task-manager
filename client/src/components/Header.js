@@ -19,7 +19,66 @@ const Header = () => {
     navigate("/login");
   };
 
+  // for dark light theme
+  // var themeToggleDarkIcon = document.getElementById("theme-toggle-dark-icon");
+  // var themeToggleLightIcon = document.getElementById("theme-toggle-light-icon");
+
+  // // Change the icons inside the button based on previous settings
+  // if (
+  //   localStorage.getItem("color-theme") === "dark" ||
+  //   (!("color-theme" in localStorage) &&
+  //     window.matchMedia("(prefers-color-scheme: dark)").matches)
+  // ) {
+  //   themeToggleLightIcon !== null
+  //     ? themeToggleLightIcon.classList.remove("hidden")
+  //     : "";
+  // } else {
+  //   themeToggleDarkIcon !== null
+  //     ? themeToggleDarkIcon.classList.remove("hidden")
+  //     : "";
+  // }
+
+  // var themeToggleBtn = document.getElementById("theme-toggle");
+
+  // themeToggleBtn.addEventListener("click", function () {
+  //   // toggle icons inside button
+  //   themeToggleDarkIcon.classList.toggle("hidden");
+  //   themeToggleLightIcon.classList.toggle("hidden");
+
+  //   // if set via local storage previously
+  //   if (localStorage.getItem("color-theme")) {
+  //     if (localStorage.getItem("color-theme") === "light") {
+  //       document.documentElement.classList.add("dark");
+  //       localStorage.setItem("color-theme", "dark");
+  //     } else {
+  //       document.documentElement.classList.remove("dark");
+  //       localStorage.setItem("color-theme", "light");
+  //     }
+
+  //     // if NOT set via local storage previously
+  //   } else {
+  //     if (document.documentElement.classList.contains("dark")) {
+  //       document.documentElement.classList.remove("dark");
+  //       localStorage.setItem("color-theme", "light");
+  //     } else {
+  //       document.documentElement.classList.add("dark");
+  //       localStorage.setItem("color-theme", "dark");
+  //     }
+  //   }
+  // });
   useEffect(() => {
+    // for light dark theme
+    // if (
+    //   localStorage.getItem("color-theme") === "dark" ||
+    //   (!("color-theme" in localStorage) &&
+    //     window.matchMedia("(prefers-color-scheme: dark)").matches)
+    // ) {
+    //   document.documentElement.classList.add("dark");
+    // } else {
+    //   document.documentElement.classList.remove("dark");
+    // }
+
+    // getting user data
     getUserData(userId)
       .then((response) => {
         setUser(response.data);
@@ -37,11 +96,11 @@ const Header = () => {
       <nav className="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
           <a href="/user-dashboard" className="flex items-center">
-            {/* <img
-              src="https://flowbite.com/docs/images/logo.svg"
-              className="h-8 mr-3"
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/747/747095.png"
+              className="h-8 ml-36 mr-2"
               alt="Flowbite Logo"
-            /> */}
+            />
             <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
               Task-Manager
             </span>
@@ -76,7 +135,7 @@ const Header = () => {
               <form>
                 <label
                   htmlFor="default-search"
-                  className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
+                  className=" mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
                 >
                   Search
                 </label>
@@ -118,7 +177,7 @@ const Header = () => {
 
               <li>
                 <a href="/user-profile">
-                  <div className="flex mt-1 items-center space-x-4 ring-2 p-2 rounded-lg bg-slate-800">
+                  {/* <div className="flex mt-1 items-center space-x-4 ring-2 p-2 rounded-lg bg-slate-800">
                     <img
                       className=" w-8 h-8 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
                       src="https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-PNG-Images.png"
@@ -127,15 +186,59 @@ const Header = () => {
                     <div className="font-medium dark:text-white">
                       <div>{user.name.split(" ")[0]}</div>
                     </div>
+                  </div> */}
+
+                  <div className="flex items-center space-x-4 mt-3">
+                    <img
+                      className="w-8 h-8 rounded-full"
+                      src="https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-PNG-Images.png"
+                      alt="User profile"
+                    />
+                    <div className="font-medium dark:text-white">
+                      <div>{user.name.split(" ")[0]}</div>
+                    </div>
                   </div>
                 </a>
               </li>
+
+              {/* theme change button */}
+              {/* <li>
+                <button
+                  id="theme-toggle"
+                  type="button"
+                  className="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5"
+                >
+                  <svg
+                    id="theme-toggle-dark-icon"
+                    className="hidden w-5 h-5"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                  </svg>
+                  <svg
+                    id="theme-toggle-light-icon"
+                    className="hidden w-5 h-5"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                    ></path>
+                  </svg>
+                </button>
+              </li> */}
+              {/* theme button end */}
 
               <li>
                 <a
                   href="/login"
                   onClick={logout}
-                  className="mt-4 block  text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                  className=" mt-4 block  text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
                 >
                   Logout
                 </a>

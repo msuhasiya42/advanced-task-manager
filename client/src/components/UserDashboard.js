@@ -2,9 +2,19 @@ import "../App.css";
 
 import React from "react";
 import Header from "./Header";
+import TaskCard from "./Task/TaskCard";
+// import DatePicker from "react-datepicker";
+// import { useState } from "react";
+
 //import Footer from "./Footer";
 
 const UserDashboard = () => {
+  // const [selectedDate, setSelectedDate] = useState(null);
+
+  // const handleDateChange = (date) => {
+  //   setSelectedDate(date);
+  // };
+
   return (
     <div>
       <Header />
@@ -38,7 +48,7 @@ const UserDashboard = () => {
               {/* left menu bar */}
               <aside
                 id="default-sidebar"
-                className="fixed top-50 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
+                className="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
                 aria-label="Sidebar"
               >
                 <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
@@ -182,150 +192,7 @@ const UserDashboard = () => {
 
               {/* left menu bar ends here */}
 
-              {/* task cards */}
-              <div className="p-4 sm:ml-64 ">
-                <div className="p-4  border-gray-800 border-dashed rounded-lg ">
-                  <div className="grid grid-cols-3 gap-4 mb-4">
-                    <div className="bg-gray-900 flex-col items-center  h-60 rounded ">
-                      <p className=" text-center text-lg mt-1 text-gray-400 dark:text-gray-500">
-                        To-do
-                      </p>
-
-                      {/* task info card */}
-                      <div className="max-w-sm bg-white border h-48 m-2 border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                        <img
-                          className="rounded-t-lg h-10 w-full"
-                          src="https://img.freepik.com/free-vector/hand-painted-watercolor-pastel-sky-background_23-2148902771.jpg?q=10&h=200"
-                          alt=""
-                        />
-
-                        <div className="p-2">
-                          <a href="#">
-                            <h5 className="mb-2 text-sm font-bold tracking-tight text-gray-900 dark:text-white">
-                              Task heading
-                            </h5>
-                          </a>
-                          <p className="mb-3 text-xs font-normal text-gray-700 dark:text-gray-400">
-                            Description:Here are the biggest enterprise
-                            technology , here description will come, this will
-                            be max length this
-                          </p>
-                          <a
-                            href="#"
-                            className=" inline-flex items-center px-3 py-1 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                          >
-                            Open Task
-                            <svg
-                              aria-hidden="true"
-                              className="w-4 h-4 ml-2 -mr-1"
-                              fill="currentColor"
-                              viewBox="0 0 20 20"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                                clipRule="evenodd"
-                              ></path>
-                            </svg>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="bg-gray-900 flex-col   h-60 rounded ">
-                      <p className="text-center text-lg mt-1 text-gray-400 dark:text-gray-500">
-                        Doing
-                      </p>
-                      {/* task info card */}
-                      <div className="max-w-sm bg-white border h-48 m-2 border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                        <img
-                          className="rounded-t-lg h-10 w-full"
-                          src="https://img.freepik.com/free-vector/hand-painted-watercolor-pastel-sky-background_23-2148902771.jpg?q=10&h=200"
-                          alt=""
-                        />
-
-                        <div className="p-2">
-                          <a href="#">
-                            <h5 className="mb-2 text-sm font-bold tracking-tight text-gray-900 dark:text-white">
-                              Task heading
-                            </h5>
-                          </a>
-                          <p className="mb-3 text-xs font-normal text-gray-700 dark:text-gray-400">
-                            Description:Here are the biggest enterprise
-                            technology , here description will come, this will
-                            be max length this
-                          </p>
-                          <a
-                            href="#"
-                            className="inline-flex items-center px-3 py-1 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                          >
-                            Open Task
-                            <svg
-                              aria-hidden="true"
-                              className="w-4 h-4 ml-2 -mr-1"
-                              fill="currentColor"
-                              viewBox="0 0 20 20"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                                clipRule="evenodd"
-                              ></path>
-                            </svg>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="bg-gray-900 flex-col items-center  h-60 rounded ">
-                      <p className=" text-center text-lg mt-1 text-gray-400 dark:text-gray-500">
-                        Completed
-                      </p>
-                      {/* task info card */}
-                      <div className="max-w-sm bg-white border h-48 m-2 border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                        <img
-                          className="rounded-t-lg h-10 w-full"
-                          src="https://img.freepik.com/free-vector/hand-painted-watercolor-pastel-sky-background_23-2148902771.jpg?q=10&h=200"
-                          alt=""
-                        />
-
-                        <div className="p-2">
-                          <a href="#">
-                            <h5 className="mb-2 text-sm font-bold tracking-tight text-gray-900 dark:text-white">
-                              Task heading
-                            </h5>
-                          </a>
-                          <p className="mb-3 text-xs font-normal text-gray-700 dark:text-gray-400">
-                            Description:Here are the biggest enterprise
-                            technology , here description will come, this will
-                            be max length this
-                          </p>
-                          <a
-                            href="#"
-                            className="inline-flex items-center px-3 py-1 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                          >
-                            Open Task
-                            <svg
-                              aria-hidden="true"
-                              className="w-4 h-4 ml-2 -mr-1"
-                              fill="currentColor"
-                              viewBox="0 0 20 20"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                                clipRule="evenodd"
-                              ></path>
-                            </svg>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {/* task cards ends here */}
+              <TaskCard />
             </header>
           </div>
         </header>
