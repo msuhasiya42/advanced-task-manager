@@ -1,7 +1,8 @@
 import React from "react";
 import TaskModal from "./TaskModal";
+import TaskDetails from "./TaskDetails";
 
-const TaskCard = () => {
+const TaskCard = ({ todos, inprogress, completed }) => {
   return (
     <div>
       {/* task cards */}
@@ -17,11 +18,44 @@ const TaskCard = () => {
                 {/* task modal */}
                 <div>
                   <TaskModal />
+                  <TaskDetails items={todos} />
                 </div>
                 {/* task modal end */}
               </div>
             </div>
             {/* to do card end */}
+
+            {/* in-progress card */}
+            <div className=" bg-gray-900 flex-col items-center  h-75 rounded ">
+              <div className="m-3">
+                <p className="m-2 text-center text-lg mt-1 text-white ">
+                  In-Progress
+                </p>
+                {/* task modal */}
+                <div>
+                  <TaskModal />
+                  <TaskDetails items={inprogress} />
+                </div>
+                {/* task modal end */}
+              </div>
+            </div>
+            {/* in-progress card end*/}
+
+            {/* completed card */}
+            <div className=" bg-gray-900 flex-col items-center  h-75 rounded ">
+              <div className="m-3">
+                <p className="m-2 text-center text-lg mt-1 text-white ">
+                  Completed
+                </p>
+                {/* task modal */}
+                <div>
+                  <TaskModal />
+                  <TaskDetails items={completed} />
+                </div>
+                {/* task modal end */}
+              </div>
+            </div>
+            {/* completed card end*/}
           </div>
         </div>
       </div>
