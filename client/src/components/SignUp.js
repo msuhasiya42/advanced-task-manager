@@ -55,7 +55,6 @@ const SignUp = () => {
           setSuccess(true);
           setShowErrMsg(false);
         }
-        console.log(response.data);
       })
       .catch((error) => {
         // Handle errors

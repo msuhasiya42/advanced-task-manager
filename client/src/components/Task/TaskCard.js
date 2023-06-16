@@ -1,9 +1,42 @@
-import React from "react";
-import TaskModal from "./TaskModal";
+// import TaskModal from "./TaskModal";
+import { useEffect, useState } from "react";
 import TaskDetails from "./TaskDetails";
 import TextAreaModal from "./TextAreaModal";
+import { fetchTask } from "../../ApiCalls";
 
-const TaskCard = ({ todos, inprogress, completed, taskStatus }) => {
+const TaskCard = () => {
+  const user = localStorage.getItem("userId");
+  // const [fetchedTasks, setFetchedTasks] = useState([]);
+
+  const [todos, setTodos] = useState([]);
+  const [inprogress, setInprogress] = useState([]);
+  const [completed, setCompleted] = useState([]);
+
+  useEffect(() => {
+    fetchTask(user)
+      .then((response) => {
+        const fetchedTasks = response.data.tasks;
+
+        // Filter tasks into different categories
+        // @Remember
+        const todos = fetchedTasks.filter((task) => task.status === "Todo");
+        const inprogress = fetchedTasks.filter(
+          (task) => task.status === "In Progress"
+        );
+        const completed = fetchedTasks.filter(
+          (task) => task.status === "Completed"
+        );
+
+        setTodos(todos);
+        setInprogress(inprogress);
+        setCompleted(completed);
+        // setFetchedTasks(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [user]);
+
   return (
     <div>
       {/* task cards */}

@@ -5,15 +5,16 @@ import { createTask } from "../../ApiCalls";
 const TextAreaModal = ({ status }) => {
   const [showTextArea, setShowTextArea] = useState(false);
   const [taskName, setTaskName] = useState("");
+  const user = localStorage.getItem("userId");
 
   const handleClick = () => {
-    setShowTextArea(true);
+    setShowTextArea(!showTextArea);
   };
   const handleSubmit = (event) => {
     event.preventDefault();
     // Perform any necessary actions with the task name
 
-    createTask(taskName, status)
+    createTask(taskName, status, user)
       .then((response) => {
         // Handle the API response
         console.log(response.data);
@@ -25,7 +26,6 @@ const TextAreaModal = ({ status }) => {
         console.error(error);
       });
 
-    console.log("Task Name:", taskName);
     // Reset the state and hide the text area
     setTaskName("");
     setShowTextArea(false);
@@ -67,6 +67,13 @@ const TextAreaModal = ({ status }) => {
             className="mb-5 inline-flex items-center px-5 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800"
           >
             Save
+          </button>
+          <button
+            type="button"
+            onClick={handleClick}
+            class="ml-2 text-gray-900 bg-white border px-5 py-2 border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm  mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+          >
+            Cancel
           </button>
         </form>
       )}

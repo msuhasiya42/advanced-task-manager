@@ -26,10 +26,18 @@ export function getUserData(userId) {
 
 // task related apis
 // Adding new task
-export function createTask(title, status) {
+export function createTask(title, status, user) {
   return API.post("tasks/createTask", {
     title,
     status,
+    user,
+  });
+}
+
+// get list of tasks
+export function fetchTask(user) {
+  return API.post("tasks/fetchTask", {
+    user,
   });
 }
 
