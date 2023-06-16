@@ -1,8 +1,8 @@
 import React from "react";
 // import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getUserData } from "../ApiCalls";
+import { logout } from "../utils/functions";
 
 const Header = () => {
   // const [isOpen, setOpen] = useState(false);
@@ -10,14 +10,7 @@ const Header = () => {
   //   setOpen(!isOpen);
   // };
   const [user, setUser] = useState(null);
-  const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
-
-  const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    navigate("/login");
-  };
 
   // for dark light theme
   // var themeToggleDarkIcon = document.getElementById("theme-toggle-dark-icon");
@@ -88,9 +81,6 @@ const Header = () => {
       });
   }, [userId]);
 
-  if (!user) {
-    return <div>Loading...</div>;
-  }
   return (
     <div>
       <nav className="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
@@ -127,55 +117,58 @@ const Header = () => {
               ></path>
             </svg>
           </button>
+
+          {/* nav bar right side buttons */}
+
           <div
             className="hidden w-full md:block md:w-auto"
             id="navbar-dropdown"
           >
             <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-              <form>
-                <label
-                  htmlFor="default-search"
-                  className=" mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
-                >
-                  Search
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                    <svg
-                      aria-hidden="true"
-                      className="w-5 h-5 text-gray-500 dark:text-gray-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                      ></path>
-                    </svg>
-                  </div>
-                  <input
-                    type="search"
-                    id="default-search"
-                    className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Search Task..."
-                    required
-                  />
-                  <button
-                    type="submit"
-                    className="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              <li>
+                <form>
+                  <label
+                    htmlFor="default-search"
+                    className=" mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
                   >
                     Search
-                  </button>
-                </div>
-              </form>
-
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                      <svg
+                        aria-hidden="true"
+                        className="w-5 h-5 text-gray-500 dark:text-gray-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <input
+                      type="search"
+                      id="default-search"
+                      className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="Search Task..."
+                      required
+                    />
+                    <button
+                      type="submit"
+                      className="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    >
+                      Search
+                    </button>
+                  </div>
+                </form>
+              </li>
               {/* user photo with options on it */}
-
-              <li>
+              <li className=" bg-slate-900 ring-1 rounded-lg px-2 pr-3 ">
                 <a href="/user-profile">
                   {/* <div className="flex mt-1 items-center space-x-4 ring-2 p-2 rounded-lg bg-slate-800">
                     <img
@@ -194,8 +187,11 @@ const Header = () => {
                       src="https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-PNG-Images.png"
                       alt="User profile"
                     />
+
                     <div className="font-medium dark:text-white">
-                      <div>{user.name.split(" ")[0]}</div>
+                      <div className="text-lg">
+                        {user !== null ? user.name.split(" ")[0] : ""}
+                      </div>
                     </div>
                   </div>
                 </a>
@@ -233,18 +229,23 @@ const Header = () => {
                 </button>
               </li> */}
               {/* theme button end */}
-
               <li>
                 <a
                   href="/login"
                   onClick={logout}
-                  className=" mt-4 block  text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                  className=" mt-2 block  text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
                 >
-                  Logout
+                  <button
+                    type="button"
+                    class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+                  >
+                    Logout
+                  </button>
                 </a>
               </li>
             </ul>
           </div>
+          {/* nav bar right side buttons end */}
         </div>
       </nav>
     </div>

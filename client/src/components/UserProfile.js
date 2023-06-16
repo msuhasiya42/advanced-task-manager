@@ -1,17 +1,10 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getUserData } from "../ApiCalls";
+import { logout } from "../utils/functions";
 const UserProfile = () => {
   const [user, setUser] = useState(null);
-  const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
-
-  const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    navigate("/login");
-  };
 
   useEffect(() => {
     getUserData(userId)
