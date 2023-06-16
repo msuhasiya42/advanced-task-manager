@@ -1,12 +1,13 @@
 import React from "react";
 import TaskModal from "./TaskModal";
 import TaskDetails from "./TaskDetails";
+import TextAreaModal from "./TextAreaModal";
 
-const TaskCard = ({ todos, inprogress, completed }) => {
+const TaskCard = ({ todos, inprogress, completed, taskStatus }) => {
   return (
     <div>
       {/* task cards */}
-      <div className="p-4 sm:ml-64 ">
+      <div className="p-4  sm:ml-64 ">
         <div className="p-4  border-gray-800 border-dashed rounded-lg ">
           <div className="grid grid-cols-3 gap-4 mb-4">
             {/* to do card */}
@@ -17,7 +18,8 @@ const TaskCard = ({ todos, inprogress, completed }) => {
                 </p>
                 {/* task modal */}
                 <div>
-                  <TaskModal />
+                  {/* <TaskModal /> */}
+                  <TextAreaModal status={"Todo"} />
                   <TaskDetails items={todos} />
                 </div>
                 {/* task modal end */}
@@ -33,7 +35,7 @@ const TaskCard = ({ todos, inprogress, completed }) => {
                 </p>
                 {/* task modal */}
                 <div>
-                  <TaskModal />
+                  <TextAreaModal status={"In Progress"} />
                   <TaskDetails items={inprogress} />
                 </div>
                 {/* task modal end */}
@@ -49,7 +51,7 @@ const TaskCard = ({ todos, inprogress, completed }) => {
                 </p>
                 {/* task modal */}
                 <div>
-                  <TaskModal />
+                  <TextAreaModal status={"Completed"} />
                   <TaskDetails items={completed} />
                 </div>
                 {/* task modal end */}

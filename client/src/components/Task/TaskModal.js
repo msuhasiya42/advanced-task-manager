@@ -49,6 +49,8 @@ const TaskModal = () => {
               <h3 className="mb-4 text-xl font-medium text-gray-900 dark:text-white">
                 Add Task
               </h3>
+
+              {/* form to fill task details */}
               <form className="space-y-6" action="#">
                 <div>
                   <label
