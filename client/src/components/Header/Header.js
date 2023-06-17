@@ -1,8 +1,8 @@
 import React from "react";
 // import { useState } from "react";
 import { useEffect, useState } from "react";
-import { getUserData } from "../ApiCalls";
-import { logout } from "../utils/functions";
+import { getUserData } from "../../ApiCalls";
+import { logout } from "../../utils/functions";
 
 const Header = () => {
   // const [isOpen, setOpen] = useState(false);
@@ -83,7 +83,7 @@ const Header = () => {
 
   return (
     <div>
-      <nav className="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
+      <nav className=" bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
           <a href="/user-dashboard" className="flex items-center">
             <img
@@ -124,7 +124,7 @@ const Header = () => {
             className="hidden w-full md:block md:w-auto"
             id="navbar-dropdown"
           >
-            <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+            <ul className="flex flex-col font-medium p-2 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
               <li>
                 <form>
                   <label
@@ -168,29 +168,21 @@ const Header = () => {
                 </form>
               </li>
               {/* user photo with options on it */}
-              <li className=" bg-slate-900 ring-1 rounded-lg px-2 pr-3 ">
+
+              <li>
                 <a href="/user-profile">
-                  {/* <div className="flex mt-1 items-center space-x-4 ring-2 p-2 rounded-lg bg-slate-800">
-                    <img
-                      className=" w-8 h-8 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
-                      src="https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-PNG-Images.png"
-                      alt="Rounded avatar"
-                    />
-                    <div className="font-medium dark:text-white">
-                      <div>{user.name.split(" ")[0]}</div>
-                    </div>
-                  </div> */}
+                  <div class="mt-1 text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                    <div className="flex items-center space-x-2 ">
+                      <img
+                        className="w-7 h-7 rounded-full"
+                        src="https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-PNG-Images.png"
+                        alt="User profile"
+                      />
 
-                  <div className="flex items-center space-x-4 mt-3">
-                    <img
-                      className="w-8 h-8 rounded-full"
-                      src="https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-PNG-Images.png"
-                      alt="User profile"
-                    />
-
-                    <div className="font-medium dark:text-white">
-                      <div className="text-lg">
-                        {user !== null ? user.name.split(" ")[0] : ""}
+                      <div className="font-medium dark:text-white">
+                        <div className="text-sm">
+                          {user !== null ? user.name.split(" ")[0] : ""}
+                        </div>
                       </div>
                     </div>
                   </div>

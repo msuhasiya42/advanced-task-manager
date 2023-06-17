@@ -1,5 +1,5 @@
 import React from "react";
-import NavBar from "./NavBarHomePage";
+import NavBar from "../NavBar/NavBarHomePage";
 //import Footer from "./Footer";
 
 const NotFound = () => {

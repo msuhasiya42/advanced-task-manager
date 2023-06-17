@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import React from "react";
-import NavBar from "./NavBarHomePage";
-import { createUser } from "../ApiCalls";
+import NavBar from "../NavBar/NavBarHomePage";
+import { createUser } from "../../ApiCalls";
 // import axios from "axios";
 //import Footer from "./Footer";
 

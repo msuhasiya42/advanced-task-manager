@@ -1,9 +1,9 @@
-import "../App.css";
+import "../../App.css";
 
 import React from "react";
-import Header from "./Header";
-import TaskCard from "./Task/TaskCard";
-import SideBar from "./SideBar";
+import Header from "../Header/Header";
+import TaskCard from "../Task/TaskCard";
+import SideBar from "../SideBar/SideBar";
 // import DatePicker from "react-datepicker";
 // import { useState } from "react";
 

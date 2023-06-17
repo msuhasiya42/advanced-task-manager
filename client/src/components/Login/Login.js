@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import NavBar from "./NavBarHomePage";
-import { login } from "../ApiCalls";
+import NavBar from "../NavBar/NavBarHomePage";
+import { login } from "../../ApiCalls";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {

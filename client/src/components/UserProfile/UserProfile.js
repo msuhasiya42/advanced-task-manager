@@ -1,7 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { getUserData } from "../ApiCalls";
-import { logout } from "../utils/functions";
+import { getUserData } from "../../ApiCalls";
+import { logout } from "../../utils/functions";
+
 const UserProfile = () => {
   const [user, setUser] = useState(null);
   const userId = localStorage.getItem("userId");
