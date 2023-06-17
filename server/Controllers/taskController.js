@@ -21,29 +21,6 @@ const createTask = async (req, res) => {
   }
 };
 
-// @Todo
-// Controller for updating task
-const updateTask = async (req, res) => {
-  try {
-    const { title, description, dueDate, priority } = req.body;
-
-    // Create a new task object
-    const newTask = new Task({
-      title,
-      description,
-      dueDate,
-      priority,
-    });
-
-    // Save the task to the database
-    const savedTask = await newTask.save();
-
-    res.status(201).json({ success: true, task: savedTask });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-};
-
 // fetch tasks of user
 const fetchTask = async (req, res) => {
   try {
@@ -59,4 +36,61 @@ const fetchTask = async (req, res) => {
   }
 };
 
-module.exports = { createTask, updateTask, fetchTask };
+// @Todo
+// Controller for updating task
+const updateTask = async (req, res) => {
+  const taskId = req.params.id;
+  const updatedTask = req.body;
+  Task.updateOne(
+    { _id: ObjectId(taskId) },
+    { $set: updatedTask },
+    (err, result) => {
+      if (err) {
+        console.error("Error updating task:", err);
+        res.status(500).json({ error: "Failed to update task" });
+        return;
+      }
+      if (result.modifiedCount === 0) {
+        res.status(404).json({ error: "Task not found" });
+        return;
+      }
+      res.json({ message: "Task updated successfully" });
+    }
+  );
+};
+
+//delete task
+const deleteTask = async (req, res) => {
+  const taskId = req.params.id;
+  Task.deleteOne({ _id: ObjectId(taskId) }, (err, result) => {
+    if (err) {
+      console.error("Error deleting task:", err);
+      res.status(500).json({ error: "Failed to delete task" });
+      return;
+    }
+    if (result.deletedCount === 0) {
+      res.status(404).json({ error: "Task not found" });
+      return;
+    }
+    res.json({ message: "Task deleted successfully" });
+  });
+};
+
+// get task by id
+const getTaskById = async (req, res) => {
+  const taskId = req.params.id;
+  TaskDetails.findOne({ _id: ObjectId(taskId) }, (err, task) => {
+    if (err) {
+      console.error("Error retrieving task:", err);
+      res.status(500).json({ error: "Failed to retrieve task" });
+      return;
+    }
+    if (!task) {
+      res.status(404).json({ error: "Task not found" });
+      return;
+    }
+    res.json(task);
+  });
+};
+
+module.exports = { createTask, updateTask, fetchTask, getTaskById, deleteTask };
