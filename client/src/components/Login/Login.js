@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errMsg, setErrMsg] = useState("Invalid Credentials");
   const [showErrMsg, setShowErrMsg] = useState(false);
   const navigate = useNavigate();
 
@@ -20,6 +21,13 @@ const Login = () => {
       })
       .catch((err) => {
         console.error("Login error:", err);
+        if (err.code === "ERR_NETWORK") {
+          setErrMsg("There was a ");
+        } else if (err.code === "ERR_BAD_RESPONSE") {
+          setErrMsg("Internal Server Error");
+        } else {
+          setErrMsg("An Error Occurred");
+        }
         setShowErrMsg(true);
         console.log(err);
       });
@@ -64,7 +72,7 @@ const Login = () => {
                     ></path>
                   </svg>
                   <span className="sr-only">Info</span>
-                  <div>Invalid Credentials!</div>
+                  <div>{errMsg}</div>
                 </div>
               ) : (
                 ""
