@@ -1,14 +1,14 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import UserDashboard from "./components/UserDashboard";
-import NotFound from "./components/NotFound";
-import Login from "./components/Login";
-import SignUp from "./components/SignUp";
-import AboutUs from "./components/AboutUs";
-import ContactUs from "./components/ContactUs";
-import ForgotPassword from "./components/ForgotPassword";
-import ProtectedRoute from "./components/Protected";
-import Home from "./components/Home";
-import UserProfile from "./components/UserProfile";
+import UserDashboard from "./components/UserDashboard/UserDashboard";
+import NotFound from "./components/NotFound/NotFound";
+import Login from "./components/Login/Login";
+import SignUp from "./components/SignUp/SignUp";
+import AboutUs from "./components/AboutUs/AboutUs";
+import ContactUs from "./components/ContactUs/ContactUs";
+import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
+import ProtectedRoute from "./components/Protected/Protected";
+import Home from "./components/Home/Home";
+import UserProfile from "./components/UserProfile/UserProfile";
 // import Auth from "./components/auth";
 import { Helmet } from "react-helmet";
 
