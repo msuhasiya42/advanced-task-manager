@@ -17,7 +17,7 @@ const TaskDetails = ({ items }) => {
                 <div className="p-2">
                   <a href="#">
                     <h5 className="mb-2 text-sm font-bold tracking-tight text-gray-900 dark:text-white">
-                      {item.title}
+                      {item}
                     </h5>
                   </a>
                   <p className="h-full mb-3 text-xs font-normal text-gray-700 dark:text-gray-400">
