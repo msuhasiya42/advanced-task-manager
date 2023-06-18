@@ -4,6 +4,7 @@ import ProfileButton from "../SmallComp/ProfileButton/ProfileButton";
 import Theme from "../SmallComp/Theme/Theme";
 import Search from "../SmallComp/Search/Search";
 import LogoutButton from "../SmallComp/Logout/LogoutButton";
+import Notifications from "../SmallComp/Notifications/Notifications";
 
 const Header = () => {
   return (
@@ -62,6 +63,8 @@ const Header = () => {
               {/* theme button */}
               <Theme />
 
+              {/* <!-- Notifications --> */}
+              <Notifications />
               {/* logout button */}
               <LogoutButton />
             </ul>
