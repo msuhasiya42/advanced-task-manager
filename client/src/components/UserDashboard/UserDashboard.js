@@ -16,26 +16,6 @@ const UserDashboard = () => {
   //   setSelectedDate(date);
   // };
 
-  // static data of tasks
-  const todos = [
-    "Create Portfolio site",
-    "Read Lean Startup",
-    "Start Exercise",
-    "Clean Room",
-    "Organize Desk",
-  ];
-  const inprogress = [
-    "Reading Alchemist",
-    "Learning MongoDb",
-    "Learning Express Js",
-  ];
-  const completed = [
-    "React Basics",
-    "Redux Basics",
-    "Reading Fastlane Millionaire",
-    "Buying Monitor",
-  ];
-
   return (
     <div>
       <Header />
@@ -44,11 +24,7 @@ const UserDashboard = () => {
           <div className=" text-white">
             <header className="App-header">
               <SideBar />
-              <TaskCard
-                todos={todos}
-                inprogress={inprogress}
-                completed={completed}
-              />
+              <TaskCard />
             </header>
           </div>
         </header>
