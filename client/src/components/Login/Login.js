@@ -22,7 +22,9 @@ const Login = () => {
       .catch((err) => {
         console.error("Login error:", err);
         if (err.code === "ERR_NETWORK") {
-          setErrMsg("There was a ");
+          setErrMsg(
+            "There was a problem connecting to the server. Please check your internet connection and try again "
+          );
         } else if (err.code === "ERR_BAD_RESPONSE") {
           setErrMsg("Internal Server Error");
         } else {
@@ -51,7 +53,7 @@ const Login = () => {
           <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
             <form
               onSubmit={handleSubmit}
-              className=" space-y-4 shadow-lg border rounded px-10 pt-12 pb-10 "
+              className=" space-y-4 shadow-lg  rounded px-10 pt-12 pb-10 "
             >
               {showErrMsg === true ? (
                 <div
