@@ -3,7 +3,7 @@ import React from "react";
 const LoadingPage = () => {
   return (
     <div>
-      <div className="flex min-h-screen items-center justify-center w-full h-full border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
+      <div className="flex min-h-screen items-center justify-center w-full h-full  border-gray-200  bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
         <div role="status">
           <svg
             aria-hidden="true"
