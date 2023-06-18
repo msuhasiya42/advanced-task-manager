@@ -6,8 +6,8 @@ const TaskDetails = ({ items }) => {
       <ul>
         {items.map((item, index) => {
           return (
-            <button href="/task-details" className="w-full">
-              <li key={index} className="mt-2">
+            <button key={index} href="/task-details" className="w-full">
+              <li className="mt-2">
                 {/* task info card */}
                 <div className="w-full bg-white border h-full  border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                   {/* <img
