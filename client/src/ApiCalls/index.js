@@ -42,14 +42,11 @@ export function fetchTask(user) {
 }
 
 // task update
-export function updateTask(title, description, dueDate, priority) {
-  const currentDateTime = new Date();
+//@TODO
+export function updateTask(task) {
+  // const currentDateTime = new Date();
 
   return API.post("tasks/updateTask", {
-    title,
-    description,
-    dueDate,
-    priority,
-    currentDateTime,
+    task,
   });
 }
