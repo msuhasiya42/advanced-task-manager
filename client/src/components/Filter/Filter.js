@@ -1,8 +1,6 @@
 import React from "react";
-
+import { tags, members } from "../../utils/data/static";
 const Filter = () => {
-  const categories = ["Apple", "Samsung", "Lenovo", "Nothing", "OnePlus"];
-  const tags = ["work", "personal", "jobhunt", "learning"];
   return (
     <div>
       {/* filter button */}
@@ -44,7 +42,7 @@ const Filter = () => {
               className="space-y-2 text-sm mb-3"
               aria-labelledby="dropdownDefault"
             >
-              {categories.map((category, index) => (
+              {members.map((member, index) => (
                 <li key={index} className="flex items-center">
                   <input
                     id="apple"
@@ -57,7 +55,7 @@ const Filter = () => {
                     htmlFor="apple"
                     className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
                   >
-                    {category}
+                    {member}
                   </label>
                 </li>
               ))}
@@ -66,29 +64,102 @@ const Filter = () => {
             {/* filter: by due date */}
             <hr />
             <h6 className="mb-2 mt-1 text-sm font-medium text-gray-900 dark:text-white">
-              Due Date
+              Date
             </h6>
             <ul
               className="space-y-2 text-sm mb-4"
               aria-labelledby="dropdownDefault"
             >
-              {categories.map((category, index) => (
-                <li key={index} className="flex items-center">
-                  <input
-                    id="apple"
-                    type="checkbox"
-                    value=""
-                    className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                  />
+              <li className="flex items-center">
+                <input
+                  id="apple"
+                  type="checkbox"
+                  value=""
+                  className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                />
+                <svg
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                  className="h-4 w-4 ml-1 text-white "
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                  ></path>
+                </svg>
 
-                  <label
-                    htmlFor="apple"
-                    className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
-                  >
-                    {category}
-                  </label>
-                </li>
-              ))}
+                <label
+                  htmlFor="apple"
+                  className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
+                >
+                  No Dates
+                </label>
+              </li>
+              <li className="flex items-center">
+                <input
+                  id="apple"
+                  type="checkbox"
+                  value=""
+                  className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                />
+                <svg
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                  className="h-4 w-4 ml-1 text-green-500 "
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                  ></path>
+                </svg>
+
+                <label
+                  htmlFor="apple"
+                  className="ml-1 text-sm font-medium text-gray-900 dark:text-gray-100"
+                >
+                  Due in tommorrow
+                </label>
+              </li>
+              <li className="flex items-center">
+                <input
+                  id="apple"
+                  type="checkbox"
+                  value=""
+                  className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                />
+                <svg
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                  className="h-4 w-4 ml-1 text-red-500 "
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                  ></path>
+                </svg>
+
+                <label
+                  htmlFor="apple"
+                  className="ml-1 text-sm font-medium text-gray-900 dark:text-gray-100"
+                >
+                  Overdue
+                </label>
+              </li>
             </ul>
 
             {/* filter : tags */}
@@ -110,7 +181,7 @@ const Filter = () => {
                     htmlFor="apple"
                     className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
                   >
-                    {tag}
+                    #{tag}
                   </label>
                 </li>
               ))}
