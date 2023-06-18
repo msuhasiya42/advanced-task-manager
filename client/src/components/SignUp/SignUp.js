@@ -56,14 +56,22 @@ const SignUp = () => {
           setShowErrMsg(false);
         }
       })
-      .catch((error) => {
+      .catch((err) => {
         // Handle errors
         // handling internal server err
         // is remaining : status code : 500
         setSuccess(false);
-        setErrMsg("Email Already Registered");
+        if (err.code === "ERR_NETWORK") {
+          setErrMsg(
+            "There was a problem connecting to the server. Please check your internet connection and try again "
+          );
+        } else if (err.code === "ERR_BAD_RESPONSE") {
+          setErrMsg("Internal Server Error");
+        } else {
+          setErrMsg("Email Already Registered");
+        }
         setShowErrMsg(true);
-        console.error(error);
+        console.error(err);
       });
   };
 
