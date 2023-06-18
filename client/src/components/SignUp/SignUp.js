@@ -279,7 +279,7 @@ const SignUp = () => {
                     type="submit"
                     id="successButton"
                     data-modal-toggle="successModal"
-                    className="w-full text-white bg-cyan-600 hover:bg-cyan-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 disabled: bg-cyan-400"
+                    className="w-full text-white hover:bg-cyan-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 disabled: bg-cyan-400"
                     onClick={(e) => handleSubmit(e)}
                     disabled={
                       email.length === 0 ||
