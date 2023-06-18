@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { getUserData } from "../../ApiCalls";
 import { logout } from "../../utils/functions";
-
+import LoadingPage from "../Loading/LoadingPage";
 const UserProfile = () => {
   const [user, setUser] = useState(null);
   const userId = localStorage.getItem("userId");
@@ -18,7 +18,11 @@ const UserProfile = () => {
   }, [userId]);
 
   if (!user) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <LoadingPage />
+      </div>
+    );
   }
   return (
     <div>
