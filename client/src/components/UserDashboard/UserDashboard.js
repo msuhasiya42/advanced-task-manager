@@ -4,18 +4,10 @@ import React from "react";
 import Header from "../Header/Header";
 import TaskCard from "../Task/TaskCard";
 import SideBar from "../SideBar/SideBar";
-// import DatePicker from "react-datepicker";
 // import { useState } from "react";
-
 //import Footer from "./Footer";
 
 const UserDashboard = () => {
-  // const [selectedDate, setSelectedDate] = useState(null);
-
-  // const handleDateChange = (date) => {
-  //   setSelectedDate(date);
-  // };
-
   return (
     <div>
       <Header />

@@ -39,24 +39,55 @@ const fetchTask = async (req, res) => {
 // @Todo
 // Controller for updating task
 const updateTask = async (req, res) => {
-  const taskId = req.params.id;
-  const updatedTask = req.body;
-  Task.updateOne(
-    { _id: ObjectId(taskId) },
-    { $set: updatedTask },
-    (err, result) => {
-      if (err) {
-        console.error("Error updating task:", err);
-        res.status(500).json({ error: "Failed to update task" });
-        return;
-      }
-      if (result.modifiedCount === 0) {
-        res.status(404).json({ error: "Task not found" });
-        return;
-      }
-      res.json({ message: "Task updated successfully" });
-    }
-  );
+  const { taskId } = req.params;
+  const {
+    title,
+    description,
+    // dueDate,
+    // collaborators,
+    priority,
+    attachments,
+    status,
+  } = req.body;
+  try {
+    // Find the task by taskId in the database
+    const task = await Task.findById(taskId);
+
+    // Update the task properties with the provided values
+    task.title = title;
+    task.description = description;
+    // task.dueDate = dueDate;
+    // task.collaborators = collaborators;
+    task.priority = priority;
+    task.attachments = attachments;
+    task.status = status;
+
+    // Save the updated task in the database
+    await task.save();
+
+    res.json({ success: true, message: "Task updated successfully" });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to update the task" });
+  }
+  // Task.updateOne(
+  //   { _id: ObjectId(taskId) },
+  //   { $set: updatedTask },
+  //   (err, result) => {
+  //     if (err) {
+  //       console.error("Error updating task:", err);
+  //       res.status(500).json({ error: "Failed to update task" });
+  //       return;
+  //     }
+  //     if (result.modifiedCount === 0) {
+  //       res.status(404).json({ error: "Task not found" });
+  //       return;
+  //     }
+  //     res.json({ message: "Task updated successfully" });
+  //   }
+  // );
 };
 
 //delete task

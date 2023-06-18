@@ -1,39 +1,38 @@
 // import TaskModal from "./TaskModal";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import TaskDetails from "./TaskDetails";
 import TextAreaModal from "./TextAreaModal";
-import { todos, inprogress, completed } from "../../utils/data/static";
-// import { fetchTask } from "../../ApiCalls";
+import { fetchTask } from "../../ApiCalls";
+// import { todos, inprogress, completed } from "../../utils/data/static";
 
 const TaskCard = () => {
   const user = localStorage.getItem("userId");
-  // const [fetchedTasks, setFetchedTasks] = useState([]);
 
-  // const [todos, setTodos] = useState([]);
-  // const [inprogress, setInprogress] = useState([]);
-  // const [completed, setCompleted] = useState([]);
+  const [todos, setTodos] = useState([]);
+  const [inprogress, setInprogress] = useState([]);
+  const [completed, setCompleted] = useState([]);
 
   useEffect(() => {
-    // fetchTask(user)
-    //   .then((response) => {
-    //     const fetchedTasks = response.data.tasks;
-    //     // Filter tasks into different categories
-    //     // @Remember
-    //     const todos = fetchedTasks.filter((task) => task.status === "Todo");
-    //     const inprogress = fetchedTasks.filter(
-    //       (task) => task.status === "In Progress"
-    //     );
-    //     const completed = fetchedTasks.filter(
-    //       (task) => task.status === "Completed"
-    //     );
-    //     setTodos(todos);
-    //     setInprogress(inprogress);
-    //     setCompleted(completed);
-    //     // setFetchedTasks(data);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    fetchTask(user)
+      .then((response) => {
+        const fetchedTasks = response.data.tasks;
+
+        // Filter tasks into different categories
+        // @Remember
+        const todos = fetchedTasks.filter((task) => task.status === "Todo");
+        const inprogress = fetchedTasks.filter(
+          (task) => task.status === "In Progress"
+        );
+        const completed = fetchedTasks.filter(
+          (task) => task.status === "Completed"
+        );
+        setTodos(todos);
+        setInprogress(inprogress);
+        setCompleted(completed);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, [user]);
 
   return (

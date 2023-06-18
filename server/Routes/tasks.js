@@ -10,7 +10,7 @@ const {
 
 // router.get("/", getAllUsers);
 router.post("/createTask", createTask);
-router.post("/updateTask", updateTask);
+router.put("/updateTask/:id", updateTask);
 router.post("/fetchTask", fetchTask);
 // router.get("/getUserById/:id", getUserById);
 

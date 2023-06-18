@@ -34,6 +34,20 @@ const taskSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
+  attatchments: [
+    {
+      type: String,
+      required: false,
+    },
+  ],
+
+  // @Remember
+  collaborators: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
 });
 
 const Task = mongoose.model("Task", taskSchema);

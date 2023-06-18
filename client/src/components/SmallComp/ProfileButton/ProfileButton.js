@@ -32,7 +32,6 @@ const ProfileButton = () => {
               <div className="font-medium dark:text-white">
                 <div className="text-sm">
                   {user !== null ? user.name.split(" ")[0] : ""}
-                  Mayur
                 </div>
               </div>
             </div>
