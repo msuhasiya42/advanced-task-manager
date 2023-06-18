@@ -29,7 +29,7 @@ const TaskDetails = ({ items }) => {
                     <div className="mt-2">
                       {/* due date badge */}
 
-                      <span class="bg-blue-100 text-blue-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
+                      <span className="bg-blue-100 text-blue-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
                         <svg
                           aria-hidden="true"
                           className="w-3 h-3 mr-1"
@@ -52,11 +52,11 @@ const TaskDetails = ({ items }) => {
                       <svg
                         fill="none"
                         stroke="currentColor"
-                        stroke-width="1.5"
+                        strokeWidth="1.5"
                         viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg"
                         aria-hidden="true"
-                        class="w-4 h-4 mt-1  ml-3"
+                        className="w-4 h-4 mt-1  ml-3"
                       >
                         <path
                           strokeLinecap="round"
@@ -73,24 +73,24 @@ const TaskDetails = ({ items }) => {
                     </div>
 
                     {/* members profile icons */}
-                    <div class="flex -space-x-4 justify-end mt-1">
+                    <div className="flex -space-x-4 justify-end mt-1">
                       <img
-                        class="w-7 h-7 border-2 border-white rounded-full dark:border-gray-800"
+                        className="w-7 h-7 border-2 border-white rounded-full dark:border-gray-800"
                         src="https://cdn.pixabay.com/photo/2021/02/12/07/03/icon-6007530_640.png"
                         alt=""
                       />
                       <img
-                        class="w-7 h-7 border-2 border-white rounded-full dark:border-gray-800"
+                        className="w-7 h-7 border-2 border-white rounded-full dark:border-gray-800"
                         src="https://cdn.icon-icons.com/icons2/2643/PNG/512/female_woman_person_people_avatar_icon_159366.png"
                         alt=""
                       />
                       <img
-                        class="w-7 h-7 border-2 border-white rounded-full dark:border-gray-800"
+                        className="w-7 h-7 border-2 border-white rounded-full dark:border-gray-800"
                         src="https://cdn-icons-png.flaticon.com/512/147/147144.png?w=360"
                         alt=""
                       />
                       <a
-                        class="flex items-center justify-center w-7 h-7 text-xs font-medium text-white bg-gray-700 border-2 border-white rounded-full hover:bg-gray-600 dark:border-gray-800"
+                        className="flex items-center justify-center w-7 h-7 text-xs font-medium text-white bg-gray-700 border-2 border-white rounded-full hover:bg-gray-600 dark:border-gray-800"
                         href="#"
                       >
                         +2
