@@ -43,10 +43,9 @@ export function fetchTask(user) {
 
 // task update
 //@TODO
-export function updateTask(task) {
+export function updateTask(id, task) {
   // const currentDateTime = new Date();
-
-  return API.post("tasks/updateTask", {
+  return API.put(`/tasks/updateTask/${id}`, {
     task,
   });
 }

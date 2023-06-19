@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { createTask } from "../../ApiCalls";
 
@@ -31,6 +31,7 @@ const TextAreaModal = ({ status }) => {
     setShowTextArea(false);
   };
 
+  useEffect(() => {});
   const handleChange = (event) => {
     setTaskName(event.target.value);
   };

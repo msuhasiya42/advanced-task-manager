@@ -2,7 +2,7 @@ import "../../App.css";
 
 import React from "react";
 import Header from "../Header/Header";
-import TaskCard from "../Task/TaskCard";
+import TaskManager from "../Task/TaskManager";
 import SideBar from "../SideBar/SideBar";
 // import { useState } from "react";
 //import Footer from "./Footer";
@@ -16,7 +16,7 @@ const UserDashboard = () => {
           <div className=" text-white">
             <header className="App-header">
               <SideBar />
-              <TaskCard />
+              <TaskManager />
             </header>
           </div>
         </header>
