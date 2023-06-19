@@ -1,39 +1,49 @@
-// import TaskModal from "./TaskModal";
 import { useEffect, useState } from "react";
-import TaskDetails from "./TaskDetails";
-import TextAreaModal from "./TextAreaModal";
+import TaskList from "./TaskList";
 import { fetchTask } from "../../ApiCalls";
+import { updateTask } from "../../ApiCalls";
 // import { todos, inprogress, completed } from "../../utils/data/static";
 
-const TaskCard = () => {
+const TaskManager = () => {
+  const [tasks, setTasks] = useState([]);
+
   const user = localStorage.getItem("userId");
 
-  const [todos, setTodos] = useState([]);
-  const [inprogress, setInprogress] = useState([]);
-  const [completed, setCompleted] = useState([]);
-
   useEffect(() => {
+    fetchTaskFun(user);
+  }, [user]);
+
+  // Fetch Task function
+  const fetchTaskFun = async (user) => {
     fetchTask(user)
       .then((response) => {
         const fetchedTasks = response.data.tasks;
-
         // Filter tasks into different categories
         // @Remember
-        const todos = fetchedTasks.filter((task) => task.status === "Todo");
-        const inprogress = fetchedTasks.filter(
-          (task) => task.status === "In Progress"
-        );
-        const completed = fetchedTasks.filter(
-          (task) => task.status === "Completed"
-        );
-        setTodos(todos);
-        setInprogress(inprogress);
-        setCompleted(completed);
+        setTasks(fetchedTasks);
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [user]);
+  };
+
+  // update task function
+  const updateTaskFun = async (taskId, updatedTask) => {
+    console.log(taskId);
+    console.log(updatedTask);
+    updateTask(taskId, updatedTask)
+      .then((res) => {
+        console.log(res);
+        console.log("Task updated");
+      })
+      .catch((err) => {
+        console.log("Error in updating task:", err);
+      });
+  };
+
+  const getTasksByCategory = (status) => {
+    return tasks.filter((task) => task.status === status);
+  };
 
   return (
     <div>
@@ -49,9 +59,11 @@ const TaskCard = () => {
                 </p>
                 {/* task modal */}
                 <div>
-                  {/* <TaskModal /> */}
-                  <TextAreaModal status={"Todo"} />
-                  <TaskDetails items={todos} />
+                  <TaskList
+                    tasks={getTasksByCategory("Todo")}
+                    status={"Todo"}
+                    updateTaskFun={updateTaskFun}
+                  />
                 </div>
                 {/* task modal end */}
               </div>
@@ -64,10 +76,12 @@ const TaskCard = () => {
                 <p className="m-2 text-center text-lg mt-1 text-white ">
                   In-Progress
                 </p>
-                {/* task modal */}
                 <div>
-                  <TextAreaModal status={"In Progress"} />
-                  <TaskDetails items={inprogress} />
+                  <TaskList
+                    tasks={getTasksByCategory("In Progress")}
+                    status={"In Progress"}
+                    updateTaskFun={updateTaskFun}
+                  />
                 </div>
                 {/* task modal end */}
               </div>
@@ -80,10 +94,12 @@ const TaskCard = () => {
                 <p className="m-2 text-center text-lg mt-1 text-white ">
                   Completed
                 </p>
-                {/* task modal */}
                 <div>
-                  <TextAreaModal status={"Completed"} />
-                  <TaskDetails items={completed} />
+                  <TaskList
+                    tasks={getTasksByCategory("Completed")}
+                    status={"Completed"}
+                    updateTaskFun={updateTaskFun}
+                  />
                 </div>
                 {/* task modal end */}
               </div>
@@ -97,4 +113,4 @@ const TaskCard = () => {
   );
 };
 
-export default TaskCard;
+export default TaskManager;
