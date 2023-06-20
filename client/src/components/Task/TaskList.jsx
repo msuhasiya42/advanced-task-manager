@@ -1,11 +1,9 @@
 import React from "react";
 import TaskItem from "./TaskItem";
-import TextAreaModal from "./TextAreaModal";
-const TaskList = ({ tasks, status, updateTaskFun }) => {
+const TaskList = ({ tasks, updateTaskFun }) => {
   return (
     <div>
       <ul>
-        <TextAreaModal status={status} />
         {tasks.map((task) => {
           return (
             <TaskItem
