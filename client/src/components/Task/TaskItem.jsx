@@ -12,7 +12,6 @@ const TaskItem = ({ id, task, updateTaskFun }) => {
   const handleFormSubmit = () => {
     console.log(task._id);
     updateTaskFun(id, editedTask);
-    // setIsEditing(false);
   };
   return (
     <div>

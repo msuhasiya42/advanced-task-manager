@@ -2,9 +2,9 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { createTask } from "../../ApiCalls";
 
-const TextAreaModal = ({ status }) => {
+const TextAreaModal = ({ status, addTask }) => {
   const [showTextArea, setShowTextArea] = useState(false);
-  const [taskName, setTaskName] = useState("");
+  const [task, setTask] = useState("");
   const user = localStorage.getItem("userId");
 
   const handleClick = () => {
@@ -14,12 +14,17 @@ const TextAreaModal = ({ status }) => {
     event.preventDefault();
     // Perform any necessary actions with the task name
 
-    createTask(taskName, status, user)
+    createTask(task, status, user)
       .then((response) => {
         // Handle the API response
-        console.log(response.data);
+
+        console.log(response.data.task);
+        // @Remember
+        const newTask = response.data.task;
+        addTask(status, newTask);
       })
       .catch((error) => {
+        // @Todo
         // Handle errors
         // handling internal server err
         // is remaining : status code : 500
@@ -27,13 +32,13 @@ const TextAreaModal = ({ status }) => {
       });
 
     // Reset the state and hide the text area
-    setTaskName("");
+    setTask("");
     setShowTextArea(false);
   };
 
   useEffect(() => {});
-  const handleChange = (event) => {
-    setTaskName(event.target.value);
+  const updateTitle = (event) => {
+    setTask(event.target.value);
   };
   return (
     <div>
@@ -54,7 +59,7 @@ const TextAreaModal = ({ status }) => {
             {/* <div className="flex items-center justify-between px-3 py-2 border-b dark:border-gray-600"></div> */}
             <div className="px-4  bg-white rounded-b-lg dark:bg-gray-800">
               <textarea
-                onChange={handleChange}
+                onChange={updateTitle}
                 id="editor"
                 rows="3"
                 className="block w-full px-0 text-sm text-gray-800 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"

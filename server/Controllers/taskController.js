@@ -13,9 +13,9 @@ const createTask = async (req, res) => {
     });
 
     // Save the task to the database
-    await newTask.save();
+    const task = await newTask.save();
 
-    res.status(200).json({ success: true, message: "Task added " });
+    res.status(200).json({ success: true, message: "Task added ", task: task });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -30,6 +30,8 @@ const fetchTask = async (req, res) => {
     const tasks = await Task.find({ user: user });
 
     // return list of task in json form
+    // @Remember
+    // sending new task we to show new task on front end side
     res.status(200).json({ success: true, tasks: tasks });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
