@@ -1,6 +1,6 @@
 import React from "react";
 import TaskItem from "./TaskItem";
-const TaskList = ({ tasks, updateTaskFun }) => {
+const TaskList = ({ tasks, updateTaskFun, handleDelete }) => {
   return (
     <div>
       <ul>
@@ -10,6 +10,7 @@ const TaskList = ({ tasks, updateTaskFun }) => {
               key={task._id}
               task={task}
               updateTaskFun={updateTaskFun}
+              handleDelete={handleDelete}
             />
           );
         })}

@@ -24,8 +24,7 @@ const createTask = async (req, res) => {
 // fetch tasks of user
 const fetchTask = async (req, res) => {
   try {
-    const { user } = req.body;
-
+    const user = req.params.id;
     // get task based on user id
     const tasks = await Task.find({ user: user });
 
@@ -62,18 +61,20 @@ const updateTask = async (req, res) => {
 //delete task
 const deleteTask = async (req, res) => {
   const taskId = req.params.id;
-  Task.deleteOne({ _id: ObjectId(taskId) }, (err, result) => {
-    if (err) {
-      console.error("Error deleting task:", err);
-      res.status(500).json({ error: "Failed to delete task" });
-      return;
+  try {
+    // @Remember
+    // Find the task by its ID and remove it
+    const deletedTask = await Task.findByIdAndRemove(taskId);
+
+    if (!deletedTask) {
+      return res.status(404).json({ message: "Task not found" });
     }
-    if (result.deletedCount === 0) {
-      res.status(404).json({ error: "Task not found" });
-      return;
-    }
-    res.json({ message: "Task deleted successfully" });
-  });
+
+    return res.json({ message: "Task deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Server error" });
+  }
 };
 
 // get task by id
