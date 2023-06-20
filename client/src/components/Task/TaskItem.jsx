@@ -1,18 +1,26 @@
 import React from "react";
 import { useState } from "react";
 
-const TaskItem = ({ id, task, updateTaskFun }) => {
+const TaskItem = ({ id, task, updateTaskFun, handleDelete }) => {
   const [editedTask, setEditedTask] = useState(task);
 
+  // handle input change
   const handleInputChange = (e) => {
     console.log(e.target.name, e.target.value);
     setEditedTask({ ...editedTask, [e.target.name]: e.target.value });
   };
 
+  // on update
   const handleFormSubmit = () => {
     console.log(task._id);
     updateTaskFun(id, editedTask);
   };
+
+  // on delete
+  const handleDeleteFun = () => {
+    handleDelete(task._id);
+  };
+
   return (
     <div>
       {/* <button
@@ -38,17 +46,27 @@ const TaskItem = ({ id, task, updateTaskFun }) => {
               {task.description}
             </p>
 
-            {/* edit button */}
+            {/* edit button and modal */}
             <div>
-              <div className="flex flex-row justify-center">
-                <div>
-                  <div className="mr-4">
+              <div className="flex flex-row justify-start">
+                <div className="mb-4 ">
+                  {/* edit button */}
+                  <div>
                     <button
                       data-modal-target="task-modal"
                       data-modal-toggle="task-modal"
-                      className="text-xs mr-4  w-full bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
+                      className="text-xs mr-4  w-12 bg-blue-500 hover:bg-blue-400 text-white font-bold py-1 px-3 border-b-4 border-blue-700 hover:border-blue-500 rounded"
                     >
                       Edit
+                    </button>
+                    {/* Delete button */}
+                    <button
+                      onClick={handleDeleteFun}
+                      //   data-modal-target="task-modal"
+                      //   data-modal-toggle="task-modal"
+                      className="h-7  text-xs mr-2  w-16 bg-red-600 hover:bg-red-400 text-white font-bold py-1  border-b-4 border-red-800 hover:border-red-500 rounded"
+                    >
+                      Delete
                     </button>
                   </div>
 
@@ -240,14 +258,16 @@ placeholder="Select date"
                   {/* modal end */}
                 </div>
                 {/* modal end */}
+              </div>
 
-                {/* due date, attatchments and members */}
-                <div className="mt-2 ">
+              {/*  date and attatchment and user icons */}
+              <div className="flex flex-row justify-end">
+                <div className="flex ">
                   {/* due date badge */}
-                  <span className="bg-blue-100 text-blue-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
+                  <span className="text-xs bg-blue-100 text-blue-800  font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
                     <svg
                       aria-hidden="true"
-                      className="w-3 h-3 mr-1"
+                      className=" w-3 h-3 mr-1"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                       xmlns="http://www.w3.org/2000/svg"
@@ -263,7 +283,7 @@ placeholder="Select date"
                 </div>
 
                 {/* links badge */}
-                <div className="flex flex-row mt-2">
+                <div className="flex flex-row ">
                   <svg
                     fill="none"
                     stroke="currentColor"
@@ -288,7 +308,7 @@ placeholder="Select date"
                 </div>
 
                 {/* members profile icons */}
-                <div className="flex -space-x-4 justify-end mt-1">
+                <div className="flex -space-x-3 h-1 justify-end ">
                   <img
                     className="w-7 h-7 border-2 border-white rounded-full dark:border-gray-800"
                     src="https://cdn.pixabay.com/photo/2021/02/12/07/03/icon-6007530_640.png"

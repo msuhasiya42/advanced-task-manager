@@ -6,12 +6,14 @@ const {
   createTask,
   updateTask,
   fetchTask,
+  deleteTask,
 } = require("../Controllers/taskController");
 
 // router.get("/", getAllUsers);
 router.post("/createTask", createTask);
 router.put("/updateTask/:id", updateTask);
-router.post("/fetchTask", fetchTask);
+router.delete("/deleteTask/:id", deleteTask);
+router.get("/fetchTask/:id", fetchTask);
 // router.get("/getUserById/:id", getUserById);
 
 // Implement other routes for updating, deleting, etc.

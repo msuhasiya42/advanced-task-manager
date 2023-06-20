@@ -35,10 +35,13 @@ export function createTask(title, status, user) {
 }
 
 // get list of tasks
-export function fetchTask(user) {
-  return API.post("tasks/fetchTask", {
-    user,
-  });
+export function fetchTask(userId) {
+  return API.get(`/tasks/fetchTask/${userId}`);
+}
+
+// task Delete
+export function deleteTask(id) {
+  return API.delete(`/tasks/deleteTask/${id}`);
 }
 
 // task update

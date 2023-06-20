@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import TaskList from "./TaskList";
-import { fetchTask } from "../../ApiCalls";
-import { updateTask } from "../../ApiCalls";
+import { fetchTask, updateTask, deleteTask } from "../../ApiCalls";
 import TaskAreaModal from "./TextAreaModal";
 import LoadingPage from "../Loading/LoadingPage";
 // import { todos, inprogress, completed } from "../../utils/data/static";
 
 const TaskManager = () => {
-  // const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState([]);
   const [todos, setTodos] = useState([]);
   const [inprogress, setInprogress] = useState([]);
   const [completed, setCompleted] = useState([]);
@@ -18,7 +17,7 @@ const TaskManager = () => {
   useEffect(() => {
     fetchTaskFun(user);
     setLoading(false);
-  }, [user]);
+  }, [user, tasks]);
 
   // Fetch Task function
   const fetchTaskFun = async (user) => {
@@ -26,7 +25,7 @@ const TaskManager = () => {
     fetchTask(user)
       .then((response) => {
         const fetchedTasks = response.data.tasks;
-
+        setTasks(fetchedTasks);
         // @Remember
         // Filter tasks into different categories
         // necessary because when we add task we need to refresh individual comp not all
@@ -58,14 +57,24 @@ const TaskManager = () => {
   };
 
   // update task function
-  const updateTaskFun = async (taskId, updatedTask) => {
+  const updateTaskFun = (taskId, updatedTask) => {
     updateTask(taskId, updatedTask)
       .then((res) => {
-        console.log(res);
-        console.log("Task updated");
+        console.log("Task updated", res);
       })
       .catch((err) => {
         console.log("Error in updating task:", err);
+      });
+  };
+
+  // delete task
+  const handleDelete = (id) => {
+    deleteTask(id)
+      .then((res) => {
+        console.log("Task Deleted:", res);
+      })
+      .catch((err) => {
+        console.log("Error in deletion:", err);
       });
   };
 
@@ -91,6 +100,7 @@ const TaskManager = () => {
                       tasks={todos}
                       status={"Todo"}
                       updateTaskFun={updateTaskFun}
+                      handleDelete={handleDelete}
                     />
                   </div>
                   {/* task modal end */}
@@ -110,6 +120,7 @@ const TaskManager = () => {
                       tasks={inprogress}
                       status={"In Progress"}
                       updateTaskFun={updateTaskFun}
+                      handleDelete={handleDelete}
                     />
                   </div>
                   {/* task modal end */}
@@ -130,6 +141,7 @@ const TaskManager = () => {
                       tasks={completed}
                       status={"Completed"}
                       updateTaskFun={updateTaskFun}
+                      handleDelete={handleDelete}
                     />
                   </div>
                   {/* task modal end */}
