@@ -85,7 +85,7 @@ const TaskManager = () => {
           {loading ? (
             <LoadingPage />
           ) : (
-            <div className="grid grid-cols-3 gap-12 mb-4">
+            <div className="flex flex-row gap-12 mb-4">
               {/* to do card */}
 
               <div className=" bg-gray-900 flex-col items-center  rounded ">
