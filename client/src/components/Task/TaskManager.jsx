@@ -6,7 +6,7 @@ import LoadingPage from "../Loading/LoadingPage";
 // import { todos, inprogress, completed } from "../../utils/data/static";
 
 const TaskManager = () => {
-  const [tasks, setTasks] = useState([]);
+  // const [tasks, setTasks] = useState([]);
   const [todos, setTodos] = useState([]);
   const [inprogress, setInprogress] = useState([]);
   const [completed, setCompleted] = useState([]);
@@ -17,7 +17,7 @@ const TaskManager = () => {
   useEffect(() => {
     fetchTaskFun(user);
     setLoading(false);
-  }, [user, tasks]);
+  }, [user]);
 
   // Fetch Task function
   const fetchTaskFun = async (user) => {
@@ -25,7 +25,7 @@ const TaskManager = () => {
     fetchTask(user)
       .then((response) => {
         const fetchedTasks = response.data.tasks;
-        setTasks(fetchedTasks);
+        // setTasks(fetchedTasks);
         // @Remember
         // Filter tasks into different categories
         // necessary because when we add task we need to refresh individual comp not all
