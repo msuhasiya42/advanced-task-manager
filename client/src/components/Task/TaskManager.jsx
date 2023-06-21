@@ -6,7 +6,7 @@ import LoadingPage from "../Loading/LoadingPage";
 // import { todos, inprogress, completed } from "../../utils/data/static";
 
 const TaskManager = () => {
-  const [tasks, setTasks] = useState([]);
+  // const [tasks, setTasks] = useState([]);
   const [todos, setTodos] = useState([]);
   const [inprogress, setInprogress] = useState([]);
   const [completed, setCompleted] = useState([]);
@@ -25,7 +25,6 @@ const TaskManager = () => {
     fetchTask(user)
       .then((response) => {
         const fetchedTasks = response.data.tasks;
-        // setTasks(fetchedTasks);
         // @Remember
         // Filter tasks into different categories
         // necessary because when we add task we need to refresh individual comp not all
@@ -37,9 +36,6 @@ const TaskManager = () => {
         setCompleted(
           fetchedTasks.filter((task) => task.status === "Completed")
         );
-
-        // @Remember
-        setTasks(fetchedTasks);
       })
       .catch((err) => {
         console.log(err);
@@ -52,8 +48,6 @@ const TaskManager = () => {
       : taskType === "In Progress"
       ? setInprogress([...inprogress, newTask])
       : setCompleted([...completed, newTask]);
-
-    console.log(todos);
   };
 
   // update task function
@@ -68,7 +62,7 @@ const TaskManager = () => {
   };
 
   // delete task
-  const handleDelete = (id) => {
+  const handleDelete = (id, taskType) => {
     deleteTask(id)
       .then((res) => {
         console.log("Task Deleted:", res);
@@ -76,6 +70,12 @@ const TaskManager = () => {
       .catch((err) => {
         console.log("Error in deletion:", err);
       });
+
+    taskType === "Todo"
+      ? setTodos(todos.filter((task) => task._id !== id))
+      : taskType === "In Progress"
+      ? setInprogress(inprogress.filter((task) => task._id !== id))
+      : setCompleted(completed.filter((task) => task._id !== id));
   };
 
   return (

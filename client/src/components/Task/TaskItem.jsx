@@ -18,7 +18,7 @@ const TaskItem = ({ id, task, updateTaskFun, handleDelete }) => {
 
   // on delete
   const handleDeleteFun = () => {
-    handleDelete(task._id);
+    handleDelete(task._id, task.status);
   };
 
   return (
