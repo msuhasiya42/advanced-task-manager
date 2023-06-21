@@ -57,12 +57,12 @@ const TextAreaModal = ({ status, addTask }) => {
         <form onSubmit={handleSubmit}>
           <div className="w-full mb-2 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
             {/* <div className="flex items-center justify-between px-3 py-2 border-b dark:border-gray-600"></div> */}
-            <div className="px-4  bg-white rounded-b-lg dark:bg-gray-800">
+            <div className="px-4  bg-white rounded-lg dark:bg-gray-800">
               <input
                 onChange={updateTitle}
-                id="editor"
+                id="task"
                 type="text"
-                className="block w-full px-0 text-sm text-gray-800 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"
+                className="block w-full px-2 text-sm text-gray-800 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"
                 placeholder="Write about task..."
                 required
               ></input>
