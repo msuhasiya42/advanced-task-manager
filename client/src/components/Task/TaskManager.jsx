@@ -6,7 +6,7 @@ import LoadingPage from "../Loading/LoadingPage";
 // import { todos, inprogress, completed } from "../../utils/data/static";
 
 const TaskManager = () => {
-  // const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState([]);
   const [todos, setTodos] = useState([]);
   const [inprogress, setInprogress] = useState([]);
   const [completed, setCompleted] = useState([]);
@@ -39,7 +39,7 @@ const TaskManager = () => {
         );
 
         // @Remember
-        // setTasks(fetchedTasks);
+        setTasks(fetchedTasks);
       })
       .catch((err) => {
         console.log(err);
@@ -85,10 +85,10 @@ const TaskManager = () => {
           {loading ? (
             <LoadingPage />
           ) : (
-            <div className="flex flex-row gap-12 mb-4">
+            <div className="grid grid-cols-3 gap-12  mb-4 ">
               {/* to do card */}
 
-              <div className=" bg-gray-900 flex-col items-center  rounded ">
+              <div className=" bg-gray-900   rounded ">
                 <div className="m-3">
                   <p className="m-2 text-center text-lg mt-1 text-white ">
                     To-do
