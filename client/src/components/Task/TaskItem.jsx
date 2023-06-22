@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-
+import useTaskStore from "../../Zustand/taskStore";
 const TaskItem = ({ id, task, handleUpdate, handleDelete }) => {
   const [editedTask, setEditedTask] = useState(task);
 
@@ -25,30 +25,63 @@ const TaskItem = ({ id, task, handleUpdate, handleDelete }) => {
     handleUpdate(id, editedTask);
   };
 
+  // using delete from store
   // on delete
+  const deleteTask = useTaskStore((state) => state.deleteTask);
+
   const handleDeleteFun = () => {
+    deleteTask(task.status, task._id);
     handleDelete(task._id, task.status);
   };
 
-  const isoTime = task.dueDate;
   // change time zone into indian
-  const convertToIndianTime = (isoTime) => {
-    const options = {
-      timeZone: "Asia/Kolkata",
-      hour12: false,
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      // hour: "numeric",
-      // minute: "numeric",
-      // second: "numeric",
-    };
+  const date = task.dueDate;
 
-    const indianTime = new Date(isoTime).toLocaleString("en-IN", options);
-    return indianTime;
+  // @Remember
+  const convertToIndianTime = (date) => {
+    // new logic
+    // Convert the input date string to a Date object
+    const inputDate = new Date(date);
+
+    // Get the current date and time
+    const currentDate = new Date();
+
+    // Calculate the start and end dates of the current week
+    const currentWeekStart = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      currentDate.getDate() - currentDate.getDay()
+    );
+
+    const currentWeekEnd = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      currentDate.getDate() + (6 - currentDate.getDay())
+    );
+
+    // Check if the input date falls within the current week
+    const isCurrentWeek =
+      inputDate >= currentWeekStart && inputDate <= currentWeekEnd;
+
+    if (isCurrentWeek) {
+      if (currentDate.getDay() === inputDate.getDay()) {
+        return "Today";
+      } else if (currentDate.getDay() + 1 === inputDate.getDay()) {
+        return "Tommorrow";
+      }
+      // Display the week day if the date is in the current week
+      const options = { weekday: "long" };
+      const weekDay = inputDate.toLocaleDateString("en-In", options);
+      return weekDay;
+    } else {
+      // Display the full date if it's not in the current week
+      const options = { year: "numeric", month: "long", day: "numeric" };
+      const formattedDate = inputDate.toLocaleDateString("en-IN", options);
+      return formattedDate;
+    }
   };
 
-  const indianTime = convertToIndianTime(isoTime);
+  const indianTime = convertToIndianTime(date);
 
   return (
     <div>
@@ -290,9 +323,19 @@ placeholder="Select date"
               </div>
 
               {/*  date and attatchment and user icons */}
-              <div className="flex flex-row justify-end">
-                <div className="flex ">
-                  {/* due date badge */}
+              <div className="flex flex-row justify-start">
+                <div className="ml-2">
+                  {task.tags.length !== 0 ? (
+                    <span class="bg-purple-100 text-purple-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300">
+                      #{task.tags[0]}
+                    </span>
+                  ) : (
+                    ""
+                  )}
+                </div>
+
+                {/* due date badge */}
+                <div className="flex ml-4">
                   <span className={className}>
                     <svg
                       aria-hidden="true"
@@ -312,49 +355,53 @@ placeholder="Select date"
                 </div>
 
                 {/* links badge */}
-                <div className="flex flex-row ">
-                  <svg
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-hidden="true"
-                    className="w-4 h-4 mt-1  ml-3"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13"
-                    ></path>
-                  </svg>
-                  <span
-                    className=" mr-3 text-left whitespace-nowrap"
-                    // sidebar-toggle-item
-                  >
-                    2
-                  </span>
-                </div>
+                {task.attatchments.length !== 0 ? (
+                  <div className="flex flex-row ml-2">
+                    <svg
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                      aria-hidden="true"
+                      className="w-4 h-4 mt-1  ml-3"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13"
+                      ></path>
+                    </svg>
+                    <span
+                      className=" mr-3 text-left whitespace-nowrap"
+                      // sidebar-toggle-item
+                    >
+                      {task.attatchments.length}
+                    </span>
+                  </div>
+                ) : (
+                  ""
+                )}
 
                 {/* members profile icons */}
-                <div className="flex -space-x-3 h-1 justify-end ">
+                <div className="flex -space-x-3 ml-4  h-1 justify-end ">
                   <img
-                    className="w-7 h-7 border-2 border-white rounded-full dark:border-gray-800"
+                    className="w-6 h-6 border-2 border-white rounded-full dark:border-gray-800"
                     src="https://cdn.pixabay.com/photo/2021/02/12/07/03/icon-6007530_640.png"
                     alt=""
                   />
                   <img
-                    className="w-7 h-7 border-2 border-white rounded-full dark:border-gray-800"
+                    className="w-6 h-6 border-2 border-white rounded-full dark:border-gray-800"
                     src="https://cdn.icon-icons.com/icons2/2643/PNG/512/female_woman_person_people_avatar_icon_159366.png"
                     alt=""
                   />
                   <img
-                    className="w-7 h-7 border-2 border-white rounded-full dark:border-gray-800"
+                    className="w-6 h-6 border-2 border-white rounded-full dark:border-gray-800"
                     src="https://cdn-icons-png.flaticon.com/512/147/147144.png?w=360"
                     alt=""
                   />
                   <a
-                    className="flex items-center justify-center w-7 h-7 text-xs font-medium text-white bg-gray-700 border-2 border-white rounded-full hover:bg-gray-600 dark:border-gray-800"
+                    className="w-6 h-6 flex items-center justify-center text-xs font-medium text-white bg-gray-700 border-2 border-white rounded-full hover:bg-gray-600 dark:border-gray-800"
                     href="/show-member"
                   >
                     +2

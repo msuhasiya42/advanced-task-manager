@@ -1,11 +1,15 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { createTask } from "../../ApiCalls";
+import useTaskStore from "../../Zustand/taskStore";
 
-const TextAreaModal = ({ status, addTask }) => {
+const TextAreaModal = ({ status }) => {
   const [showTextArea, setShowTextArea] = useState(false);
   const [task, setTask] = useState("");
   const user = localStorage.getItem("userId");
+
+  // using add task from store
+  const addTask = useTaskStore((state) => state.addTask);
 
   const handleClick = () => {
     setShowTextArea(!showTextArea);
