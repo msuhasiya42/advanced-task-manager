@@ -50,9 +50,9 @@ const TaskManager = () => {
       : setCompleted([...completed, newTask]);
   };
 
-  // update task function
-  const updateTaskFun = (taskId, updatedTask) => {
-    updateTask(taskId, updatedTask)
+  // update task
+  const handleUpdate = (id, updatedTask) => {
+    updateTask(id, updatedTask)
       .then((res) => {
         console.log("Task updated", res);
       })
@@ -99,7 +99,7 @@ const TaskManager = () => {
                     <TaskList
                       tasks={todos}
                       status={"Todo"}
-                      updateTaskFun={updateTaskFun}
+                      handleUpdate={handleUpdate}
                       handleDelete={handleDelete}
                     />
                   </div>
@@ -119,7 +119,7 @@ const TaskManager = () => {
                     <TaskList
                       tasks={inprogress}
                       status={"In Progress"}
-                      updateTaskFun={updateTaskFun}
+                      handleUpdate={handleUpdate}
                       handleDelete={handleDelete}
                     />
                   </div>
@@ -140,7 +140,7 @@ const TaskManager = () => {
                     <TaskList
                       tasks={completed}
                       status={"Completed"}
-                      updateTaskFun={updateTaskFun}
+                      handleUpdate={handleUpdate}
                       handleDelete={handleDelete}
                     />
                   </div>

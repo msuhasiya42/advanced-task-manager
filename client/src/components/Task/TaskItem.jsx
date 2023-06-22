@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 
-const TaskItem = ({ id, task, updateTaskFun, handleDelete }) => {
+const TaskItem = ({ id, task, handleUpdate, handleDelete }) => {
   const [editedTask, setEditedTask] = useState(task);
 
   // handle input change
@@ -13,7 +13,7 @@ const TaskItem = ({ id, task, updateTaskFun, handleDelete }) => {
   // on update
   const handleFormSubmit = () => {
     console.log(task._id);
-    updateTaskFun(id, editedTask);
+    handleUpdate(id, editedTask);
   };
 
   // on delete

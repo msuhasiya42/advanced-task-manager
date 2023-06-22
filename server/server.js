@@ -24,6 +24,9 @@ mongoose
   })
   .then(() => {
     console.log("connection successfull");
+    app.listen(port, () => {
+      console.log(`Server started on port ${port}`);
+    });
   })
   .catch((err) => {
     console.log(err + "connection failed");
@@ -34,6 +37,3 @@ app.use("/", routes);
 
 // Start the server
 const port = 5000;
-app.listen(port, () => {
-  console.log(`Server started on port ${port}`);
-});
