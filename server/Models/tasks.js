@@ -1,28 +1,59 @@
 const mongoose = require("mongoose");
 
+// Decide all fields of scheme before you create
 const taskSchema = new mongoose.Schema(
   {
     title: {
       type: String,
       required: true,
     },
-    status: {
-      type: String,
-      enum: ["Todo", "In Progress", "Completed"],
-      required: true,
-    },
+
     description: {
       type: String,
     },
-    dueDate: {
-      type: Date,
-      default: Date.now,
+
+    status: {
+      type: String,
+      enum: ["todo", "inProgress", "completed"],
+      required: true,
     },
+
     priority: {
       type: String,
       enum: ["High", "Medium", "Low"],
       default: "Medium",
     },
+
+    startDate: {
+      type: Date,
+      default: Date.now,
+    },
+
+    dueDate: {
+      type: Date,
+      default: Date.now,
+    },
+
+    tags: [
+      // Array of strings to store tags
+      {
+        type: String,
+      },
+    ],
+    attatchments: [
+      {
+        type: String,
+      },
+    ],
+
+    // @Remember
+    collaborators: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+
     createdAt: {
       type: Date,
       default: Date.now,
@@ -36,20 +67,6 @@ const taskSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    attatchments: [
-      {
-        type: String,
-        required: false,
-      },
-    ],
-
-    // @Remember
-    collaborators: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
   },
   {
     timestamps: true,

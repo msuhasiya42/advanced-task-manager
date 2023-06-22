@@ -4,51 +4,57 @@ import { fetchTask, updateTask, deleteTask } from "../../ApiCalls";
 import TaskAreaModal from "./TextAreaModal";
 import LoadingPage from "../Loading/LoadingPage";
 // import { todos, inprogress, completed } from "../../utils/data/static";
-
+import useTaskStore from "../../Zustand/taskStore";
 const TaskManager = () => {
-  // const [tasks, setTasks] = useState([]);
-  const [todos, setTodos] = useState([]);
-  const [inprogress, setInprogress] = useState([]);
-  const [completed, setCompleted] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const user = localStorage.getItem("userId");
 
+  // using zustand store
+  const tasks = useTaskStore((state) => state.tasks);
+  const setTasks = useTaskStore((state) => state.setTasks);
+
   useEffect(() => {
+    const fetchTaskFun = async (user) => {
+      setLoading(true);
+      fetchTask(user)
+        .then((response) => {
+          const fetchedTasks = response.data.tasks;
+          // @Remember
+          // Filter tasks into different categories
+          // necessary because when we add task we need to refresh individual comp not all
+          // so add we add task in particular cat. it will refresh only that comp
+          const todos = fetchedTasks.filter((task) => task.status === "todo");
+          const inprogress = fetchedTasks.filter(
+            (task) => task.status === "inProgress"
+          );
+          const completed = fetchedTasks.filter(
+            (task) => task.status === "completed"
+          );
+
+          setTasks("todo", todos); // Set the fetched tasks in the "todo" category
+          setTasks("inProgress", inprogress); // Set the fetched tasks in the "inProgress" category
+          setTasks("completed", completed);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
     fetchTaskFun(user);
+
     setLoading(false);
-  }, [user]);
+  }, [user, setTasks]);
 
   // Fetch Task function
-  const fetchTaskFun = async (user) => {
-    setLoading(true);
-    fetchTask(user)
-      .then((response) => {
-        const fetchedTasks = response.data.tasks;
-        // @Remember
-        // Filter tasks into different categories
-        // necessary because when we add task we need to refresh individual comp not all
-        // so add we add task in particular cat. it will refresh only that comp
-        setTodos(fetchedTasks.filter((task) => task.status === "Todo"));
-        setInprogress(
-          fetchedTasks.filter((task) => task.status === "In Progress")
-        );
-        setCompleted(
-          fetchedTasks.filter((task) => task.status === "Completed")
-        );
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
 
-  const addTask = (taskType, newTask) => {
-    taskType === "Todo"
-      ? setTodos([...todos, newTask])
-      : taskType === "In Progress"
-      ? setInprogress([...inprogress, newTask])
-      : setCompleted([...completed, newTask]);
-  };
+  // const addTask = (taskType, newTask) => {
+  //   taskType === "Todo"
+  //     ? addTask(task, data.todo)
+  //     : taskType === "In Progress"
+  //     ? setInprogress([...inprogress, newTask])
+  //     : setCompleted([...completed, newTask]);
+  // };
 
   // update task
   const handleUpdate = (id, updatedTask) => {
@@ -62,7 +68,7 @@ const TaskManager = () => {
   };
 
   // delete task
-  const handleDelete = (id, taskType) => {
+  const handleDelete = (id) => {
     deleteTask(id)
       .then((res) => {
         console.log("Task Deleted:", res);
@@ -71,11 +77,11 @@ const TaskManager = () => {
         console.log("Error in deletion:", err);
       });
 
-    taskType === "Todo"
-      ? setTodos(todos.filter((task) => task._id !== id))
-      : taskType === "In Progress"
-      ? setInprogress(inprogress.filter((task) => task._id !== id))
-      : setCompleted(completed.filter((task) => task._id !== id));
+    // taskType === "Todo"
+    //   ? setTodos(todos.filter((task) => task._id !== id))
+    //   : taskType === "In Progress"
+    //   ? setInprogress(inprogress.filter((task) => task._id !== id))
+    //   : setCompleted(completed.filter((task) => task._id !== id));
   };
 
   return (
@@ -95,9 +101,9 @@ const TaskManager = () => {
                   </p>
                   {/* task modal */}
                   <div>
-                    <TaskAreaModal status={"Todo"} addTask={addTask} />
+                    <TaskAreaModal status={"todo"} />
                     <TaskList
-                      tasks={todos}
+                      tasks={tasks.todo}
                       status={"Todo"}
                       handleUpdate={handleUpdate}
                       handleDelete={handleDelete}
@@ -115,9 +121,9 @@ const TaskManager = () => {
                     In-Progress
                   </p>
                   <div>
-                    <TaskAreaModal status={"In Progress"} addTask={addTask} />
+                    <TaskAreaModal status={"inProgress"} />
                     <TaskList
-                      tasks={inprogress}
+                      tasks={tasks.inProgress}
                       status={"In Progress"}
                       handleUpdate={handleUpdate}
                       handleDelete={handleDelete}
@@ -135,10 +141,10 @@ const TaskManager = () => {
                     Completed
                   </p>
                   <div>
-                    <TaskAreaModal status={"Completed"} addTask={addTask} />
+                    <TaskAreaModal status={"completed"} />
 
                     <TaskList
-                      tasks={completed}
+                      tasks={tasks.completed}
                       status={"Completed"}
                       handleUpdate={handleUpdate}
                       handleDelete={handleDelete}
