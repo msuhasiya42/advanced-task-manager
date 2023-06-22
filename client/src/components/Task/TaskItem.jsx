@@ -4,6 +4,15 @@ import { useState } from "react";
 const TaskItem = ({ id, task, handleUpdate, handleDelete }) => {
   const [editedTask, setEditedTask] = useState(task);
 
+  // due date red if it's over due otherwise blue
+  const taskDate = new Date(task.dueDate).getDay();
+  const currentDate = new Date().getDay();
+
+  const className =
+    taskDate < currentDate
+      ? "text-xs bg-red-100 text-red-800  font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-red-400 border border-red-400"
+      : "text-xs bg-blue-100 text-blue-800  font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400";
+
   // handle input change
   const handleInputChange = (e) => {
     console.log(e.target.name, e.target.value);
@@ -20,6 +29,26 @@ const TaskItem = ({ id, task, handleUpdate, handleDelete }) => {
   const handleDeleteFun = () => {
     handleDelete(task._id, task.status);
   };
+
+  const isoTime = task.dueDate;
+  // change time zone into indian
+  const convertToIndianTime = (isoTime) => {
+    const options = {
+      timeZone: "Asia/Kolkata",
+      hour12: false,
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      // hour: "numeric",
+      // minute: "numeric",
+      // second: "numeric",
+    };
+
+    const indianTime = new Date(isoTime).toLocaleString("en-IN", options);
+    return indianTime;
+  };
+
+  const indianTime = convertToIndianTime(isoTime);
 
   return (
     <div>
@@ -264,7 +293,7 @@ placeholder="Select date"
               <div className="flex flex-row justify-end">
                 <div className="flex ">
                   {/* due date badge */}
-                  <span className="text-xs bg-blue-100 text-blue-800  font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
+                  <span className={className}>
                     <svg
                       aria-hidden="true"
                       className=" w-3 h-3 mr-1"
@@ -278,7 +307,7 @@ placeholder="Select date"
                         clipRule="evenodd"
                       ></path>
                     </svg>
-                    20 July 2023
+                    {indianTime}
                   </span>
                 </div>
 
