@@ -36,7 +36,7 @@ export function createTask(title, status, user) {
 
 // get list of tasks
 export function fetchTask(userId) {
-  return API.get(`/tasks/fetchTask/${userId}`);
+  return API.get(`/tasks/fetchTasksByUserId/${userId}`);
 }
 
 // task Delete

@@ -42,9 +42,7 @@ const fetchTask = async (req, res) => {
 const updateTask = async (req, res) => {
   try {
     const id = req.params.id;
-    console.log(id);
     const updatedTask = req.body;
-    console.log(updatedTask);
     const task = await Task.findByIdAndUpdate(id, updatedTask, { new: true });
 
     if (!task) {
@@ -80,18 +78,21 @@ const deleteTask = async (req, res) => {
 // get task by id
 const getTaskById = async (req, res) => {
   const taskId = req.params.id;
-  TaskDetails.findOne({ _id: ObjectId(taskId) }, (err, task) => {
-    if (err) {
-      console.error("Error retrieving task:", err);
-      res.status(500).json({ error: "Failed to retrieve task" });
-      return;
-    }
+
+  try {
+    const task = await Task.findById(taskId);
+
     if (!task) {
-      res.status(404).json({ error: "Task not found" });
-      return;
+      return res.status(404).json({ message: "Task not found" });
     }
-    res.json(task);
-  });
+
+    return res
+      .status(200)
+      .json({ message: "Task fetched successfully", task: task });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Server error" });
+  }
 };
 
 module.exports = { createTask, updateTask, fetchTask, getTaskById, deleteTask };
