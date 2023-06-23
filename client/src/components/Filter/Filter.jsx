@@ -2,82 +2,36 @@ import React from "react";
 import { tags, members } from "../../utils/data/static";
 const Filter = () => {
   return (
-    <div>
-      {/* filter button */}
-      <li>
-        <div className="flex items-center justify-center p-2">
-          <button
-            id="dropdownDefault"
-            data-dropdown-toggle="dropdown"
-            className="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-            type="button"
-          >
-            Filter
-            <svg
-              className="w-4 h-4 ml-2"
-              aria-hidden="true"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M19 9l-7 7-7-7"
-              ></path>
-            </svg>
-          </button>
+    <details className="dropdown ">
+      <summary className="m-1 btn btn-primary">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="w-6 h-6"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"
+          />
+        </svg>
+        Filter
+      </summary>
+      <ul className="p-1 flex text-white shadow menu dropdown-content z-[1] bg-purple-800 rounded-box w-88">
+        <div className="form-control flex flex-row text-xs">
+          <div className="ml-2">
+            <label className="cursor-pointer label text-gray-400" htmlFor="">
+              Due Date
+            </label>
 
-          {/* <!-- Dropdown menu --> */}
-          <div
-            id="dropdown"
-            className="z-10 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700"
-          >
-            <h6 className="mb-3 text-sm font-medium text-gray-900 dark:text-white">
-              Members
-            </h6>
-            <ul
-              className="space-y-2 text-sm mb-3"
-              aria-labelledby="dropdownDefault"
-            >
-              {members.map((member, index) => (
-                <li key={index} className="flex items-center">
-                  <input
-                    id="apple"
-                    type="checkbox"
-                    value=""
-                    className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                  />
+            <label className="cursor-pointer label">
+              <input type="checkbox" className="checkbox" />
 
-                  <label
-                    htmlFor="apple"
-                    className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
-                  >
-                    {member}
-                  </label>
-                </li>
-              ))}
-            </ul>
-
-            {/* filter: by due date */}
-            <hr />
-            <h6 className="mb-2 mt-1 text-sm font-medium text-gray-900 dark:text-white">
-              Date
-            </h6>
-            <ul
-              className="space-y-2 text-sm mb-4"
-              aria-labelledby="dropdownDefault"
-            >
-              <li className="flex items-center">
-                <input
-                  id="apple"
-                  type="checkbox"
-                  value=""
-                  className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                />
-                <svg
+              <span className=" text-white label-text">
+                {/* <svg
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="1.5"
@@ -91,23 +45,16 @@ const Filter = () => {
                     strokeLinejoin="round"
                     d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
                   ></path>
-                </svg>
+                </svg> */}
+                No Dates
+              </span>
+            </label>
 
-                <label
-                  htmlFor="apple"
-                  className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
-                >
-                  No Dates
-                </label>
-              </li>
-              <li className="flex items-center">
-                <input
-                  id="apple"
-                  type="checkbox"
-                  value=""
-                  className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                />
-                <svg
+            <label className="cursor-pointer label">
+              <input type="checkbox" className="checkbox" />
+
+              <span className="ml-4 text-white label-text">
+                {/* <svg
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="1.5"
@@ -121,23 +68,16 @@ const Filter = () => {
                     strokeLinejoin="round"
                     d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
                   ></path>
-                </svg>
+                </svg> */}
+                tommorrow
+              </span>
+            </label>
 
-                <label
-                  htmlFor="apple"
-                  className="ml-1 text-sm font-medium text-gray-900 dark:text-gray-100"
-                >
-                  Due in tommorrow
-                </label>
-              </li>
-              <li className="flex items-center">
-                <input
-                  id="apple"
-                  type="checkbox"
-                  value=""
-                  className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                />
-                <svg
+            <label className="cursor-pointer label">
+              <input type="checkbox" className="checkbox" />
+
+              <span className=" text-white label-text">
+                {/* <svg
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="1.5"
@@ -151,45 +91,40 @@ const Filter = () => {
                     strokeLinejoin="round"
                     d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
                   ></path>
-                </svg>
+                </svg> */}
+                Overdue
+              </span>
+            </label>
+          </div>
 
-                <label
-                  htmlFor="apple"
-                  className="ml-1 text-sm font-medium text-gray-900 dark:text-gray-100"
-                >
-                  Overdue
-                </label>
-              </li>
-            </ul>
+          {/* members  */}
+          <div className="ml-3">
+            <label className="cursor-pointer label text-gray-400" htmlFor="">
+              Members
+            </label>
+            {members.map((member, index) => (
+              <label key={index} className="cursor-pointer label">
+                <input type="checkbox" className="checkbox checkbox-info" />
+                <span className="ml-4 text-white label-text">{member}</span>
+              </label>
+            ))}
+          </div>
 
-            {/* filter : tags */}
-            <hr />
-            <h6 className="mt-1 mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          {/* tags */}
+          <div className="ml-8 mr-2">
+            <label className="cursor-pointer label text-gray-400" htmlFor="">
               Tags
-            </h6>
-            <ul className="space-y-2 text-sm" aria-labelledby="dropdownDefault">
-              {tags.map((tag, index) => (
-                <li key={index} className="flex items-center">
-                  <input
-                    id="apple"
-                    type="checkbox"
-                    value=""
-                    className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                  />
-
-                  <label
-                    htmlFor="apple"
-                    className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
-                  >
-                    #{tag}
-                  </label>
-                </li>
-              ))}
-            </ul>
+            </label>
+            {tags.map((tag, index) => (
+              <label key={index} className="cursor-pointer label">
+                <input type="checkbox" className="checkbox" />
+                <span className="ml-4 text-sm">{tag}</span>
+              </label>
+            ))}
           </div>
         </div>
-      </li>
-    </div>
+      </ul>
+    </details>
   );
 };
 

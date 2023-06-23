@@ -29,10 +29,7 @@ const Notifications = () => {
           Notifications
         </div>
         <div>
-          <a
-            href="#"
-            className="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600"
-          >
+          <button className="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600">
             <div className="flex-shrink-0">
               <img
                 className="w-11 h-11 rounded-full"
@@ -64,11 +61,8 @@ const Notifications = () => {
                 a few moments ago
               </div>
             </div>
-          </a>
-          <a
-            href="#"
-            className="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600"
-          >
+          </button>
+          <button className="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600">
             <div className="flex-shrink-0">
               <img
                 className="w-11 h-11 rounded-full"
@@ -102,11 +96,8 @@ const Notifications = () => {
                 10 minutes ago
               </div>
             </div>
-          </a>
-          <a
-            href="#"
-            className="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600"
-          >
+          </button>
+          <button className="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600">
             <div className="flex-shrink-0">
               <img
                 className="w-11 h-11 rounded-full"
@@ -144,16 +135,13 @@ const Notifications = () => {
                 44 minutes ago
               </div>
             </div>
-          </a>
-          <a
-            href="#"
-            className="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600"
-          >
+          </button>
+          <button className="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600">
             <div className="flex-shrink-0">
               <img
                 className="w-11 h-11 rounded-full"
                 src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/roberta-casas.png"
-                alt="Roberta Casas image"
+                alt="Roberta Casas "
               />
               <div className="flex absolute justify-center items-center ml-6 -mt-5 w-5 h-5 bg-green-400 rounded-full border border-white dark:border-gray-700">
                 <svg
@@ -186,16 +174,13 @@ const Notifications = () => {
                 1 hour ago
               </div>
             </div>
-          </a>
-          <a
-            href="#"
-            className="flex py-3 px-4 hover:bg-gray-100 dark:hover:bg-gray-600"
-          >
+          </button>
+          <button className="flex py-3 px-4 hover:bg-gray-100 dark:hover:bg-gray-600">
             <div className="flex-shrink-0">
               <img
                 className="w-11 h-11 rounded-full"
                 src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/robert-brown.png"
-                alt="Robert image"
+                alt="Robert "
               />
               <div className="flex absolute justify-center items-center ml-6 -mt-5 w-5 h-5 bg-purple-500 rounded-full border border-white dark:border-gray-700">
                 <svg
@@ -221,12 +206,9 @@ const Notifications = () => {
                 3 hours ago
               </div>
             </div>
-          </a>
+          </button>
         </div>
-        <a
-          href="#"
-          className="block py-2 text-base font-normal text-center text-gray-900 bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:text-white dark:hover:underline"
-        >
+        <button className="block py-2 text-base font-normal text-center text-gray-900 bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:text-white dark:hover:underline">
           <div className="inline-flex items-center ">
             <svg
               aria-hidden="true"
@@ -244,7 +226,7 @@ const Notifications = () => {
             </svg>
             View all
           </div>
-        </a>
+        </button>
       </div>
     </div>
   );

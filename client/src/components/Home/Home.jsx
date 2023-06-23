@@ -1,10 +1,12 @@
 import React from "react";
 import NavBar from "../NavBar/NavBarHomePage";
 import { Navigate } from "react-router-dom";
+import useAuthStore from "../../Zustand/authStore";
 
 const Home = () => {
-  const token = localStorage.getItem("token");
-  if (token) {
+  const { user } = useAuthStore();
+  // @Remember
+  if (user) {
     return <Navigate to="/user-dashboard" replace />;
   }
   return (

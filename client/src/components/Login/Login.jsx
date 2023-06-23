@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import NavBar from "../NavBar/NavBarHomePage";
-import { login } from "../../ApiCalls";
+import { loginApi } from "../../ApiCalls";
 import { useNavigate } from "react-router-dom";
-
+import useAuthStore from "../../Zustand/authStore";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -10,13 +10,20 @@ const Login = () => {
   const [showErrMsg, setShowErrMsg] = useState(false);
   const navigate = useNavigate();
 
+  // store login infor in store
+  const { login } = useAuthStore();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     // login api call
-    login(email, password)
+    loginApi(email, password)
       .then((response) => {
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("userId", response.data.userId);
+        const userData = {
+          id: response.data.userId,
+          name: response.data.name,
+        };
+        const token = response.data.token;
+        login(userData, token);
         navigate("/user-dashboard");
       })
       .catch((err) => {

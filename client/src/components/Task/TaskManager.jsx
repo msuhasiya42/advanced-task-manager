@@ -6,18 +6,18 @@ import LoadingPage from "../Loading/LoadingPage";
 // import { todos, inprogress, completed } from "../../utils/data/static";
 import useTaskStore from "../../Zustand/taskStore";
 import React from "react";
+import useAuthStore from "../../Zustand/authStore";
 const TaskManager = () => {
   const [loading, setLoading] = useState(false);
 
-  const user = localStorage.getItem("userId");
-
   // using zustand store
+  const { user } = useAuthStore();
   const tasks = useTaskStore((state) => state.tasks);
   const setTasks = useTaskStore((state) => state.setTasks);
 
   useEffect(() => {
+    setLoading(true);
     const fetchTaskFun = async (user) => {
-      setLoading(true);
       fetchTask(user)
         .then((response) => {
           const fetchedTasks = response.data.tasks;
@@ -42,8 +42,7 @@ const TaskManager = () => {
         });
     };
 
-    fetchTaskFun(user);
-
+    fetchTaskFun(user.id);
     setLoading(false);
   }, [user, setTasks]);
 
@@ -87,7 +86,7 @@ const TaskManager = () => {
 
   return (
     <div>
-      <div className="p-4  sm:ml-64 ">
+      <div className="p-4">
         <div className="p-4  border-gray-800 border-dashed rounded-lg ">
           {loading ? (
             <LoadingPage />
@@ -115,7 +114,7 @@ const TaskManager = () => {
               {/* to do card end */}
 
               {/* in-progress card */}
-              <div className=" bg-gray-900 flex-col items-center  rounded ">
+              <div className=" bg-gray-900  items-center  rounded ">
                 <div className="m-3">
                   <p className="m-2 text-center text-lg mt-1 text-white ">
                     In-Progress
@@ -134,7 +133,7 @@ const TaskManager = () => {
               {/* in-progress card end*/}
 
               {/* completed card */}
-              <div className=" bg-gray-900 flex-col items-center  rounded ">
+              <div className=" bg-gray-900  items-center  rounded ">
                 <div className="m-3">
                   <p className="m-2 text-center text-lg mt-1 text-white ">
                     Completed

@@ -2,6 +2,8 @@
 module.exports = {
   darkMode: "class",
   // optional
+  // @ts-ignore
+  // eslint-disable-next-line no-dupe-keys
   darkMode: "media",
 
   content: ["./src/**/*.{js,jsx,ts,tsx}", "./node_modules/flowbite/**/*.js"],
@@ -23,5 +25,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require("flowbite/plugin")],
+  plugins: [require("flowbite/plugin"), require("daisyui")],
 };

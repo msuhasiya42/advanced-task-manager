@@ -15,8 +15,14 @@ const UserDashboard = () => {
         <header className="App-header">
           <div className=" text-white">
             <header className="App-header">
-              <SideBar />
-              <TaskManager />
+              <div className="flex flex-row w-full ">
+                <div>
+                  <SideBar />
+                </div>
+                <div>
+                  <TaskManager />
+                </div>
+              </div>
             </header>
           </div>
         </header>

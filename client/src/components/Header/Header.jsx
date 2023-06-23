@@ -14,7 +14,7 @@ const Header = () => {
           <a href="/user-dashboard" className="flex items-center">
             <img
               src="https://cdn-icons-png.flaticon.com/512/747/747095.png"
-              className="h-8 ml-64 mr-2"
+              className="h-8  mr-2"
               alt="Flowbite Logo"
             />
             <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">

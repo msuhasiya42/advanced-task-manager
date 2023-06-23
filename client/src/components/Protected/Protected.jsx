@@ -1,10 +1,10 @@
 import React from "react";
-
+import useAuthStore from "../../Zustand/authStore";
 import { Navigate } from "react-router-dom";
 
 const ProtectedRoute = ({ children }) => {
-  const token = localStorage.getItem("token");
-  if (!token) {
+  const { user } = useAuthStore();
+  if (!user) {
     return <Navigate to="/" replace />;
   }
   return children;

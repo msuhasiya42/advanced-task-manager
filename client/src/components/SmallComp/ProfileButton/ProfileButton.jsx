@@ -31,7 +31,11 @@ const ProfileButton = () => {
 
               <div className="font-medium dark:text-white">
                 <div className="text-sm">
-                  {user !== null ? user.name.split(" ")[0] : ""}
+                  {user !== null
+                    ? user// @ts-ignore
+                      .name
+                        .split(" ")[0]
+                    : ""}
                 </div>
               </div>
             </div>

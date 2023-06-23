@@ -13,7 +13,7 @@ export function createUser(name, email, password) {
   });
 }
 
-export function login(email, password) {
+export function loginApi(email, password) {
   return API.post("users/login", {
     email,
     password,
