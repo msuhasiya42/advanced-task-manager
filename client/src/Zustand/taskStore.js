@@ -42,6 +42,30 @@ const useTaskStore = create((set) => ({
         [category]: state.tasks[category].filter((task) => task._id !== taskId),
       },
     })),
+
+  filterTasksByTagsAndCategory: () => {
+    const tasks = useTaskStore.getState().tasks;
+    const tags = useTaskStore.getState().tags;
+    const category = useTaskStore.getState().category;
+
+    const filteredTasks = tasks.filter((task) => {
+      const hasMatchingTags = tags.every((tag) => task.tags.includes(tag));
+
+      if (category === "All") {
+        return hasMatchingTags;
+      } else if (category === "Todo") {
+        return task.category === "Todo" && hasMatchingTags;
+      } else if (category === "In Progress") {
+        return task.category === "In Progress" && hasMatchingTags;
+      } else if (category === "Completed") {
+        return task.category === "Completed" && hasMatchingTags;
+      }
+
+      return false;
+    });
+
+    useTaskStore.getState().setFilteredTasks(filteredTasks);
+  },
 }));
 
 export default useTaskStore;

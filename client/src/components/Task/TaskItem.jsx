@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import useTaskStore from "../../Zustand/taskStore";
-const TaskItem = ({ id, task, handleUpdate, handleDelete }) => {
+const TaskItem = ({ task, handleUpdate, handleDelete }) => {
   const [editedTask, setEditedTask] = useState(task);
 
   // due date red if it's over due otherwise blue
@@ -22,7 +22,7 @@ const TaskItem = ({ id, task, handleUpdate, handleDelete }) => {
   // on update
   const handleFormSubmit = () => {
     console.log(task._id);
-    handleUpdate(id, editedTask);
+    handleUpdate(task._id, editedTask);
   };
 
   // using delete from store
@@ -71,11 +71,13 @@ const TaskItem = ({ id, task, handleUpdate, handleDelete }) => {
       }
       // Display the week day if the date is in the current week
       const options = { weekday: "long" };
+      // @ts-ignore
       const weekDay = inputDate.toLocaleDateString("en-In", options);
       return weekDay;
     } else {
       // Display the full date if it's not in the current week
       const options = { year: "numeric", month: "long", day: "numeric" };
+      // @ts-ignore
       const formattedDate = inputDate.toLocaleDateString("en-IN", options);
       return formattedDate;
     }
@@ -136,7 +138,6 @@ const TaskItem = ({ id, task, handleUpdate, handleDelete }) => {
                   {/* <!-- Main modal --> */}
                   <div
                     id="task-modal"
-                    tabIndex="-1"
                     aria-hidden="true"
                     className="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full"
                   >
@@ -326,7 +327,7 @@ placeholder="Select date"
               <div className="flex flex-row justify-start">
                 <div className="ml-2">
                   {task.tags.length !== 0 ? (
-                    <span class="bg-purple-100 text-purple-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300">
+                    <span className="bg-purple-100 text-purple-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300">
                       #{task.tags[0]}
                     </span>
                   ) : (

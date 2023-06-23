@@ -5,6 +5,7 @@ import TaskAreaModal from "./TextAreaModal";
 import LoadingPage from "../Loading/LoadingPage";
 // import { todos, inprogress, completed } from "../../utils/data/static";
 import useTaskStore from "../../Zustand/taskStore";
+import React from "react";
 const TaskManager = () => {
   const [loading, setLoading] = useState(false);
 
@@ -104,7 +105,6 @@ const TaskManager = () => {
                     <TaskAreaModal status={"todo"} />
                     <TaskList
                       tasks={tasks.todo}
-                      status={"Todo"}
                       handleUpdate={handleUpdate}
                       handleDelete={handleDelete}
                     />
@@ -124,7 +124,6 @@ const TaskManager = () => {
                     <TaskAreaModal status={"inProgress"} />
                     <TaskList
                       tasks={tasks.inProgress}
-                      status={"In Progress"}
                       handleUpdate={handleUpdate}
                       handleDelete={handleDelete}
                     />
@@ -145,7 +144,6 @@ const TaskManager = () => {
 
                     <TaskList
                       tasks={tasks.completed}
-                      status={"Completed"}
                       handleUpdate={handleUpdate}
                       handleDelete={handleDelete}
                     />

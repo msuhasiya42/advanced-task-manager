@@ -1,17 +1,18 @@
 import React from "react";
 import TaskItem from "./TaskItem";
-const TaskList = ({ tasks, updateTaskFun, handleDelete }) => {
+const TaskList = ({ tasks, handleUpdate, handleDelete }) => {
   return (
     <div>
       <ul>
         {tasks.map((task) => {
           return (
-            <TaskItem
-              key={task._id}
-              task={task}
-              updateTaskFun={updateTaskFun}
-              handleDelete={handleDelete}
-            />
+            <div key={task._id}>
+              <TaskItem
+                task={task}
+                handleUpdate={handleUpdate}
+                handleDelete={handleDelete}
+              />
+            </div>
           );
         })}
       </ul>

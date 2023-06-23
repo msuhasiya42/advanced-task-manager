@@ -1,8 +1,15 @@
 import React from "react";
+// import useTaskStore from "../../Zustand/taskStore";
+
 const SideBar = () => {
   // static tags
+  // const tasks = useTaskStore((state) => state.tasks);
+
+  // const filterTasksByDate = useTaskStore((state) => state.filterTasksByDate);
+
   const tags = ["work", "personal", "jobhunt", "learning"];
 
+  // const getTaskByTags = (tag) => {};
   return (
     <div>
       <button
@@ -222,12 +229,12 @@ const SideBar = () => {
               <ul className=" py-2 space-y-2">
                 {tags.map((tag, index) => (
                   <li key={index}>
-                    <a
-                      href="/"
+                    <button
+                      // onClick={() => getTaskByTags(tag)}
                       className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                     >
                       #{tag}
-                    </a>
+                    </button>
                   </li>
                 ))}
               </ul>
