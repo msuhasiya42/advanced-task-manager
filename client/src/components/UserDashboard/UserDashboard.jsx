@@ -15,11 +15,11 @@ const UserDashboard = () => {
         <header className="App-header">
           <div className=" text-white">
             <header className="App-header">
-              <div className="flex flex-row w-full ">
-                <div>
+              <div className="flex flex-row h-screen ">
+                <div className="h-screen">
                   <SideBar />
                 </div>
-                <div>
+                <div className="w-screen ">
                   <TaskManager />
                 </div>
               </div>

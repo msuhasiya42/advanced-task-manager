@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import TaskList from "./TaskList";
-import { fetchTask, updateTask, deleteTask } from "../../ApiCalls";
-import TaskAreaModal from "./TextAreaModal";
+import { fetchTask } from "../../ApiCalls";
 import LoadingPage from "../Loading/LoadingPage";
 // import { todos, inprogress, completed } from "../../utils/data/static";
 import useTaskStore from "../../Zustand/taskStore";
@@ -56,109 +55,33 @@ const TaskManager = () => {
   //     : setCompleted([...completed, newTask]);
   // };
 
-  // update task
-  const handleUpdate = (id, updatedTask) => {
-    updateTask(id, updatedTask)
-      .then((res) => {
-        console.log("Task updated", res);
-      })
-      .catch((err) => {
-        console.log("Error in updating task:", err);
-      });
-  };
-
-  // delete task
-  const handleDelete = (id) => {
-    deleteTask(id)
-      .then((res) => {
-        console.log("Task Deleted:", res);
-      })
-      .catch((err) => {
-        console.log("Error in deletion:", err);
-      });
-
-    // taskType === "Todo"
-    //   ? setTodos(todos.filter((task) => task._id !== id))
-    //   : taskType === "In Progress"
-    //   ? setInprogress(inprogress.filter((task) => task._id !== id))
-    //   : setCompleted(completed.filter((task) => task._id !== id));
-  };
+  // taskType === "Todo"
+  //   ? setTodos(todos.filter((task) => task._id !== id))
+  //   : taskType === "In Progress"
+  //   ? setInprogress(inprogress.filter((task) => task._id !== id))
+  //   : setCompleted(completed.filter((task) => task._id !== id));
 
   return (
     <div>
-      <div className="p-4">
-        <div className="p-4  border-gray-800 border-dashed rounded-lg ">
-          {loading ? (
-            <LoadingPage />
-          ) : (
-            <div className="grid grid-cols-3 gap-12  mb-4 ">
-              {/* to do card */}
-
-              <div className=" bg-gray-900   rounded ">
-                <div className="m-3">
-                  <p className="m-2 text-center text-lg mt-1 text-white ">
-                    To-do
-                  </p>
-                  {/* task modal */}
-                  <div>
-                    <TaskAreaModal status={"todo"} />
-                    <TaskList
-                      tasks={tasks.todo}
-                      handleUpdate={handleUpdate}
-                      handleDelete={handleDelete}
-                    />
-                  </div>
-                  {/* task modal end */}
+      <div className=" border-gray-900 border-dashed rounded-lg ">
+        {loading ? (
+          <LoadingPage />
+        ) : (
+          <>
+            <div className=" bg-gray-900 ml-1 grow h-full rounded ">
+              <div className="m-1">
+                <div className="">
+                  <TaskList
+                    todosTasks={tasks.todo}
+                    inProgressTasks={tasks.inProgress}
+                    completedTasks={tasks.completed}
+                  />
                 </div>
               </div>
-              {/* to do card end */}
-
-              {/* in-progress card */}
-              <div className=" bg-gray-900  items-center  rounded ">
-                <div className="m-3">
-                  <p className="m-2 text-center text-lg mt-1 text-white ">
-                    In-Progress
-                  </p>
-                  <div>
-                    <TaskAreaModal status={"inProgress"} />
-                    <TaskList
-                      tasks={tasks.inProgress}
-                      handleUpdate={handleUpdate}
-                      handleDelete={handleDelete}
-                    />
-                  </div>
-                  {/* task modal end */}
-                </div>
-              </div>
-              {/* in-progress card end*/}
-
-              {/* completed card */}
-              <div className=" bg-gray-900  items-center  rounded ">
-                <div className="m-3">
-                  <p className="m-2 text-center text-lg mt-1 text-white ">
-                    Completed
-                  </p>
-                  <div>
-                    <TaskAreaModal status={"completed"} />
-
-                    <TaskList
-                      tasks={tasks.completed}
-                      handleUpdate={handleUpdate}
-                      handleDelete={handleDelete}
-                    />
-                  </div>
-                  {/* task modal end */}
-                </div>
-              </div>
-              {/* completed card end*/}
             </div>
-          )}
-        </div>
+          </>
+        )}
       </div>
-
-      {/* task cards */}
-
-      {/* task cards ends here */}
     </div>
   );
 };

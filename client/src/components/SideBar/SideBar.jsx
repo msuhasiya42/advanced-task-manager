@@ -27,7 +27,7 @@ const SideBar = () => {
         </div>
         <div className="drawer-side bg-slate-100">
           <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
-          <ul className="menu p-4 w-60 bg-[#1F2937] h-full text-base-content">
+          <ul className="menu p-4 w-60 bg-[#1F2937] h-screen text-base-content">
             {/* Sidebar content here */}
 
             <li>

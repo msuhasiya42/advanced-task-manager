@@ -46,7 +46,7 @@ export function deleteTask(id) {
 
 // task update
 //@TODO
-export function updateTask(id, task) {
+export function updateTaskApi(id, task) {
   // const currentDateTime = new Date();
   return API.put(`tasks/updateTask/${id}`, {
     task,
