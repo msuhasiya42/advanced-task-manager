@@ -15,13 +15,11 @@ const TaskItem = ({ task, handleUpdate, handleDelete }) => {
 
   // handle input change
   const handleInputChange = (e) => {
-    console.log(e.target.name, e.target.value);
     setEditedTask({ ...editedTask, [e.target.name]: e.target.value });
   };
 
   // on update
   const handleFormSubmit = () => {
-    console.log(task._id);
     handleUpdate(task._id, editedTask);
   };
 
@@ -116,13 +114,60 @@ const TaskItem = ({ task, handleUpdate, handleDelete }) => {
                 <div className="mb-4 ">
                   {/* edit button */}
                   <div>
-                    <button
+                    {/* <button
                       data-modal-target="task-modal"
                       data-modal-toggle="task-modal"
                       className="text-xs mr-4  w-12 bg-blue-500 hover:bg-blue-400 text-white font-bold py-1 px-3 border-b-4 border-blue-700 hover:border-blue-500 rounded"
                     >
                       Edit
-                    </button>
+                    </button> */}
+
+                    {/* new modal */}
+                    <label
+                      htmlFor="my_modal_6"
+                      className="text-xs mr-4  w-12 bg-blue-500 hover:bg-blue-400 text-white font-bold py-1 px-3 border-b-4 border-blue-700 hover:border-blue-500 rounded"
+                    >
+                      Edit
+                    </label>
+
+                    {/* Put this part before </body> tag */}
+                    <input
+                      type="checkbox"
+                      id="my_modal_6"
+                      className="modal-toggle"
+                    />
+                    <div className="modal">
+                      <div className="modal-box">
+                        <h3 className="font-bold text-lg">Edit Task</h3>
+
+                        <div className="modal-action">
+                          <form action="" onSubmit={handleFormSubmit}>
+                            {/* title */}
+                            <input
+                              type="text"
+                              name="title"
+                              id="title"
+                              value={editedTask.title}
+                              onChange={handleInputChange}
+                              // placeholder="Type here"
+                              className="mb-6 input input-accent input-bordered input-sm w-full max-w-xs"
+                            />
+
+                            <label htmlFor="my_modal_6" className="btn">
+                              Cancel
+                            </label>
+                            <button
+                              type="submit"
+                              className="btn ml-2"
+                              onSubmit={handleFormSubmit}
+                            >
+                              Save
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+
                     {/* Delete button */}
                     <button
                       onClick={handleDeleteFun}
