@@ -40,7 +40,7 @@ export function fetchTask(userId) {
 }
 
 // task Delete
-export function deleteTask(id) {
+export function deleteTaskApi(id) {
   return API.delete(`/tasks/deleteTask/${id}`);
 }
 

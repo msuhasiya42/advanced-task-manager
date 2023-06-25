@@ -1,15 +1,38 @@
 import React from "react";
-// import useTaskStore from "../../Zustand/taskStore";
+import useTaskStore from "../../Zustand/taskStore";
 
 const SideBar = () => {
-  // static tags
-  // const tasks = useTaskStore((state) => state.tasks);
+  // store
+  const originalTasks = useTaskStore((state) => state.originalTasks);
+  const copyTasks = useTaskStore((state) => state.copyTasks);
+  const setTodaysTasks = useTaskStore((state) => state.setTodaysTasks);
+  const setUpcomingTasks = useTaskStore((state) => state.setUpcomingTasks);
 
-  // const filterTasksByDate = useTaskStore((state) => state.filterTasksByDate);
+  // All tasks
+  const handleAllTasks = () => {
+    copyTasks(originalTasks);
+  };
+
+  // filter task where today is dueDate
+  const handleTodaysTasks = () => {
+    // first get orig store into copy store
+    copyTasks(originalTasks);
+    // then apply filter on copied store
+    setTodaysTasks("todo");
+    setTodaysTasks("inProgress");
+    setTodaysTasks("completed");
+  };
+
+  // Upcoming tasks
+  const handleUpcomingTasks = () => {
+    copyTasks(originalTasks);
+    // then apply filter on copied store
+    setUpcomingTasks("todo");
+    setUpcomingTasks("inProgress");
+    setUpcomingTasks("completed");
+  };
 
   const tags = ["work", "personal", "jobhunt", "learning"];
-
-  // const getTaskByTags = (tag) => {};
 
   const handleTemp = () => {};
   return (
@@ -32,8 +55,8 @@ const SideBar = () => {
 
             <li>
               <button
-                onClick={handleTemp}
-                className="active flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                onClick={handleAllTasks}
+                className=" flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
               >
                 <svg
                   aria-hidden="true"
@@ -113,7 +136,7 @@ const SideBar = () => {
 
             <li>
               <button
-                onClick={handleTemp}
+                onClick={handleTodaysTasks}
                 className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
               >
                 <svg
@@ -140,7 +163,7 @@ const SideBar = () => {
             {/* upcoming tasks */}
             <li>
               <button
-                onClick={handleTemp}
+                onClick={handleUpcomingTasks}
                 className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
               >
                 <svg

@@ -1,10 +1,11 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { getUserData } from "../../../ApiCalls";
+import useAuthStore from "../../../Zustand/authStore";
 
 const ProfileButton = () => {
   const [user, setUser] = useState(null);
-  const userId = localStorage.getItem("userId");
+  const userId = useAuthStore((state) => state.user.id);
 
   useEffect(() => {
     // getting user data

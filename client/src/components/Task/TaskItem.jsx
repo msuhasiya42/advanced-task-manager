@@ -1,7 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import useTaskStore from "../../Zustand/taskStore";
-const TaskItem = ({ task, handleUpdate, handleDelete, handleTaskClick }) => {
+const TaskItem = ({ task, handleDelete, handleTaskClick }) => {
   const [editedTask, setEditedTask] = useState(task);
 
   // due date red if it's over due otherwise blue
@@ -18,18 +17,9 @@ const TaskItem = ({ task, handleUpdate, handleDelete, handleTaskClick }) => {
     setEditedTask({ ...editedTask, [e.target.name]: e.target.value });
   };
 
-  // on update
-  const handleFormSubmit = () => {
-    handleUpdate(task._id, editedTask);
-  };
-
-  // using delete from store
   // on delete
-  const deleteTask = useTaskStore((state) => state.deleteTask);
-
   const handleDeleteFun = () => {
-    deleteTask(task.status, task._id);
-    handleDelete(task._id, task.status);
+    handleDelete(task);
   };
 
   // change time zone into indian
@@ -37,7 +27,6 @@ const TaskItem = ({ task, handleUpdate, handleDelete, handleTaskClick }) => {
 
   // @Remember
   const convertToIndianTime = (date) => {
-    // new logic
     // Convert the input date string to a Date object
     const inputDate = new Date(date);
 
