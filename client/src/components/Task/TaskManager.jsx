@@ -11,11 +11,15 @@ const TaskManager = () => {
 
   // using zustand store
   const { user } = useAuthStore();
-  const tasks = useTaskStore((state) => state.tasks);
-  const setTasks = useTaskStore((state) => state.setTasks);
+  const originalTasks = useTaskStore((state) => state.originalTasks);
+  const setOriginalTasks = useTaskStore((state) => state.setOriginalTasks);
+  const copyTasks = useTaskStore((state) => state.copyTasks);
+  const copiedTasks = useTaskStore((state) => state.copiedTasks);
 
   useEffect(() => {
     setLoading(true);
+
+    // fetching all tasks
     const fetchTaskFun = async (user) => {
       fetchTask(user)
         .then((response) => {
@@ -32,9 +36,13 @@ const TaskManager = () => {
             (task) => task.status === "completed"
           );
 
-          setTasks("todo", todos); // Set the fetched tasks in the "todo" category
-          setTasks("inProgress", inprogress); // Set the fetched tasks in the "inProgress" category
-          setTasks("completed", completed);
+          // Storing data to main store
+          setOriginalTasks("todo", todos); // Set the fetched tasks in the "todo" category
+          setOriginalTasks("inProgress", inprogress); // Set the fetched tasks in the "inProgress" category
+          setOriginalTasks("completed", completed);
+
+          // copying orig store into copied store
+          copyTasks(originalTasks);
         })
         .catch((err) => {
           console.log(err);
@@ -43,23 +51,7 @@ const TaskManager = () => {
 
     fetchTaskFun(user.id);
     setLoading(false);
-  }, [user, setTasks]);
-
-  // Fetch Task function
-
-  // const addTask = (taskType, newTask) => {
-  //   taskType === "Todo"
-  //     ? addTask(task, data.todo)
-  //     : taskType === "In Progress"
-  //     ? setInprogress([...inprogress, newTask])
-  //     : setCompleted([...completed, newTask]);
-  // };
-
-  // taskType === "Todo"
-  //   ? setTodos(todos.filter((task) => task._id !== id))
-  //   : taskType === "In Progress"
-  //   ? setInprogress(inprogress.filter((task) => task._id !== id))
-  //   : setCompleted(completed.filter((task) => task._id !== id));
+  }, [user, setOriginalTasks]);
 
   return (
     <div>
@@ -72,9 +64,9 @@ const TaskManager = () => {
               <div className="m-1">
                 <div className="">
                   <TaskList
-                    todosTasks={tasks.todo}
-                    inProgressTasks={tasks.inProgress}
-                    completedTasks={tasks.completed}
+                    todosTasks={copiedTasks.todo}
+                    inProgressTasks={copiedTasks.inProgress}
+                    completedTasks={copiedTasks.completed}
                   />
                 </div>
               </div>
