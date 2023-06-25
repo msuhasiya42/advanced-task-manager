@@ -12,11 +12,11 @@ const Header = () => {
       <nav className=" bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
         <div className="max-w-screen-2xl flex flex-wrap  justify-between mx-auto p-4">
           <a href="/user-dashboard" className="flex items-center">
-            <img
-              src="https://cdn-icons-png.flaticon.com/512/747/747095.png"
+            {/* <img
+              src="https://w7.pngwing.com/pngs/209/1016/png-transparent-computer-icons-task-id-miscellaneous-computer-logo.png"
               className="h-8  mr-2"
               alt="Flowbite Logo"
-            />
+            /> */}
             <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
               Task-Manager
             </span>
