@@ -108,7 +108,7 @@ const TaskList = ({ todosTasks, inProgressTasks, completedTasks }) => {
         </div>
       )}
       <div className="grid grid-cols-3 gap-12  mb-4 p-6">
-        <ul className="w-full">
+        <ul className="w-full p-2 bg-black">
           <p className="m-2 text-center text-lg  text-white ">Todo</p>
           <TaskAreaModal status={"todo"} />
           {todosTasks.map((task) => {
@@ -157,8 +157,8 @@ const TaskList = ({ todosTasks, inProgressTasks, completedTasks }) => {
             </div>
           </div>
         </div>
-        <ul>
-          <p className="m-2 text-center text-lg  text-white ">In Progress</p>
+        <ul className="bg-black p-2">
+          <p className="m-2 text-center text-lg   text-white ">In Progress</p>
           <TaskAreaModal status={"inProgress"} />
           {inProgressTasks.map((task) => {
             return (
@@ -172,8 +172,10 @@ const TaskList = ({ todosTasks, inProgressTasks, completedTasks }) => {
             );
           })}
         </ul>
-        <ul>
-          <p className="m-2 text-center text-lg  text-white ">Completed</p>
+        <ul className="bg-black p-2">
+          <p className="m-2 text-center text-lg bg-black text-white ">
+            Completed
+          </p>
           <TaskAreaModal status={"completed"} />
 
           {completedTasks.map((task) => {
