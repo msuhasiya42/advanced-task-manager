@@ -3,6 +3,8 @@ import NavBar from "../NavBar/NavBarHomePage";
 import { loginApi } from "../../ApiCalls";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../Zustand/authStore";
+import useTagStore from "../../Zustand/tagStore";
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -12,18 +14,24 @@ const Login = () => {
 
   // store login infor in store
   const { login } = useAuthStore();
-
+  const { setTags } = useTagStore();
   const handleSubmit = async (e) => {
     e.preventDefault();
     // login api call
     loginApi(email, password)
       .then((response) => {
+        // user data and token and tags
         const userData = {
           id: response.data.userId,
           name: response.data.name,
         };
         const token = response.data.token;
+        const tags = response.data.tags;
+
+        // store in auth store
+        // @Remember: store data in store directly without JSON.stringify in tag store
         login(userData, token);
+        setTags(tags);
         navigate("/user-dashboard");
       })
       .catch((err) => {

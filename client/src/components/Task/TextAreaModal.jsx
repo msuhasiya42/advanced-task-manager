@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createTask } from "../../ApiCalls";
 import useTaskStore from "../../Zustand/taskStore";
 import useAuthStore from "../../Zustand/authStore";
@@ -14,9 +13,6 @@ const TextAreaModal = ({ status }) => {
   // using add task from store
   const addTaskOrigStore = useTaskStore((state) => state.addTaskOrigStore);
   const addTaskCopiedStore = useTaskStore((state) => state.addTaskCopiedStore);
-
-  const originalTasks = useTaskStore((state) => state.originalTasks);
-  const copyTasks = useTaskStore((state) => state.copyTasks);
 
   const handleClick = () => {
     setShowTextArea(!showTextArea);
@@ -69,9 +65,9 @@ const TextAreaModal = ({ status }) => {
           onClick={handleClick}
           //   data-modal-target="task-modal"
           //   data-modal-toggle="task-modal"
-          className="mb-3 w-full bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
+          className="mb-3 w-full bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded-xl"
         >
-          +
+          Add Card
         </button>
       </div>
       {/* task Added msg */}

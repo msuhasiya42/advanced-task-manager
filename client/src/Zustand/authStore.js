@@ -14,6 +14,7 @@ const useAuthStore = create((set) => ({
   logout: () => {
     set({ user: null, token: null });
     localStorage.removeItem("authState");
+    localStorage.removeItem("tags");
   },
 }));
 // @Remember

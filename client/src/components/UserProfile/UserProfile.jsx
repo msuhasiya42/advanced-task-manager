@@ -1,22 +1,10 @@
 import React from "react";
-// import { useState, useEffect } from "react";
-// import { getUserData } from "../../ApiCalls";
 import LogoutButton from "../SmallComp/Logout/LogoutButton";
 import LoadingPage from "../Loading/LoadingPage";
 import useAuthStore from "../../Zustand/authStore";
 
 const UserProfile = () => {
   const { user } = useAuthStore();
-
-  // useEffect(() => {
-  //   // getUserData(userId)
-  //   //   .then((response) => {
-  //   //     setUser(response.data);
-  //   //   })
-  //   //   .catch((error) => {
-  //   //     console.error("Error retrieving user data:", error);
-  //   //   });
-  // }, [user]);
 
   if (!user) {
     return (

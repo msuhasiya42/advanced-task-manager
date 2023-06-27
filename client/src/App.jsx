@@ -9,7 +9,6 @@ import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
 import ProtectedRoute from "./components/Protected/Protected";
 import Home from "./components/Home/Home";
 import UserProfile from "./components/UserProfile/UserProfile";
-// import Auth from "./components/auth";
 import React from "react";
 
 function App() {

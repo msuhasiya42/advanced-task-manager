@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -11,7 +14,6 @@
 .App-footer {
   position: relative;
   margin: 0 auto;
-  padding-top: 76px;
   display: flex;
   flex-direction: column;
   height: 100%;

@@ -1,8 +1,11 @@
 import React from "react";
 import useTaskStore from "../../Zustand/taskStore";
+import AddTags from "../Add Tags/AddTags";
+import useTagStore from "../../Zustand/tagStore";
 
 const SideBar = () => {
   // store
+  const tags = useTagStore((state) => state.tags);
   const originalTasks = useTaskStore((state) => state.originalTasks);
   const copyTasks = useTaskStore((state) => state.copyTasks);
   const setTodaysTasks = useTaskStore((state) => state.setTodaysTasks);
@@ -31,8 +34,6 @@ const SideBar = () => {
     setUpcomingTasks("inProgress");
     setUpcomingTasks("completed");
   };
-
-  const tags = ["work", "personal", "jobhunt", "learning"];
 
   const handleTemp = () => {};
   return (
@@ -208,6 +209,10 @@ const SideBar = () => {
                 </ul>
               </li>
             </ul>
+            {/* Add tag button */}
+            <div className="ml-6">
+              <AddTags />
+            </div>
           </nav>
         </div>
       </aside>

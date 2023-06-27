@@ -41,7 +41,8 @@ const login = async (req, res) => {
         const token = jwt.sign({ userId: user._id }, "secret_key");
         const userId = user._id;
         const name = user.name;
-        res.json({ token, userId, name });
+        const tags = user.tags;
+        res.json({ token, userId, name, tags });
       } else {
         res.status(401).json({ error: "Invalid credentials" });
       }
@@ -75,8 +76,25 @@ const getUserById = async (req, res) => {
 };
 
 // update the user
-const updateUser = (req, res) => {
+const updateUser = async (req, res) => {
   // Logic to update a user by ID
+  const userId = req.params.id;
+  const newTag = req.body.tag;
+
+  await User.findById(userId)
+    .then((user) => {
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      // User data retrieved successfully
+      user.tags.push(newTag);
+      user.save();
+      res.json(user.tags);
+    })
+    .catch((err) => {
+      // console.log(err);
+      res.status(500).json({ error: "Failed to add tag" });
+    });
 };
 
 // delete user

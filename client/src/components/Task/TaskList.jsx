@@ -1,15 +1,16 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import TaskItem from "./TaskItem";
 import TaskAreaModal from "./TextAreaModal";
 import { deleteTaskApi, updateTaskApi } from "../../ApiCalls";
 import useTaskStore from "../../Zustand/taskStore";
+
 const TaskList = ({ todosTasks, inProgressTasks, completedTasks }) => {
   const [delMsg, setDelMsg] = useState(false);
   const [editedTask, setEditedTask] = useState({
     _id: "",
     title: "",
     description: "",
+    dueDate: "",
     status: "",
     priority: "",
     attatchments: [],
@@ -27,13 +28,18 @@ const TaskList = ({ todosTasks, inProgressTasks, completedTasks }) => {
   };
 
   // handle input change
-  // const handleInputChange = (e) => {
-  //   setEditedTask({ ...editedTask, [e.target.name]: e.target.value });
-  // };
+  const handleInputChange = (e) => {
+    setEditedTask({ ...editedTask, [e.target.name]: e.target.value });
+  };
 
   // on updating task
+  const updateTaskOrigStore = useTaskStore(
+    (state) => state.updateTaskOrigStore
+  );
+  const updateTaskCopiedStore = useTaskStore(
+    (state) => state.updateTaskCopiedStore
+  );
   const handleFormSubmit = (e) => {
-    e.preventDefault();
     updateTaskApi(editedTask._id, editedTask)
       .then((res) => {
         console.log("Task updated", res);
@@ -44,14 +50,6 @@ const TaskList = ({ todosTasks, inProgressTasks, completedTasks }) => {
         console.log("Error in updating task:", err);
       });
   };
-
-  // update task
-  const updateTaskOrigStore = useTaskStore(
-    (state) => state.updateTaskOrigStore
-  );
-  const updateTaskCopiedStore = useTaskStore(
-    (state) => state.updateTaskCopiedStore
-  );
 
   // getting fun from store to delete and calling delete task api
   // then updating the store
@@ -107,8 +105,10 @@ const TaskList = ({ todosTasks, inProgressTasks, completedTasks }) => {
           </div>
         </div>
       )}
+
       <div className="grid grid-cols-3 gap-12  mb-4 p-6">
-        <ul className="w-full p-2 bg-black">
+        {/* todo list */}
+        <ul className="w-full p-3 bg-black rounded-2xl">
           <p className="m-2 text-center text-lg  text-white ">Todo</p>
           <TaskAreaModal status={"todo"} />
           {todosTasks.map((task) => {
@@ -124,40 +124,160 @@ const TaskList = ({ todosTasks, inProgressTasks, completedTasks }) => {
             );
           })}
         </ul>
+        {/* new modal */}
         {/* Put this part before </body> tag */}
         <input type="checkbox" id="my_modal_6" className="modal-toggle" />
+
         <div className="modal">
-          <div className="modal-box">
-            <div className="grid grid-cols-2">
-              <h3 className="font-bold text-lg">Edit Task</h3>
-              <label htmlFor="my_modal_6" className="">
-                X
-              </label>
-            </div>
+          <div className="modal-box bg-gray-400 text-black">
+            <div>
+              <form className="text-sm" onSubmit={handleFormSubmit}>
+                <div className="grid grid-cols-2">
+                  <h1 className="text-gray-800 text-xl mb-4">Edit Task</h1>
 
-            <div className="modal-action">
-              <form action="" onSubmit={handleFormSubmit}>
-                {/* title */}
-                <input
-                  type="text"
-                  name="title"
-                  id="title"
-                  // @ts-ignore
-                  value={editedTask.title}
-                  onChange={(e) =>
-                    // @ts-ignore
-                    setEditedTask({ ...editedTask, title: e.target.value })
-                  }
-                  // placeholder="Type here"
-                  className="mb-6 input input-accent input-bordered input-sm w-full max-w-xs"
-                />
+                  <label
+                    htmlFor="my_modal_6"
+                    className="btn bg-gray-600 w-16 ml-44 h-2"
+                  >
+                    <svg
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                      aria-hidden="true"
+                      className="w-6 h-6"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M6 18L18 6M6 6l12 12"
+                      ></path>
+                    </svg>
+                  </label>
+                </div>
+                <div className="xt-row xt-row-x-6 xt-row-y-4">
+                  <div className="w-full">
+                    <div className="modal-action"></div>
 
-                <button className="btn ml-2">Save</button>
+                    <label className="block mb-3 font-medium text-gray-700">
+                      Title
+                    </label>
+                    <input
+                      required
+                      type="text"
+                      id="title"
+                      name="title"
+                      value={editedTask.title}
+                      className="block w-full rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
+                      aria-label="Input"
+                      placeholder="Input"
+                      onChange={handleInputChange}
+                    />
+                  </div>
+
+                  <div className="w-full mt-4">
+                    <label className="block mb-3 font-medium text-gray-700">
+                      Description
+                    </label>
+                    <textarea
+                      name="description"
+                      id="description"
+                      className="block w-full h-20 max-h-48 rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none resize-vertical"
+                      aria-label="Textarea"
+                      placeholder="Textarea"
+                      value={editedTask.description}
+                      onChange={handleInputChange}
+                    ></textarea>
+                  </div>
+                  <div className="w-full mt-4">
+                    <label className="block mb-3 font-medium text-gray-700">
+                      Status
+                    </label>
+                    <select
+                      id="status"
+                      name="status"
+                      className="block w-full xt-select rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
+                      aria-label="Select"
+                      value={editedTask.status}
+                      onChange={handleInputChange}
+                    >
+                      {/* <option selected value="">
+                        Select an option
+                      </option> */}
+                      <option value="todo">Todo</option>
+                      <option value="inProgress">In Progress</option>
+                      <option value="completed">Completed</option>
+                    </select>
+                  </div>
+
+                  <div className="w-full mt-4">
+                    <label className="block mb-3 font-medium text-gray-700">
+                      Priority
+                    </label>
+                    <select
+                      id="priority"
+                      name="priority"
+                      className="block w-full xt-select rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
+                      aria-label="Select"
+                      value={editedTask.priority}
+                      onChange={handleInputChange}
+                    >
+                      {/* <option selected value="">
+                        Select an option
+                      </option> */}
+                      <option value="Low">Low</option>
+                      <option value="Medium">Medium</option>
+                      <option value="High">High</option>
+                    </select>
+                  </div>
+
+                  <div></div>
+                  {/* <DatePicker
+                      name="dueDate"
+                      id="dueDate"
+                      selected={
+                        editedTask.dueDate === ""
+                          ? moment().toDate()
+                          : moment(editedTask.dueDate).toDate()
+                      }
+                      onChange={(e) => handleDueDate(e)}
+                    /> */}
+
+                  {/* <div className="w-full">
+                    <label className="block mb-3 font-medium text-gray-700">
+                      Tags
+                    </label>
+                    <select
+                      name="tags"
+                      id="tags"
+                      className="block w-full xt-select rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
+                      multiple
+                      aria-label="Select multiple"
+                      onChange={handleInputChange}
+                    >
+                      <option value="Personal">Personal</option>
+                      <option value="Work">Work</option>
+                      <option value="House">House</option>
+                    </select>
+                  </div> */}
+
+                  <div className="w-full mt-3">
+                    <button
+                      type="submit"
+                      className="xt-button py-2.5 px-3.5 text-sm rounded-md font-medium leading-snug tracking-wider uppercase text-white bg-primary-500 transition hover:text-white hover:bg-primary-600 active:text-white active:bg-primary-700 on:text-white on:bg-primary-600"
+                    >
+                      submit
+                    </button>
+                  </div>
+                </div>
               </form>
             </div>
           </div>
         </div>
-        <ul className="bg-black p-2">
+
+        {/* in progress list */}
+        <ul className="bg-black p-3 rounded-2xl">
           <p className="m-2 text-center text-lg   text-white ">In Progress</p>
           <TaskAreaModal status={"inProgress"} />
           {inProgressTasks.map((task) => {
@@ -172,7 +292,9 @@ const TaskList = ({ todosTasks, inProgressTasks, completedTasks }) => {
             );
           })}
         </ul>
-        <ul className="bg-black p-2">
+
+        {/* completed list */}
+        <ul className="bg-black p-3 rounded-2xl">
           <p className="m-2 text-center text-lg bg-black text-white ">
             Completed
           </p>

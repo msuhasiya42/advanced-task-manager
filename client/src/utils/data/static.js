@@ -6,6 +6,7 @@ const options = { day: "numeric", month: "long", year: "numeric" };
 // to get next day logic
 // currentDate.setDate(currentDate.getDate() + 1);
 
+// @ts-ignore
 const dateString = currentDate.toLocaleString("en-US", options);
 
 export const todos = [

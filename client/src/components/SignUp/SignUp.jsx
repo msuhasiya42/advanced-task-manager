@@ -1,9 +1,6 @@
-import { useEffect, useState } from "react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import NavBar from "../NavBar/NavBarHomePage";
 import { createUser } from "../../ApiCalls";
-// import axios from "axios";
-//import Footer from "./Footer";
 
 const SignUp = () => {
   const [name, setName] = useState("");

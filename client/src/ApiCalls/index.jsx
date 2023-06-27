@@ -24,6 +24,14 @@ export function getUserData(userId) {
   return API.get(`/users/getUserById/${userId}`);
 }
 
+// update user : to add new tags into user data
+export function updateUserApi(userId, tag) {
+  return API.put(`/users/updateUser/${userId}`, {
+    tag,
+  });
+}
+/*________________________________________________*/
+
 // task related apis
 // Adding new task
 export function createTask(title, status, user) {
@@ -45,9 +53,8 @@ export function deleteTaskApi(id) {
 }
 
 // task update
-//@TODO
+//TODO
 export function updateTaskApi(id, task) {
-  // const currentDateTime = new Date();
   return API.put(`tasks/updateTask/${id}`, {
     task,
   });
