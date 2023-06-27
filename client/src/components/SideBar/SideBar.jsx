@@ -1,11 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import useTaskStore from "../../Zustand/taskStore";
 import AddTags from "../Add Tags/AddTags";
 import useTagStore from "../../Zustand/tagStore";
+import * as AlertDialog from "@radix-ui/react-alert-dialog";
+import { updateUserApi } from "../../ApiCalls";
+import useAuthStore from "../../Zustand/authStore";
 
 const SideBar = () => {
+  const [err, setErr] = useState(false);
   // store
   const tags = useTagStore((state) => state.tags);
+  const deleteTag = useTagStore((state) => state.deleteTag);
   const originalTasks = useTaskStore((state) => state.originalTasks);
   const copyTasks = useTaskStore((state) => state.copyTasks);
   const setTodaysTasks = useTaskStore((state) => state.setTodaysTasks);
@@ -14,6 +19,34 @@ const SideBar = () => {
   // All tasks
   const handleAllTasks = () => {
     copyTasks(originalTasks);
+  };
+
+  // toast msg remove
+  const disAppearToast = () => {
+    setErr(false);
+  };
+
+  // delete tag
+  const userId = useAuthStore((state) => state.user.id);
+
+  const handleDelete = (tag) => {
+    updateUserApi(userId, "delete", tag)
+      .then((response) => {
+        // @Remember
+        // add tag in store
+        deleteTag(tag);
+        console.log(response);
+      })
+      .catch((error) => {
+        // @Todo
+        // Handle errors
+        // handling internal server err
+        // is remaining : status code : 500
+        console.error(error);
+        setErr(true);
+        setTimeout(disAppearToast, 3000);
+      });
+    deleteTag(tag);
   };
 
   // filter task where today is dueDate
@@ -38,6 +71,34 @@ const SideBar = () => {
   const handleTemp = () => {};
   return (
     <>
+      {/* server issue: task not added */}
+      {err && (
+        <div className="toast">
+          <div className=" ">
+            <span>
+              <div className="flex w-full max-w-sm overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800">
+                <div className="flex items-center justify-center w-12 bg-red-500">
+                  <svg
+                    className="w-6 h-6 text-white fill-current"
+                    viewBox="0 0 40 40"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M20 3.36667C10.8167 3.36667 3.3667 10.8167 3.3667 20C3.3667 29.1833 10.8167 36.6333 20 36.6333C29.1834 36.6333 36.6334 29.1833 36.6334 20C36.6334 10.8167 29.1834 3.36667 20 3.36667ZM19.1334 33.3333V22.9H13.3334L21.6667 6.66667V17.1H27.25L19.1334 33.3333Z" />
+                  </svg>
+                </div>
+
+                <div className="px-4 py-2 -mx-3">
+                  <div className="mx-3">
+                    <span className="font-semibold text-red-500 dark:text-red-400">
+                      Error in deletion
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </span>
+          </div>
+        </div>
+      )}
       <aside className="flex flex-col h-screen w-64  px-5 mt-1  bg-white border-r rtl:border-r-0 rtl:border-l dark:bg-gray-900 dark:border-gray-700">
         <div className="flex flex-col justify-between flex-1 mt-6">
           <nav className="flex-1  space-y-3 ">
@@ -195,14 +256,82 @@ const SideBar = () => {
                     Tags
                   </span>
                 </button>
-                <ul className=" py-2 space-y-2">
+                <ul className=" space-y-1">
                   {tags.map((tag, index) => (
                     <li key={index}>
                       <button
                         // onClick={() => getTaskByTags(tag)}
-                        className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                        className="grid grid-cols-2 w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-6 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                       >
                         #{tag}
+                        <AlertDialog.Root>
+                          <AlertDialog.Trigger asChild>
+                            <button className="ml-12">
+                              <svg
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="1.5"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                                aria-hidden="true"
+                                className="flex-shrink-0 w-5 h-5 text-gray-900 transition duration-75 dark: group-hover:text-gray-900 dark:group-hover:text-white"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                                ></path>
+                              </svg>
+                            </button>
+                          </AlertDialog.Trigger>
+                          <AlertDialog.Portal>
+                            <AlertDialog.Overlay className="bg-blackA9 data-[state=open]:animate-overlayShow fixed inset-0" />
+                            <AlertDialog.Content className="  data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] max-h-[85vh] w-[90vw] max-w-[500px] translate-x-[-50%] translate-y-[-50%] rounded-[6px] bg-white p-[25px] shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none">
+                              <AlertDialog.Title className="text-black text-mauve12 m-0 text-[17px] font-medium">
+                                Do you want to delete this tag?
+                              </AlertDialog.Title>
+                              <AlertDialog.Description className="text-gray-600 text-mauve11 mt-4 mb-5 text-[15px] leading-normal">
+                                Tag will be removed from all the tasks linked to
+                                it.
+                              </AlertDialog.Description>
+                              <div className="flex justify-end gap-[25px]">
+                                <AlertDialog.Cancel asChild>
+                                  <button className="text-mauve11 text-gray-500  bg-gray-200 focus:shadow-mauve7 inline-flex h-[35px] items-center justify-center rounded-[4px] px-[15px] font-medium ">
+                                    Cancel
+                                  </button>
+                                </AlertDialog.Cancel>
+                                <AlertDialog.Action asChild>
+                                  <button
+                                    onClick={() => handleDelete(tag)}
+                                    className=" text-red-600 bg-red-200 hover:bg-red5 focus:shadow-red7 inline-flex h-[35px] items-center justify-center rounded-[4px] px-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px]"
+                                  >
+                                    Yes, delete
+                                  </button>
+                                </AlertDialog.Action>
+                              </div>
+                            </AlertDialog.Content>
+                          </AlertDialog.Portal>
+                        </AlertDialog.Root>
+                        {/* <button
+                          className="ml-8"
+                          onClick={() => handleDelete(tag)}
+                        >
+                          <svg
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                            aria-hidden="true"
+                            className="flex-shrink-0 w-5 h-5 text-gray-900 transition duration-75 dark: group-hover:text-gray-900 dark:group-hover:text-white"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                            ></path>
+                          </svg>
+                        </button> */}
                       </button>
                     </li>
                   ))}

@@ -25,9 +25,10 @@ export function getUserData(userId) {
 }
 
 // update user : to add new tags into user data
-export function updateUserApi(userId, tag) {
+export function updateUserApi(userId, type, tag) {
   return API.put(`/users/updateUser/${userId}`, {
     tag,
+    type,
   });
 }
 /*________________________________________________*/

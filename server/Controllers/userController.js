@@ -79,20 +79,36 @@ const getUserById = async (req, res) => {
 const updateUser = async (req, res) => {
   // Logic to update a user by ID
   const userId = req.params.id;
-  const newTag = req.body.tag;
+  const tag = req.body.tag;
+  const type = req.body.type;
 
   await User.findById(userId)
     .then((user) => {
       if (!user) {
         return res.status(404).json({ error: "User not found" });
       }
-      // User data retrieved successfully
-      user.tags.push(newTag);
-      user.save();
-      res.json(user.tags);
+
+      // Add tag
+      if (type == "add") {
+        user.tags.push(tag);
+        user.save();
+        return res.json(user.tags);
+      }
+
+      // delete tag
+      if (type == "delete") {
+        const index = user.tags.indexOf(tag);
+        if (index > -1) {
+          user.tags.splice(index, 1);
+          user.save();
+          return res.json(user.tags);
+        } else {
+          res.status(404).json({ error: "Tag not found" });
+        }
+      }
     })
     .catch((err) => {
-      // console.log(err);
+      console.log(err);
       res.status(500).json({ error: "Failed to add tag" });
     });
 };
