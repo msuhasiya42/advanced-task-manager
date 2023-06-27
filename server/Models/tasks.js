@@ -12,6 +12,11 @@ const taskSchema = new mongoose.Schema(
       type: String,
     },
 
+    tag: {
+      type: String,
+      default: "",
+    },
+
     status: {
       type: String,
       enum: ["todo", "inProgress", "completed"],
@@ -34,12 +39,6 @@ const taskSchema = new mongoose.Schema(
       default: Date.now,
     },
 
-    tags: [
-      // Array of strings to store tags
-      {
-        type: String,
-      },
-    ],
     attatchments: [
       {
         type: String,

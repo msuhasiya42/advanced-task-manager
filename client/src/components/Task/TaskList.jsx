@@ -3,6 +3,7 @@ import TaskItem from "./TaskItem";
 import TaskAreaModal from "./TextAreaModal";
 import { deleteTaskApi, updateTaskApi } from "../../ApiCalls";
 import useTaskStore from "../../Zustand/taskStore";
+import useTagStore from "../../Zustand/tagStore";
 
 const TaskList = ({ todosTasks, inProgressTasks, completedTasks }) => {
   const [delMsg, setDelMsg] = useState(false);
@@ -13,9 +14,13 @@ const TaskList = ({ todosTasks, inProgressTasks, completedTasks }) => {
     dueDate: "",
     status: "",
     priority: "",
+    tag: "",
     attatchments: [],
     colloborations: [],
   });
+
+  // tags
+  const tags = useTagStore((state) => state.tags);
 
   const handleTaskClick = (task) => {
     setEditedTask(task);
@@ -29,6 +34,7 @@ const TaskList = ({ todosTasks, inProgressTasks, completedTasks }) => {
 
   // handle input change
   const handleInputChange = (e) => {
+    console.log(e.target.value, e.target.name);
     setEditedTask({ ...editedTask, [e.target.name]: e.target.value });
   };
 
@@ -189,6 +195,34 @@ const TaskList = ({ todosTasks, inProgressTasks, completedTasks }) => {
                       value={editedTask.description}
                       onChange={handleInputChange}
                     ></textarea>
+                  </div>
+
+                  {/* select tag */}
+                  <div className="w-full mt-4">
+                    <label className="block mb-3 font-medium text-gray-700">
+                      Tag
+                    </label>
+                    <select
+                      id="tag"
+                      name="tag"
+                      className="block w-full xt-select rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
+                      aria-label="Select"
+                      value={editedTask.tag}
+                      onChange={handleInputChange}
+                    >
+                      {/* <option selected value="">
+                        Select an option
+                      </option> */}
+
+                      {tags.map((tag, index) => (
+                        <option key={index} value={tag}>
+                          {tag}
+                        </option>
+                      ))}
+                      {/* <option value="Low">Low</option>
+                      <option value="Medium">Medium</option>
+                      <option value="High">High</option> */}
+                    </select>
                   </div>
                   <div className="w-full mt-4">
                     <label className="block mb-3 font-medium text-gray-700">

@@ -97,14 +97,11 @@ const TaskItem = ({ task, handleDelete, handleTaskClick }) => {
                   {task.title}
                 </h1>
               </div>
-
-              {task.tags.length !== 0 ? (
-                <span className="px-3 py-2 text-xs text-blue-800 uppercase bg-blue-500 rounded-full dark:bg-blue-300 dark:text-blue-900">
-                  {task.tags[0]}
-                </span>
+              {task.tag === "" ? (
+                ""
               ) : (
-                <span className="px-3 py-2 text-xs text-blue-800 uppercase bg-blue-500 rounded-full dark:bg-blue-300 dark:text-blue-900">
-                  Tag
+                <span className=" text-center text-xs px-3 py-1 h-5 w-32  text-blue-800 uppercase bg-blue-500 rounded-full dark:bg-blue-300 dark:text-blue-900">
+                  {task.tag}
                 </span>
               )}
             </div>
