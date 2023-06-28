@@ -49,6 +49,8 @@ const TaskItem = ({ task, handleDelete, handleTaskClick }) => {
         return "Today";
       } else if (currentDate.getDay() + 1 === inputDate.getDay()) {
         return "Tommorrow";
+      } else if (currentDate.getDay() - 1 === inputDate.getDay()) {
+        return "Yesterday";
       }
       // Display the week day if the date is in the current week
       const options = { weekday: "long" };
