@@ -31,7 +31,7 @@ const SignUp = () => {
       return;
     } else if (!password.match(passRegex)) {
       setErrMsg(
-        "Password must contain eight characters, at least one letter, one number and one special character:"
+        "Password must contain eight characters, one capital letter, one small letter, one number and one special character:"
       );
       setShowErrMsg(true);
       setSuccess(false);
@@ -219,11 +219,6 @@ const SignUp = () => {
                     required
                   />
                 </div>
-                {/* {password.length !== 0 && showErrMsg ? (
-                  <div className="text-red-500 "> {passErrorMessage} </div>
-                ) : (
-                  ""
-                )} */}
 
                 <div>
                   <label
@@ -245,11 +240,6 @@ const SignUp = () => {
                     required
                   />
                 </div>
-                {/* {conPassword.length !== 0 && showErrMsg ? (
-                  <div className="text-red-500 "> {conErrorMessage} </div>
-                ) : (
-                  ""
-                )} */}
 
                 <div className="flex items-start">
                   <div className="flex items-center h-5">
