@@ -1,6 +1,9 @@
 import React from "react";
-import { tags, members } from "../../utils/data/static";
+import { members } from "../../utils/data/static";
+import useTagStore from "../../Zustand/tagStore";
+
 const Filter = () => {
+  const tags= useTagStore((state) => state.tags )
   return (
     <details className="dropdown ">
       <summary className="m-1 btn btn-primary">

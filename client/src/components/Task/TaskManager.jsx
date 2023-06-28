@@ -1,10 +1,8 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import TaskList from "./TaskList";
 import { fetchTask } from "../../ApiCalls";
 import LoadingPage from "../Loading/LoadingPage";
-// import { todos, inprogress, completed } from "../../utils/data/static";
 import useTaskStore from "../../Zustand/taskStore";
-import React from "react";
 import useAuthStore from "../../Zustand/authStore";
 const TaskManager = () => {
   const [loading, setLoading] = useState(false);
