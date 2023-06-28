@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { createTask } from "../../ApiCalls";
 import useTaskStore from "../../Zustand/taskStore";
 import useAuthStore from "../../Zustand/authStore";
@@ -14,9 +14,15 @@ const TextAreaModal = ({ status }) => {
   const addTaskOrigStore = useTaskStore((state) => state.addTaskOrigStore);
   const addTaskCopiedStore = useTaskStore((state) => state.addTaskCopiedStore);
 
+  // hooks
+  const textRef = useRef(null);
+
+  // show/hide textArea
   const handleClick = () => {
     setShowTextArea(!showTextArea);
   };
+
+  // when user saves task
   const handleSubmit = (event) => {
     event.preventDefault();
     // Perform any necessary actions with the task name
@@ -54,10 +60,23 @@ const TextAreaModal = ({ status }) => {
     setShowTextArea(false);
   };
 
-  useEffect(() => {});
+  // update task title
   const updateTitle = (event) => {
     setTask(event.target.value);
   };
+
+  // useEffect
+  useEffect(() => {
+    if (showTextArea) {
+      // @Remember: useRef used here because we are hiding
+      // and showing textArea
+      if (textRef.current != null) {
+        // 👉️ TypeScript knows that ref is not null here
+        textRef.current.focus();
+      }
+    }
+  }, [showTextArea]);
+
   return (
     <div>
       <div>
@@ -135,6 +154,7 @@ const TextAreaModal = ({ status }) => {
             {/* <div className="flex items-center justify-between px-3 py-2 border-b dark:border-gray-600"></div> */}
             <div className="px-4  bg-white rounded-lg dark:bg-gray-800">
               <input
+                ref={textRef}
                 onChange={updateTitle}
                 id="task"
                 type="text"
@@ -144,6 +164,8 @@ const TextAreaModal = ({ status }) => {
               ></input>
             </div>
           </div>
+
+          {/* Add card button */}
           <button
             type="submit"
             className="mb-5 inline-flex items-center px-5 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800"
