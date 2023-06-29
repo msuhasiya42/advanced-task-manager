@@ -46,7 +46,7 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
   const updateTaskCopiedStore = useTaskStore(
     (state) => state.updateTaskCopiedStore
   );
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = () => {
     updateTaskApi(editedTask._id, editedTask)
       .then((res) => {
         console.log("Task updated", res);
