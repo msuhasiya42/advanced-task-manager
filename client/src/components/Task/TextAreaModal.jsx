@@ -72,6 +72,7 @@ const TextAreaModal = ({ status }) => {
       // and showing textArea
       if (textRef.current != null) {
         // 👉️ TypeScript knows that ref is not null here
+        // @ts-ignore
         textRef.current.focus();
       }
     }
