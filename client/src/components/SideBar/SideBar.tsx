@@ -15,6 +15,10 @@ const SideBar = () => {
   const copyTasks = useTaskStore((state) => state.copyTasks);
   const setTodaysTasks = useTaskStore((state) => state.setTodaysTasks);
   const setUpcomingTasks = useTaskStore((state) => state.setUpcomingTasks);
+  const filterTasksByTag = useTaskStore((state) => state.filterTasksByTag);
+  const filterTaskByHavingTagFun = useTaskStore(
+    (state) => state.filterTaskByHavingTagFun
+  );
 
   // All tasks
   const handleAllTasks = () => {
@@ -66,6 +70,24 @@ const SideBar = () => {
     setUpcomingTasks("todo");
     setUpcomingTasks("inProgress");
     setUpcomingTasks("completed");
+  };
+
+  // Filter task by tag name
+  const filterTaskByTagName = (tag) => {
+    copyTasks(originalTasks);
+    // then apply filter on copied store
+    filterTasksByTag("todo", tag);
+    filterTasksByTag("inProgress", tag);
+    filterTasksByTag("completed", tag);
+  };
+
+  // Filter tasks which has Tags
+  const filterTaskByHavingTag = () => {
+    copyTasks(originalTasks);
+    // then apply filter on copied store
+    filterTaskByHavingTagFun("todo");
+    filterTaskByHavingTagFun("inProgress");
+    filterTaskByHavingTagFun("completed");
   };
 
   const handleTemp = () => {
@@ -255,6 +277,7 @@ const SideBar = () => {
               <li>
                 <button
                   type="button"
+                  onClick={filterTaskByHavingTag}
                   className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                 >
                   <svg
@@ -273,14 +296,14 @@ const SideBar = () => {
                     ></path>
                   </svg>
                   <span className="flex-1 ml-3 text-left whitespace-nowrap">
-                    Tags
+                    Tasks with Tags
                   </span>
                 </button>
                 <ul className=" space-y-1">
                   {tags.map((tag, index) => (
                     <li key={index}>
                       <a
-                        //  onClick={() => getTaskByTags(tag)}
+                        onClick={() => filterTaskByTagName(tag)}
                         className="grid grid-cols-2 h-10 w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-6 group hover:bg-gray-100 hover:text-base dark:text-white dark:hover:bg-gray-700"
                       >
                         #{tag}

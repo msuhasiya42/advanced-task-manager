@@ -96,15 +96,6 @@ const useTaskStore = create((set) => ({
       },
     })),
 
-  // filter task by tag
-  setFilteredTasks: (category, newFilteredTasks) =>
-    set((state) => ({
-      filteredTasks: {
-        ...state.filteredTasks,
-        [category]: newFilteredTasks,
-      },
-    })),
-
   selectedTag: "",
   setSelectedTag: (tag) => set({ selectedTag: tag }),
 
@@ -143,6 +134,28 @@ const useTaskStore = create((set) => ({
       },
     }));
   },
+
+  // Filter by tag
+  filterTasksByTag: (category, tag) =>
+    set((state) => ({
+      copiedTasks: {
+        ...state.copiedTasks,
+        [category]: state.copiedTasks[category].filter(
+          (task) => task.tag === tag
+        ),
+      },
+    })),
+
+  // Filter task by having atleast one tag
+  filterTaskByHavingTagFun: (category) =>
+    set((state) => ({
+      copiedTasks: {
+        ...state.copiedTasks,
+        [category]: state.copiedTasks[category].filter(
+          (task) => task.tag !== ""
+        ),
+      },
+    })),
 }));
 
 export default useTaskStore;
