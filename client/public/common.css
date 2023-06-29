@@ -3,3 +3,9 @@
 @tailwind utilities;
 
 /* common css for all */
+
+.bg-gradient
+{
+    background: rgb(34,193,195);
+    background: linear-gradient(0deg, rgba(34,193,195,1) 0%, rgba(150,45,253,0.9470122521664917) 100%);
+}
