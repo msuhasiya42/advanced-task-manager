@@ -212,9 +212,9 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
                       value={editedTask.tag}
                       onChange={handleInputChange}
                     >
-                      {/* <option selected value="">
-                        Select an option
-                      </option> */}
+                      <option className="bg-red-400" selected value="">
+                        No tag
+                      </option>
 
                       {tags.map((tag, index) => (
                         <option key={index} value={tag}>
