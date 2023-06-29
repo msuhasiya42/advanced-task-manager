@@ -1,7 +1,8 @@
 import React from "react";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
+import { TasksProps } from "./Types/types";
 
-const TaskItem = ({ task, handleDelete, handleTaskClick }) => {
+const TaskItem = ({ task, handleDelete, handleTaskClick }: TasksProps) => {
   // due date red if it's over due otherwise blue
   const taskDate = new Date(task.dueDate).getDay();
   const currentDate = new Date().getDay();
@@ -53,15 +54,19 @@ const TaskItem = ({ task, handleDelete, handleTaskClick }) => {
         return "Yesterday";
       }
       // Display the week day if the date is in the current week
-      const options = { weekday: "long" };
-      // @ts-ignore
-      const weekDay = inputDate.toLocaleDateString("en-In", options);
+
+      const weekDay = inputDate.toLocaleDateString("en-In", {
+        weekday: "long",
+      });
       return weekDay;
     } else {
       // Display the full date if it's not in the current week
-      const options = { year: "numeric", month: "long", day: "numeric" };
-      // @ts-ignore
-      const formattedDate = inputDate.toLocaleDateString("en-IN", options);
+
+      const formattedDate = inputDate.toLocaleDateString("en-IN", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
       return formattedDate;
     }
   };
@@ -86,11 +91,7 @@ const TaskItem = ({ task, handleDelete, handleTaskClick }) => {
 
   return (
     <div>
-      <label
-        // @ts-ignore
-        htmlFor="my_modal_6"
-        onClick={() => handleTaskClick(task)}
-      >
+      <label htmlFor="my_modal_6" onClick={() => handleTaskClick(task)}>
         <div className="w-full mb-2 overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800 hover:bg-gray-700 ">
           <div className="px-4 py-2">
             <div className="flex justify-between">
@@ -137,56 +138,37 @@ const TaskItem = ({ task, handleDelete, handleTaskClick }) => {
               </svg>
               {indianTime}
             </span>
+
             {/* links badge */}
-            {task.attatchments.length !== 0 ? (
-              <div className="flex flex-row ml-2">
-                <svg
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden="true"
-                  className="w-4 h-4 mt-1  ml-3"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13"
-                  ></path>
-                </svg>
-                <span
-                  className=" mr-3 text-left whitespace-nowrap"
-                  // sidebar-toggle-item
-                >
-                  {task.attatchments.length}
-                </span>
-              </div>
-            ) : (
-              <div className="flex flex-row ml-2">
-                <svg
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden="true"
-                  className="w-4 h-4 mt-1  "
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13"
-                  ></path>
-                </svg>
-                <span
-                  className=" mr-3 text-left whitespace-nowrap"
-                  // sidebar-toggle-item
-                >
-                  2
-                </span>
-              </div>
-            )}
+            <div className="flex flex-row ml-2">
+              {task.attatchments.length ? (
+                <>
+                  <svg
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                    className="w-4 h-4 mt-1  "
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13"
+                    ></path>
+                  </svg>
+                  <span
+                    className=" mr-3 text-left whitespace-nowrap"
+                    // sidebar-toggle-item
+                  >
+                    {task.attatchments.length}
+                  </span>
+                </>
+              ) : (
+                ""
+              )}
+            </div>
 
             <AlertDialog.Root>
               <AlertDialog.Trigger asChild>

@@ -20,8 +20,8 @@ const ForgotPassword = () => {
               Forgot your password?
             </h1>
             <p className="font-light text-gray-500 dark:text-gray-400">
-              Don't fret! Just type in your email and we will send you a code to
-              reset your password.
+              Don not fret! Just type in your email and we will send you a code
+              to reset your password.
             </p>
             <form className="mt-4 space-y-4 lg:mt-5 md:space-y-5" action="#">
               <div>

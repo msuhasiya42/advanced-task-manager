@@ -62,9 +62,9 @@ const TaskManager = () => {
               <div className="m-1">
                 <div className="">
                   <TaskList
-                    todosTasks={copiedTasks.todo}
-                    inProgressTasks={copiedTasks.inProgress}
-                    completedTasks={copiedTasks.completed}
+                    todo={copiedTasks.todo}
+                    inProgress={copiedTasks.inProgress}
+                    completed={copiedTasks.completed}
                   />
                 </div>
               </div>

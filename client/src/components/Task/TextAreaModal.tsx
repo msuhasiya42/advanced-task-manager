@@ -3,7 +3,11 @@ import { createTask } from "../../ApiCalls";
 import useTaskStore from "../../Zustand/taskStore";
 import useAuthStore from "../../Zustand/authStore";
 
-const TextAreaModal = ({ status }) => {
+interface StatusType {
+  status: string;
+}
+
+const TextAreaModal = ({ status }: StatusType) => {
   const [showTextArea, setShowTextArea] = useState(false);
   const [task, setTask] = useState("");
   const [taskCreated, setTaskCreated] = useState(false);
@@ -15,7 +19,8 @@ const TextAreaModal = ({ status }) => {
   const addTaskCopiedStore = useTaskStore((state) => state.addTaskCopiedStore);
 
   // hooks
-  const textRef = useRef(null);
+  // @remember
+  const textRef = React.useRef<HTMLInputElement>(null);
 
   // show/hide textArea
   const handleClick = () => {
@@ -72,7 +77,6 @@ const TextAreaModal = ({ status }) => {
       // and showing textArea
       if (textRef.current != null) {
         // 👉️ TypeScript knows that ref is not null here
-        // @ts-ignore
         textRef.current.focus();
       }
     }

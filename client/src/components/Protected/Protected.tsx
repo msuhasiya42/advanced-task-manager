@@ -1,8 +1,11 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import useAuthStore from "../../Zustand/authStore";
 import { Navigate } from "react-router-dom";
+interface ChildrenProp {
+  children?: ReactNode;
+}
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = ({ children }: ChildrenProp) => {
   const { user } = useAuthStore();
   if (!user) {
     return <Navigate to="/" replace />;

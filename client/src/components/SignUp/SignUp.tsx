@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import NavBar from "../NavBar/NavBarHomePage";
 import { createUser } from "../../ApiCalls";
 
@@ -11,8 +11,6 @@ const SignUp = () => {
   const [showErrMsg, setShowErrMsg] = useState(false);
   const [success, setSuccess] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
-
-  useEffect(() => {}, []);
 
   // regex for emiall and password
   const passRegex =

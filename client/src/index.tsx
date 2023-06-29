@@ -4,8 +4,10 @@ import "./index.css";
 import "../public/common.css";
 import App from "./App";
 import { QueryClient, QueryClientProvider } from "react-query";
-// @ts-ignore
-const root = ReactDOM.createRoot(document.getElementById("root"));
+
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const rootType = document.getElementById("root")!;
+const root = ReactDOM.createRoot(rootType);
 const queryClient = new QueryClient();
 
 root.render(

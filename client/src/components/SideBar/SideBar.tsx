@@ -68,7 +68,9 @@ const SideBar = () => {
     setUpcomingTasks("completed");
   };
 
-  const handleTemp = () => {};
+  const handleTemp = () => {
+    // some code
+  };
   return (
     <>
       {/* server issue: task not added */}
@@ -128,12 +130,22 @@ const SideBar = () => {
             <ul className="menu h-fit text-base-content bg-gray-900">
               {/* Sidebar content here */}
               <li>
-                <button className="bold flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-                </svg>
-                <span className="ml-3">Journaling</span>
+                <button className="bold flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="currentColor"
+                    className="w-5 h-5"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
+                    />
+                  </svg>
+                  <span className="ml-3">Journaling</span>
                 </button>
               </li>
               <li>
@@ -180,7 +192,7 @@ const SideBar = () => {
                     ></path>
                   </svg>
                   <span className="flex-1 ml-3 whitespace-nowrap">
-                    Today's Task
+                    Todays Tasks
                   </span>
                 </button>
               </li>
@@ -198,7 +210,8 @@ const SideBar = () => {
                     viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg"
                     aria-hidden="true"
-                    className=" w-5 h-5 "                  >
+                    className=" w-5 h-5 "
+                  >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -224,7 +237,8 @@ const SideBar = () => {
                     viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg"
                     aria-hidden="true"
-                    className=" w-5 h-5 "                  >
+                    className=" w-5 h-5 "
+                  >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -250,7 +264,8 @@ const SideBar = () => {
                     viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg"
                     aria-hidden="true"
-                    className=" w-5 h-5 "                  >
+                    className=" w-5 h-5 "
+                  >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"

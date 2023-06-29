@@ -4,8 +4,9 @@ import TaskAreaModal from "./TextAreaModal";
 import { deleteTaskApi, updateTaskApi } from "../../ApiCalls";
 import useTaskStore from "../../Zustand/taskStore";
 import useTagStore from "../../Zustand/tagStore";
+import { TaskCollection } from "./Types/types";
 
-const TaskList = ({ todosTasks, inProgressTasks, completedTasks }) => {
+const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
   const [delMsg, setDelMsg] = useState(false);
   const [editedTask, setEditedTask] = useState({
     _id: "",
@@ -81,6 +82,7 @@ const TaskList = ({ todosTasks, inProgressTasks, completedTasks }) => {
         console.log("Error in deletion:", err);
       });
   };
+
   return (
     <div className="h-screen">
       {delMsg && (
@@ -117,7 +119,7 @@ const TaskList = ({ todosTasks, inProgressTasks, completedTasks }) => {
         <ul className="w-full p-3 bg-black rounded-2xl">
           <p className="m-2 text-center text-lg  text-white ">Todo</p>
           <TaskAreaModal status={"todo"} />
-          {todosTasks.map((task) => {
+          {todo.map((task) => {
             return (
               <div key={task._id}>
                 <TaskItem
@@ -314,7 +316,7 @@ const TaskList = ({ todosTasks, inProgressTasks, completedTasks }) => {
         <ul className="bg-black p-3 rounded-2xl">
           <p className="m-2 text-center text-lg   text-white ">In Progress</p>
           <TaskAreaModal status={"inProgress"} />
-          {inProgressTasks.map((task) => {
+          {inProgress.map((task) => {
             return (
               <div key={task._id}>
                 <TaskItem
@@ -334,7 +336,7 @@ const TaskList = ({ todosTasks, inProgressTasks, completedTasks }) => {
           </p>
           <TaskAreaModal status={"completed"} />
 
-          {completedTasks.map((task) => {
+          {completed.map((task) => {
             return (
               <div key={task._id}>
                 <TaskItem
