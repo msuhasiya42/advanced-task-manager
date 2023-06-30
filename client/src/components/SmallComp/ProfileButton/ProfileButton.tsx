@@ -3,9 +3,13 @@ import { getUserData } from "../../../ApiCalls";
 import useAuthStore from "../../../Zustand/authStore";
 
 const ProfileButton = () => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({
+    name: "",
+  });
   const userId = useAuthStore((state) => state.user.id);
-
+  const getUserName = () => {
+    return user.name.split(" ")[0];
+  };
   useEffect(() => {
     // getting user data
     getUserData(userId)
@@ -30,12 +34,7 @@ const ProfileButton = () => {
               />
 
               <div className="font-medium dark:text-white">
-                <div className="text-sm">
-                  {user !== null
-                    ? // @ts-ignore
-                      user.name.split(" ")[0]
-                    : ""}
-                </div>
+                <div className="text-sm">{getUserName()}</div>
               </div>
             </div>
           </div>

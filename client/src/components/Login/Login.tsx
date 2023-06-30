@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import React, { useState } from "react";
 import NavBar from "../NavBar/NavBarHomePage";
 import { loginApi } from "../../ApiCalls";
