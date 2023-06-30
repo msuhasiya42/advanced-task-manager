@@ -96,17 +96,19 @@ const TaskItem = ({ task, handleDelete, handleTaskClick }: TasksProps) => {
           <div className="px-4 py-2">
             <div className="flex justify-between">
               <div className="w-48">
+                <div className="mb-3">
+                  {task.tag === "" ? (
+                    ""
+                  ) : (
+                    <span className="text-xxsm text-center px-2 py-1 h-4 w-32  text-blue-800 uppercase bg-blue-500 rounded-full dark:bg-blue-300 dark:text-blue-900">
+                      {task.tag}
+                    </span>
+                  )}
+                </div>
                 <h1 className="text-sm font-bold text-gray-400   dark:text-gray-300">
                   {task.title}
                 </h1>
               </div>
-              {task.tag === "" ? (
-                ""
-              ) : (
-                <span className=" text-center text-xs px-3 py-1 h-5 w-32  text-blue-800 uppercase bg-blue-500 rounded-full dark:bg-blue-300 dark:text-blue-900">
-                  {task.tag}
-                </span>
-              )}
             </div>
 
             <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">

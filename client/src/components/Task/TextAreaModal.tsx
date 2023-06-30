@@ -89,7 +89,7 @@ const TextAreaModal = ({ status }: StatusType) => {
           onClick={handleClick}
           //   data-modal-target="task-modal"
           //   data-modal-toggle="task-modal"
-          className="mb-3 w-full bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded-xl"
+          className="flex items-center justify-center text-sm mb-3 w-full h-8 bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded-xl"
         >
           Add Card
         </button>

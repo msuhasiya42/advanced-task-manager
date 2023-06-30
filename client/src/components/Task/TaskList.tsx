@@ -205,9 +205,9 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
   return (
     <div className="h-screen">
       <DragDropContext onDragEnd={handleDragEnd}>
-        <div className="grid grid-cols-3 gap-12  mb-4 p-6">
+        <div className="grid grid-cols-4 gap-6  mb-4 p-6">
           {/* todo list */}
-          <ul className="w-full p-3 bg-black rounded-2xl">
+          <div className="max-h-[550px] overflow-y-auto w-full p-3 bg-black rounded-2xl">
             <Droppable droppableId="todo">
               {(provided) => (
                 <div
@@ -215,7 +215,7 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                 >
-                  <p className="m-2 text-center text-lg  text-white ">Todo</p>
+                  <p className="mb-2 text-center text-lg  text-white ">Todo</p>
                   <TaskAreaModal status={"todo"} />
                   {todo.map((task, index) => {
                     return (
@@ -245,10 +245,10 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
                 </div>
               )}
             </Droppable>
-          </ul>
+          </div>
 
           {/* in progress list */}
-          <ul className="w-full p-3 bg-black rounded-2xl">
+          <div className="max-h-[550px] overflow-y-auto w-full p-3 bg-black rounded-2xl">
             <Droppable droppableId="inProgress">
               {(provided) => (
                 <div
@@ -256,7 +256,7 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                 >
-                  <p className="m-2 text-center text-lg   text-white ">
+                  <p className="mb-2 text-center text-lg   text-white ">
                     In Progress
                   </p>
                   <TaskAreaModal status={"inProgress"} />
@@ -288,10 +288,10 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
                 </div>
               )}
             </Droppable>
-          </ul>
+          </div>
 
           {/* completed list */}
-          <ul className="w-full p-3 bg-black rounded-2xl">
+          <div className="max-h-[550px] overflow-y-auto w-full p-3 bg-black rounded-2xl">
             <Droppable droppableId="completed">
               {(provided) => (
                 <div
@@ -299,7 +299,7 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                 >
-                  <p className="m-2 text-center text-lg bg-black text-white ">
+                  <p className="mb-2 text-center text-lg bg-black text-white ">
                     Completed
                   </p>
                   <TaskAreaModal status={"completed"} />
@@ -331,7 +331,9 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
                 </div>
               )}
             </Droppable>
-          </ul>
+          </div>
+
+          <div className=""></div>
 
           {/* delete toast msg */}
           {delMsg && (

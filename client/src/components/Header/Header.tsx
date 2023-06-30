@@ -10,7 +10,7 @@ const Header = () => {
   return (
     <div>
       <nav className=" bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
-        <div className="max-w-screen-2xl flex flex-wrap  justify-between mx-auto p-4">
+        <div className="max-w-screen-2xl flex flex-wrap  justify-between mx-auto p-2">
           <a href="/user-dashboard" className="flex items-center">
             {/* <img
               src="https://w7.pngwing.com/pngs/209/1016/png-transparent-computer-icons-task-id-miscellaneous-computer-logo.png"
