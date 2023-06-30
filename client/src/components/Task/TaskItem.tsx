@@ -75,7 +75,7 @@ const TaskItem = ({ task, handleDelete, handleTaskClick }: TasksProps) => {
 
   // for description
   const truncateString = (str) => {
-    const maxLength = 20;
+    const maxLength = 7;
 
     if (str !== undefined) {
       const length = str.split(" ").length;

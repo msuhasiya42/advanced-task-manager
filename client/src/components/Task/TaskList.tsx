@@ -207,7 +207,11 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="grid grid-cols-4 gap-6  mb-4 p-6">
           {/* todo list */}
-          <div className="max-h-[550px] overflow-y-auto w-full p-3 bg-black rounded-2xl">
+          <div className="border border-gray-500  max-h-[550px] overflow-y-auto w-full p-3 bg-black rounded-2xl">
+            <div>
+              <p className="mb-2 text-center text-lg  text-white ">Todo</p>
+              <TaskAreaModal status={"todo"} />
+            </div>
             <Droppable droppableId="todo">
               {(provided) => (
                 <div
@@ -215,8 +219,6 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                 >
-                  <p className="mb-2 text-center text-lg  text-white ">Todo</p>
-                  <TaskAreaModal status={"todo"} />
                   {todo.map((task, index) => {
                     return (
                       <Draggable
@@ -248,7 +250,7 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
           </div>
 
           {/* in progress list */}
-          <div className="max-h-[550px] overflow-y-auto w-full p-3 bg-black rounded-2xl">
+          <div className="border border-gray-500  max-h-[550px] overflow-y-auto w-full p-3 bg-black rounded-2xl">
             <Droppable droppableId="inProgress">
               {(provided) => (
                 <div
@@ -291,7 +293,7 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
           </div>
 
           {/* completed list */}
-          <div className="max-h-[550px] overflow-y-auto w-full p-3 bg-black rounded-2xl">
+          <div className="border border-gray-500 max-h-[550px] overflow-y-auto w-full p-3 bg-black rounded-2xl">
             <Droppable droppableId="completed">
               {(provided) => (
                 <div
