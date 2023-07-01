@@ -296,15 +296,15 @@ const SideBar = () => {
                     ></path>
                   </svg>
                   <span className="flex-1 ml-3 text-left whitespace-nowrap">
-                    Tasks with Tags
+                    Filter By Tags
                   </span>
                 </button>
-                <ul className=" space-y-1">
+                <ul className="border border-gray-500 max-h-[200px] bg-gray-800 rounded-lg overflow-y-auto">
                   {tags.map((tag, index) => (
                     <li key={index}>
                       <a
                         onClick={() => filterTaskByTagName(tag)}
-                        className="grid grid-cols-2 h-10 w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-6 group hover:bg-gray-100 hover:text-base dark:text-white dark:hover:bg-gray-700"
+                        className="grid grid-cols-2 h-10 w-42 p-2 text-gray-900 transition duration-75 rounded-lg pl-6 group hover:bg-gray-100 hover:text-base dark:text-white dark:hover:bg-gray-700"
                       >
                         #{tag}
                         <AlertDialog.Root>
@@ -317,7 +317,7 @@ const SideBar = () => {
                                 viewBox="0 0 24 24"
                                 xmlns="http://www.w3.org/2000/svg"
                                 aria-hidden="true"
-                                className="flex-shrink-0 w-5 h-5 text-gray-900 transition duration-75 dark: group-hover:text-gray-900 dark:group-hover:text-white"
+                                className="flex-shrink-0 w-5 h-5 text-gray-800 transition duration-75 dark: group-hover:text-gray-900 dark:group-hover:text-white"
                               >
                                 <path
                                   strokeLinecap="round"

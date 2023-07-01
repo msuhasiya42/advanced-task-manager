@@ -100,7 +100,7 @@ const TaskItem = ({ task, handleDelete, handleTaskClick }: TasksProps) => {
                   {task.tag === "" ? (
                     ""
                   ) : (
-                    <span className="text-xxsm text-center px-2 py-1 h-4 w-32  text-blue-800 uppercase bg-blue-500 rounded-full dark:bg-blue-300 dark:text-blue-900">
+                    <span className="text-xxs text-center px-2 py-1 h-4 w-32  text-blue-800 uppercase bg-blue-500 rounded-full dark:bg-blue-300 dark:text-blue-900">
                       {task.tag}
                     </span>
                   )}
