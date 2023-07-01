@@ -25,17 +25,14 @@ const ProfileButton = () => {
     <div>
       <li>
         <a href="/user-profile">
-          <div className="w-32 ml-1 mt-1 text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
-            <div className="flex items-center space-x-2 ">
+          <div className="ml-3 mr-2 w-22 mt-1 h-8 items-center justify-center text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-2 py-1.5 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+            <div className="flex items-center space-x-1 ">
               <img
-                className="w-7 h-7 rounded-full"
+                className="w-5 h-5 rounded-"
                 src="https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-PNG-Images.png"
                 alt="User profile"
               />
-
-              <div className="font-medium dark:text-white">
-                <div className="text-sm">{getUserName()}</div>
-              </div>
+              <div className="text-sm">{getUserName()}</div>
             </div>
           </div>
         </a>

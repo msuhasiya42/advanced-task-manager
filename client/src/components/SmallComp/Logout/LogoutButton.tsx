@@ -6,11 +6,14 @@ const LogoutButton = () => {
     logout();
   };
   return (
-    <>
-      <button onClick={logoutUser} className="mt-1 btn btn-primary">
+    <div className="ml-4">
+      <button
+        onClick={logoutUser}
+        className="uppercase font-bold flex flex-row justify-center items-center m-1 btn-sm w-20 rounded-md btn-primary hover:cursor-pointer"
+      >
         Logout
       </button>
-    </>
+    </div>
   );
 };
 
