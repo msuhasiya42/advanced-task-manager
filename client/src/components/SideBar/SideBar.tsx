@@ -123,7 +123,7 @@ const SideBar = () => {
           </div>
         </div>
       )}
-      <aside className="flex flex-col h-screen w-64  px-5 mt-1  bg-white border-r rtl:border-r-0 rtl:border-l dark:bg-gray-900 dark:border-gray-700">
+      <aside className="flex text-gray-400 flex-col h-screen w-64  px-5 mt-1  bg-white border-r rtl:border-r-0 rtl:border-l dark:bg-gray-900 dark:border-gray-700">
         <div className="flex flex-col justify-between flex-1 mt-6">
           <nav className="flex-1  space-y-3 ">
             <div className="relative ">
@@ -152,7 +152,7 @@ const SideBar = () => {
             <ul className="menu h-fit text-base-content bg-gray-900">
               {/* Sidebar content here */}
               <li>
-                <button className="bold flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+                <button className="bold flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -173,7 +173,7 @@ const SideBar = () => {
               <li>
                 <button
                   onClick={handleAllTasks}
-                  className="bold flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                  className="bold flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -196,7 +196,7 @@ const SideBar = () => {
               <li>
                 <button
                   onClick={handleTodaysTasks}
-                  className="bold flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                  className="bold flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                 >
                   <svg
                     fill="none"
@@ -223,7 +223,7 @@ const SideBar = () => {
               <li>
                 <button
                   onClick={handleUpcomingTasks}
-                  className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                  className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white "
                 >
                   <svg
                     fill="none"
@@ -250,7 +250,7 @@ const SideBar = () => {
               <li>
                 <button
                   onClick={handleTemp}
-                  className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                  className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
                 >
                   <svg
                     fill="none"
@@ -278,7 +278,7 @@ const SideBar = () => {
                 <button
                   type="button"
                   onClick={filterTaskByHavingTag}
-                  className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                  className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
                 >
                   <svg
                     fill="none"
@@ -304,7 +304,7 @@ const SideBar = () => {
                     <li key={index}>
                       <a
                         onClick={() => filterTaskByTagName(tag)}
-                        className="grid grid-cols-2 h-10 w-42 p-2 text-gray-900 transition duration-75 rounded-lg pl-6 group hover:bg-gray-100 hover:text-base dark:text-white dark:hover:bg-gray-700"
+                        className="grid grid-cols-2 h-10 w-42 p-2 text-gray-900 transition duration-75 rounded-lg pl-6 group hover:bg-gray-100 hover:text-base dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
                       >
                         #{tag}
                         <AlertDialog.Root>

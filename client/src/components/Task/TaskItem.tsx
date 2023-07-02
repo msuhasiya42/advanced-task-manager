@@ -1,24 +1,61 @@
 import React from "react";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import { TasksProps } from "./Types/types";
+import { updateTaskApi } from "../../ApiCalls";
+import useTaskStore from "../../Zustand/taskStore";
 
 const TaskItem = ({ task, handleDelete, handleTaskClick }: TasksProps) => {
-  // due date red if it's over due otherwise blue
-  const taskDate = new Date(task.dueDate).getDay();
-  const currentDate = new Date().getDay();
+  // if it's done then green otherwise based on dueDate color will change into yellow or red.
+  const taskDate = new Date(task.dueDate);
+  const currentDate = new Date();
 
-  const className =
-    taskDate < currentDate
-      ? "text-xs ml-2 bg-red-100 text-red-800  font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-red-400 border border-red-400"
-      : "text-xs ml-2 bg-green-400 text-black  font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-green-400 dark:text-black border border-green-400";
+  // putting selected color into the class
+  function redOrYellow() {
+    return taskDate < currentDate ? "red" : "yellow";
+  }
+  const dateColor = task.done ? "green" : redOrYellow();
+  const classNameDueDate = `text-xs ml-2 bg-${dateColor}-400 text-black font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-${dateColor}-400 dark:text-black border border-${dateColor}-400`;
+
+  // After clicking button it will red or green
+  const updateTaskOrigStore = useTaskStore(
+    (state) => state.updateTaskOrigStore
+  );
+  const updateTaskCopiedStore = useTaskStore(
+    (state) => state.updateTaskCopiedStore
+  );
+
+  const hanldeDueDateChange = () => {
+    if (dateColor != "green") {
+      task.done = true;
+      updateTaskApi(task._id, task)
+        .then((res) => {
+          console.log("task updated to done:", res);
+          // updating store
+          updateTaskOrigStore(task.status, task._id, task);
+          updateTaskCopiedStore(task.status, task._id, task);
+        })
+        .catch((err) => {
+          console.log("err in updating to done:", err);
+        });
+    } else {
+      task.done = false;
+      updateTaskApi(task._id, task)
+        .then((res) => {
+          console.log("task updated to done:", res);
+          // updating store
+          updateTaskOrigStore(task.status, task._id, task);
+          updateTaskCopiedStore(task.status, task._id, task);
+        })
+        .catch((err) => {
+          console.log("err in updating to done:", err);
+        });
+    }
+  };
 
   // on delete
   const handleDeleteFun = () => {
     handleDelete(task);
   };
-
-  // change time zone into indian
-  const date = task.dueDate;
 
   // @Remember
   const convertToIndianTime = (date) => {
@@ -62,37 +99,37 @@ const TaskItem = ({ task, handleDelete, handleTaskClick }: TasksProps) => {
     } else {
       // Display the full date if it's not in the current week
 
-      const formattedDate = inputDate.toLocaleDateString("en-IN", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
+      const formattedDate =
+        inputDate.getFullYear() == currentDate.getFullYear()
+          ? inputDate.toLocaleDateString("en-IN", {
+              // year: "numeric",
+              month: "long",
+              day: "numeric",
+            })
+          : inputDate.toLocaleDateString("en-IN", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            });
       return formattedDate;
     }
   };
 
+  // change time zone into indian
+  const date = task.dueDate;
   const indianTime = convertToIndianTime(date);
 
-  // for description
-  const truncateString = (str) => {
-    const maxLength = 7;
-
-    if (str !== undefined) {
-      const length = str.split(" ").length;
-
-      if (length < maxLength) {
-        return str;
-      } else {
-        const truncatedString = str.split(" ").slice(0, maxLength).join(" ");
-        return truncatedString + "...";
-      }
-    }
-  };
+  // handle due date change
 
   return (
     <div>
       <label htmlFor="my_modal_6" onClick={() => handleTaskClick(task)}>
-        <div className="w-full mb-2 overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800 hover:bg-gray-700 ">
+        <div className="font-thin w-full mb-2 overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800 hover:bg-gray-700 ">
+          {/* <img
+            className="w-full h-48 mt-2"
+            src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=320&q=80"
+            alt="NIKE AIR"
+          /> */}
           <div className="px-4 py-2">
             <div className="flex justify-between">
               <div className="w-48">
@@ -100,46 +137,101 @@ const TaskItem = ({ task, handleDelete, handleTaskClick }: TasksProps) => {
                   {task.tag === "" ? (
                     ""
                   ) : (
-                    <span className="text-xxs text-center px-2 py-1 h-4 w-32  text-blue-800 uppercase bg-blue-500 rounded-full dark:bg-blue-300 dark:text-blue-900">
+                    <span className=" text-xxs text-center px-2 py-1 h-4 w-32  uppercase bg-blue-500 rounded-full dark:bg-blue-600 dark:text-white">
                       {task.tag}
                     </span>
                   )}
                 </div>
-                <h1 className="text-sm font-bold text-gray-400   dark:text-gray-300">
+                <h1 className="text-sm font-extralight text-gray-400   dark:text-gray-300">
                   {task.title}
                 </h1>
               </div>
             </div>
 
             <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-              {truncateString(task.description)}
+              {task.description == null ? (
+                ""
+              ) : (
+                <div className="w-4 group">
+                  <p className="group text-white  rounded ">
+                    <svg
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                      aria-hidden="true"
+                      className="w-4 h-4"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12"
+                      ></path>
+                    </svg>
+                  </p>
+
+                  <p
+                    className="
+                    text-xs
+                    absolute
+                    h-6
+                    w-42
+                    p-1
+                    border border-gray-100
+                    bg-gray-600
+                    text-white
+                    rounded
+                    hidden
+                    group-hover:block"
+                  >
+                    This card has Description
+                  </p>
+                </div>
+              )}
             </p>
           </div>
 
-          {/* <img
-            className="object-cover w-full h-48 mt-2"
-            src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=320&q=80"
-            alt="NIKE AIR"
-          /> */}
-
-          <div className="flex items-center justify-between px-4 py-2 bg-gray-800">
+          <div className="flex items-center justify-between px-3 py-2 bg-gray-800">
             {/* Due Date */}
-            <span className={className}>
-              <svg
-                aria-hidden="true"
-                className=" w-3 h-3 "
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
-                  clipRule="evenodd"
-                ></path>
-              </svg>
-              {indianTime}
-            </span>
+            <button onClick={hanldeDueDateChange}>
+              <span className={classNameDueDate}>
+                {dateColor != "green" ? (
+                  <svg
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    viewBox="0 0 24 24"
+                    className="w-3.5 h-3.5"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                    ></path>
+                  </svg>
+                ) : (
+                  <svg
+                    fill="none"
+                    stroke="currentColor"
+                    className=" w-3.5 h-3.5"
+                    strokeWidth="1.5"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    ></path>
+                  </svg>
+                )}
+                <p className="ml-1">{indianTime}</p>
+              </span>
+            </button>
 
             {/* links badge */}
             <div className="flex flex-row ml-2">
@@ -174,7 +266,7 @@ const TaskItem = ({ task, handleDelete, handleTaskClick }: TasksProps) => {
 
             <AlertDialog.Root>
               <AlertDialog.Trigger asChild>
-                <button className="px-2 py-1 text-xs font-semibold text-gray-300 uppercase transition-colors duration-300 transform bg-red-600 rounded hover:bg-red-800 focus:bg-red-800 focus:outline-none">
+                <button className="font-light px-2 py-1 text-xs  text-gray-100 uppercase transition-colors duration-300 transform bg-red-600 rounded hover:bg-red-800 focus:bg-red-800 focus:outline-none">
                   Delete
                 </button>
               </AlertDialog.Trigger>

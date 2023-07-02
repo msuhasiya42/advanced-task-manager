@@ -80,6 +80,18 @@ const TextAreaModal = ({ status }: StatusType) => {
         textRef.current.focus();
       }
     }
+
+    // when user click outside the text area -> make textArea disappear
+    const handleClickOutside = (event) => {
+      if (textRef.current && !textRef.current.contains(event.target)) {
+        setShowTextArea(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, [showTextArea]);
 
   return (

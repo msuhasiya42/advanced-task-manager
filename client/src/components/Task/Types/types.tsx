@@ -8,6 +8,7 @@ export interface TaskType {
   tag: string;
   priority: string;
   status: string;
+  done: boolean;
 }
 
 export interface TasksProps {

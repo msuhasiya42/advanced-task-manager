@@ -37,7 +37,6 @@ const useTaskStore = create((set) => ({
     })),
 
   //   add new task
-
   addTaskOrigStore: (category, task) =>
     set((state) => ({
       originalTasks: {
