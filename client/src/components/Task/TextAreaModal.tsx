@@ -41,8 +41,6 @@ const TextAreaModal = ({ status }: StatusType) => {
     createTask(task, status, user)
       .then((response) => {
         // Handle the API response
-
-        console.log(response.data.task);
         // @Remember
         const newTask = response.data.task;
         addTaskOrigStore(status, newTask);

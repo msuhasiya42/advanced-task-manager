@@ -36,7 +36,6 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
 
   // handle input change
   const handleInputChange = (e) => {
-    console.log(e.target.value, e.target.name);
     setEditedTask({ ...editedTask, [e.target.name]: e.target.value });
   };
 
@@ -50,7 +49,6 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
   const handleFormSubmit = () => {
     updateTaskApi(editedTask._id, editedTask)
       .then((res) => {
-        console.log("Task updated", res);
         updateTaskOrigStore(editedTask.status, editedTask._id, editedTask);
         updateTaskCopiedStore(editedTask.status, editedTask._id, editedTask);
       })
@@ -71,8 +69,7 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
   // on task delete
   const handleDelete = (task) => {
     deleteTaskApi(task._id)
-      .then((res) => {
-        console.log("Task Deleted:", res);
+      .then(() => {
         deleteTaskOrigStore(task.status, task._id);
         deleteTaskCopiedStore(task.status, task._id);
 
@@ -91,9 +88,7 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
 
   // drag and drop
   const handleDragEnd = (result) => {
-    const { destination, source, draggableId } = result;
-
-    console.log(source, destination, draggableId);
+    const { destination, source } = result;
 
     // Item dropped outside of a droppable area : no destination
     if (!destination) {

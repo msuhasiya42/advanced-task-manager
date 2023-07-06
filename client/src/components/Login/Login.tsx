@@ -1,10 +1,11 @@
 /* eslint-disable react/no-unescaped-entities */
 import React, { useState } from "react";
 import NavBar from "../NavBar/NavBarHomePage";
-import { loginApi } from "../../ApiCalls";
+import { googleLoginApi, loginApi } from "../../ApiCalls";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../Zustand/authStore";
 import useTagStore from "../../Zustand/tagStore";
+import { GoogleLogin } from "@react-oauth/google";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -25,13 +26,48 @@ const Login = () => {
         const userData = {
           id: response.data.userId,
           name: response.data.name,
+          token: response.data.token,
         };
-        const token = response.data.token;
         const tags = response.data.tags;
 
         // store in auth store
         // @Remember: store data in store directly without JSON.stringify in tag store
-        login(userData, token);
+        login(userData);
+        setTags(tags);
+        navigate("/user-dashboard");
+      })
+      .catch((err) => {
+        console.error("Login error:", err);
+        if (err.code === "ERR_NETWORK") {
+          setErrMsg(
+            "There was a problem connecting to the server. Please check your internet connection and try again "
+          );
+        } else if (err.code === "ERR_BAD_RESPONSE") {
+          setErrMsg("Internal Server Error");
+        } else {
+          setErrMsg("An Error Occurred");
+        }
+        setShowErrMsg(true);
+        console.log(err);
+      });
+  };
+
+  // login with google
+  const loginGoogle = (response) => {
+    // call api with access token
+    const { credential } = response;
+    googleLoginApi(credential)
+      .then((res) => {
+        const { userId, name, token, picture, tags } = res.data;
+        const userData = {
+          id: userId,
+          name,
+          token,
+          picture,
+        };
+        // store in auth store
+        // @Remember: store data in store directly without JSON.stringify in tag store
+        login(userData);
         setTags(tags);
         navigate("/user-dashboard");
       })
@@ -68,7 +104,7 @@ const Login = () => {
           </a>
           <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
             <form
-              onSubmit={handleSubmit}
+              // onSubmit={handleSubmit}
               className=" space-y-4 shadow-lg  rounded px-10 pt-12 pb-10 "
             >
               {showErrMsg === true ? (
@@ -142,6 +178,17 @@ const Login = () => {
                 >
                   Forgot Password?
                 </a>
+              </div>
+              <div className="">
+                <GoogleLogin
+                  onSuccess={(googleToken) => {
+                    loginGoogle(googleToken);
+                  }}
+                  onError={() => {
+                    console.log("Login Failed");
+                  }}
+                  useOneTap
+                />
               </div>
               <p className="mt-6 text-sm font-light text-gray-500 dark:text-gray-400">
                 Don't have account?{" "}

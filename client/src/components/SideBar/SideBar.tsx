@@ -35,11 +35,10 @@ const SideBar = () => {
 
   const handleDelete = (tag) => {
     updateUserApi(userId, "delete", tag)
-      .then((response) => {
+      .then(() => {
         // @Remember
         // add tag in store
         deleteTag(tag);
-        console.log(response);
       })
       .catch((error) => {
         // @Todo

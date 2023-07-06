@@ -4,6 +4,7 @@ import "./index.css";
 import "../public/common.css";
 import App from "./App";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const rootType = document.getElementById("root")!;
@@ -12,9 +13,11 @@ const queryClient = new QueryClient();
 
 root.render(
   // <React.StrictMode>
-  <QueryClientProvider client={queryClient}>
-    <App />
-  </QueryClientProvider>
+  <GoogleOAuthProvider clientId="1032180948351-qcskgfti1iibbdhq4tavjmjuq3kl3b0k.apps.googleusercontent.com">
+    <QueryClientProvider client={queryClient}>
+      <App />
+    </QueryClientProvider>
+  </GoogleOAuthProvider>
   // </React.StrictMode>
 );
 

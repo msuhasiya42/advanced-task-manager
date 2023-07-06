@@ -28,8 +28,7 @@ const TaskItem = ({ task, handleDelete, handleTaskClick }: TasksProps) => {
     if (dateColor != "green") {
       task.done = true;
       updateTaskApi(task._id, task)
-        .then((res) => {
-          console.log("task updated to done:", res);
+        .then(() => {
           // updating store
           updateTaskOrigStore(task.status, task._id, task);
           updateTaskCopiedStore(task.status, task._id, task);
@@ -40,8 +39,7 @@ const TaskItem = ({ task, handleDelete, handleTaskClick }: TasksProps) => {
     } else {
       task.done = false;
       updateTaskApi(task._id, task)
-        .then((res) => {
-          console.log("task updated to done:", res);
+        .then(() => {
           // updating store
           updateTaskOrigStore(task.status, task._id, task);
           updateTaskCopiedStore(task.status, task._id, task);
@@ -148,7 +146,7 @@ const TaskItem = ({ task, handleDelete, handleTaskClick }: TasksProps) => {
               </div>
             </div>
 
-            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+            <div className="mt-1 text-sm text-gray-600 dark:text-gray-400">
               {task.description == null ? (
                 ""
               ) : (
@@ -189,7 +187,7 @@ const TaskItem = ({ task, handleDelete, handleTaskClick }: TasksProps) => {
                   </p>
                 </div>
               )}
-            </p>
+            </div>
           </div>
 
           <div className="flex items-center justify-between px-3 py-2 bg-gray-800">

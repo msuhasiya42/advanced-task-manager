@@ -21,6 +21,20 @@ export function loginApi(email, password) {
   });
 }
 
+// login using google
+export function googleLoginApi(tokenId) {
+  return API.post("users/googleLoginApi", {
+    token: tokenId,
+  });
+}
+
+// check session
+export function verifyToken(token) {
+  return API.post("users/verifyToken", {
+    token,
+  });
+}
+
 export function getUserData(userId) {
   return API.get(`/users/getUserById/${userId}`);
 }

@@ -107,9 +107,13 @@ const UserProfile = () => {
       </div>
       <div className="flex flex-col items-center -mt-20">
         <img
-          src="https://img.freepik.com/premium-vector/young-smiling-man-avatar-man-with-brown-beard-mustache-hair-wearing-yellow-sweater-sweatshirt-3d-vector-people-character-illustration-cartoon-minimal-style_365941-860.jpg?w=2000"
-          className="w-40 border-4 border-white rounded-full"
+          src={
+            user.picture == undefined
+              ? "https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-PNG-Images.png"
+              : user.picture
+          }
           alt="User name"
+          className="w-28 h-28 rounded-lg"
         />
         <div className="flex items-center space-x-2 mt-2">
           <p className="text-2xl">{user.name}</p>

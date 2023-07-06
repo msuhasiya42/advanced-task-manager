@@ -1,8 +1,12 @@
+require("dotenv").config();
 const User = require("../Models/users");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const axios = require("axios"); // node
 
-// Logic to create a new user
+const secretKey = process.env.SECRET_KEY;
+
+// Create a new user
 const createUser = async (req, res) => {
   const { name, email, password } = req.body;
 
@@ -26,6 +30,7 @@ const createUser = async (req, res) => {
   }
 };
 
+// login
 const login = async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -33,16 +38,20 @@ const login = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (user) {
+      const userPassword = user.password == undefined ? "" : user.password;
       // Compare the provided password with the stored hashed password
-      const passwordMatch = await bcrypt.compare(password, user.password);
+      const passwordMatch = await bcrypt.compare(password, userPassword);
 
       if (passwordMatch) {
         // Create a JWT token
-        const token = jwt.sign({ userId: user._id }, "secret_key");
-        const userId = user._id;
-        const name = user.name;
-        const tags = user.tags;
-        res.json({ token, userId, name, tags });
+        // @ts-ignore
+        const token = jwt.sign({ userId: user._id }, secretKey, {
+          expiresIn: "1h",
+        });
+
+        const { _id, name, tags } = user;
+
+        res.json({ token, userId: _id, name, tags });
       } else {
         res.status(401).json({ error: "Invalid credentials" });
       }
@@ -122,11 +131,68 @@ const getAllUsers = (req, res) => {
   // Logic to get all users
 };
 
+// google login
+const googleLogin = async (req, res) => {
+  const { token } = req.body;
+  // @ts-ignore
+  const result = await axios.get(
+    `https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=${token}`
+  );
+
+  const { sub, email, name, picture } = result.data;
+  try {
+    // check googleUser already exists or not
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      // if exists then take previous data
+      const { _id, name, tags, picture } = existingUser;
+
+      res.json({ token, userId: _id, name, tags, picture });
+    } else {
+      // if new user then add user data to DB
+      const newUser = new User({
+        googleId: sub,
+        name: name,
+        email: email,
+        picture: picture,
+      });
+
+      await newUser
+        .save()
+        .then(() => {
+          const { _id, name, tags, picture } = newUser;
+          res.json({ token, userId: _id, name, tags, picture });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  } catch (error) {
+    console.error("An error occurred:", error);
+    res.status(500).json({ error: error });
+  }
+};
+
+// check if token expired or not
+const verifyToken = async (req, res) => {
+  const { token } = req.body;
+  try {
+    // @ts-ignore
+    const decoded = jwt.verify(token, secretKey);
+    return res.json({ decoded: decoded });
+  } catch (error) {
+    // Token has expired or is invalid
+    return res.json({ error: error });
+  }
+};
+
 module.exports = {
   getAllUsers,
   getUserById,
   createUser,
   login,
+  googleLogin,
   updateUser,
   deleteUser,
+  verifyToken,
 };

@@ -39,12 +39,11 @@ const AddTags = () => {
       // update user to add tag api
       const type = "add";
       updateUserApi(userId, type, tag)
-        .then((response) => {
+        .then(() => {
           // @Remember
           // add tag in store
           setTagCreated(true);
           addTag(tag);
-          console.log(response);
           setTimeout(disAppearToast, 3000);
         })
         .catch((error) => {
