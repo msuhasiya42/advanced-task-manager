@@ -10,9 +10,16 @@ import { GoogleLogin } from "@react-oauth/google";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
   const [errMsg, setErrMsg] = useState("Invalid Credentials");
   const [showErrMsg, setShowErrMsg] = useState(false);
   const navigate = useNavigate();
+
+  // show password
+  const handleShowPasswordToggle = () => {
+    setShowPassword(!showPassword);
+  };
 
   // store login infor in store
   const { login } = useAuthStore();
@@ -157,11 +164,22 @@ const Login = () => {
                 <input
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   id="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
+                <div className="mt-3">
+                  <input
+                    type="checkbox"
+                    id="showPasswordCheckbox"
+                    checked={showPassword}
+                    onChange={handleShowPasswordToggle}
+                  />
+                  <label className="ml-2" htmlFor="showPasswordCheckbox">
+                    Show Password
+                  </label>
+                </div>
                 {/* <p className="text-red-500 text-xs italic">Please choose a password.</p> */}
               </div>
               <div className="flex items-center justify-between">
@@ -179,17 +197,6 @@ const Login = () => {
                   Forgot Password?
                 </a>
               </div>
-              <div className="">
-                <GoogleLogin
-                  onSuccess={(googleToken) => {
-                    loginGoogle(googleToken);
-                  }}
-                  onError={() => {
-                    console.log("Login Failed");
-                  }}
-                  useOneTap
-                />
-              </div>
               <p className="mt-6 text-sm font-light text-gray-500 dark:text-gray-400">
                 Don't have account?{" "}
                 <a
@@ -202,6 +209,17 @@ const Login = () => {
               <p className="text-center text-gray-500 text-xs">
                 &copy;2023 M & R Corp. All rights reserved.
               </p>
+              <div className="">
+                <GoogleLogin
+                  onSuccess={(googleToken) => {
+                    loginGoogle(googleToken);
+                  }}
+                  onError={() => {
+                    console.log("Login Failed");
+                  }}
+                  useOneTap
+                />
+              </div>
             </form>
           </div>
         </div>
