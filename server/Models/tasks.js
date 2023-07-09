@@ -50,7 +50,6 @@ const taskSchema = new mongoose.Schema(
       },
     ],
 
-    // @Remember
     collaborators: [
       {
         type: mongoose.Schema.Types.ObjectId,

@@ -36,8 +36,6 @@ const SideBar = () => {
   const handleDelete = (tag) => {
     updateUserApi(userId, "delete", tag)
       .then(() => {
-        // @Remember
-        // add tag in store
         deleteTag(tag);
       })
       .catch((error) => {

@@ -18,8 +18,6 @@ const TextAreaModal = ({ status }: StatusType) => {
   const addTaskOrigStore = useTaskStore((state) => state.addTaskOrigStore);
   const addTaskCopiedStore = useTaskStore((state) => state.addTaskCopiedStore);
 
-  // hooks
-  // @remember
   const textRef = React.useRef<HTMLInputElement>(null);
 
   // show/hide textArea
@@ -71,7 +69,8 @@ const TextAreaModal = ({ status }: StatusType) => {
   // useEffect
   useEffect(() => {
     if (showTextArea) {
-      // @Remember: useRef used here because we are hiding
+      // @Remember:
+      // textRef used here because we are hiding
       // and showing textArea
       if (textRef.current != null) {
         // 👉️ TypeScript knows that ref is not null here

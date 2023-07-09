@@ -1,4 +1,3 @@
-// @Remember
 import axios from "redaxios";
 
 const API = axios.create({
@@ -69,7 +68,6 @@ export function deleteTaskApi(id) {
 }
 
 // task update
-//TODO
 export function updateTaskApi(id, task) {
   return API.put(`tasks/updateTask/${id}`, {
     task,

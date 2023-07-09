@@ -28,16 +28,12 @@ const fetchTask = async (req, res) => {
     // get task based on user id
     const tasks = await Task.find({ user: user });
 
-    // return list of task in json form
-    // @Remember
-    // sending new task we to show new task on front end side
     res.status(200).json({ success: true, tasks: tasks });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
 };
 
-// @Todo
 // Controller for updating task
 const updateTask = async (req, res) => {
   try {
@@ -61,7 +57,6 @@ const updateTask = async (req, res) => {
 const deleteTask = async (req, res) => {
   const taskId = req.params.id;
   try {
-    // @Remember
     // Find the task by its ID and remove it
     const deletedTask = await Task.findByIdAndRemove(taskId);
 

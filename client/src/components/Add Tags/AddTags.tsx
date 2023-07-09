@@ -22,7 +22,6 @@ const AddTags = () => {
   };
 
   // toast msg remove
-  // @todo
   const disAppearToast = () => {
     setTagCreated(false);
   };
@@ -40,8 +39,6 @@ const AddTags = () => {
       const type = "add";
       updateUserApi(userId, type, tag)
         .then(() => {
-          // @Remember
-          // add tag in store
           setTagCreated(true);
           addTag(tag);
           setTimeout(disAppearToast, 3000);

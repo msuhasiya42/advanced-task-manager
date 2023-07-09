@@ -5,7 +5,6 @@ import useAuthStore from "../../Zustand/authStore";
 
 const Home = () => {
   const { user } = useAuthStore();
-  // @Remember
   if (user) {
     return <Navigate to="/user-dashboard" replace />;
   }

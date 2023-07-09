@@ -37,8 +37,6 @@ const Login = () => {
         };
         const tags = response.data.tags;
 
-        // store in auth store
-        // @Remember: store data in store directly without JSON.stringify in tag store
         login(userData);
         setTags(tags);
         navigate("/user-dashboard");
@@ -72,8 +70,6 @@ const Login = () => {
           token,
           picture,
         };
-        // store in auth store
-        // @Remember: store data in store directly without JSON.stringify in tag store
         login(userData);
         setTags(tags);
         navigate("/user-dashboard");
