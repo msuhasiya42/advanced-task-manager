@@ -1,0 +1,4 @@
+server/
+
+# Local Netlify folder
+.netlify
