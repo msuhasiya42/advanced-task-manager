@@ -9,6 +9,8 @@ export interface TaskType {
   priority: string;
   status: string;
   done: boolean;
+  collaborators: string[]; // Assuming collaborators can be of any type
+  user: string;
 }
 
 export interface TasksProps {

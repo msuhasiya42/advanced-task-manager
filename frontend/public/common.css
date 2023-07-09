@@ -4,10 +4,6 @@
 
 /* common css for all */
 
-body
-{
-    overflow: hidden;
-}
 
 .bg-gradient
 {
@@ -45,4 +41,11 @@ body
     font-size: 9px;
    
 }
+
+/* Ipad css */
+@media (max-width: 1100px) {
+  
+}
+
+
   

@@ -6,10 +6,14 @@ import useTaskStore from "../../Zustand/taskStore";
 import useTagStore from "../../Zustand/tagStore";
 import { TaskCollection } from "./Types/types";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+// import ReactQuill from "react-quill";
+// import "react-quill/dist/quill.snow.css";
 
 const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
   const [delMsg, setDelMsg] = useState(false);
-  const [editedTask, setEditedTask] = useState({
+  const [modalData, setModalData] = useState({
     _id: "",
     title: "",
     description: "",
@@ -21,44 +25,17 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
     colloborations: [],
   });
 
-  // tags
+  // store
+  const setOriginalTasks = useTaskStore((state) => state.setOriginalTasks);
+  const originalTasks = useTaskStore((state) => state.originalTasks);
+  const copyTasks = useTaskStore((state) => state.copyTasks);
   const tags = useTagStore((state) => state.tags);
-
-  const handleTaskClick = (task) => {
-    setEditedTask(task);
-    // Code to open the edit task modal
-  };
-
-  // toast msg remove
-  const disAppearToast = () => {
-    setDelMsg(false);
-  };
-
-  // handle input change
-  const handleInputChange = (e) => {
-    setEditedTask({ ...editedTask, [e.target.name]: e.target.value });
-  };
-
-  // on updating task
   const updateTaskOrigStore = useTaskStore(
     (state) => state.updateTaskOrigStore
   );
   const updateTaskCopiedStore = useTaskStore(
     (state) => state.updateTaskCopiedStore
   );
-  const handleFormSubmit = () => {
-    updateTaskApi(editedTask._id, editedTask)
-      .then((res) => {
-        updateTaskOrigStore(editedTask.status, editedTask._id, editedTask);
-        updateTaskCopiedStore(editedTask.status, editedTask._id, editedTask);
-      })
-      .catch((err) => {
-        console.log("Error in updating task:", err);
-      });
-  };
-
-  // getting fun from store to delete and calling delete task api
-  // then updating the store
   const deleteTaskOrigStore = useTaskStore(
     (state) => state.deleteTaskOrigStore
   );
@@ -66,7 +43,42 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
     (state) => state.deleteTaskCopiedStore
   );
 
-  // on task delete
+  // when clicked on task set editedTask value to currentTask
+  const handleTaskClick = (task) => {
+    setModalData(task);
+  };
+
+  // handle input change (title,priority, status)
+  const handleInputChange = (e) => {
+    setModalData({ ...modalData, [e.target.name]: e.target.value });
+  };
+
+  // handle description change
+  const handleDescription = (desc) => {
+    setModalData({ ...modalData, description: desc });
+  };
+
+  // handle Date change
+  const handleDate = (date) => {
+    setModalData({ ...modalData, dueDate: date.toString() });
+  };
+
+  const handleFormSubmit = () => {
+    updateTaskApi(modalData._id, modalData)
+      .then(() => {
+        updateTaskOrigStore(modalData.status, modalData._id, modalData);
+        updateTaskCopiedStore(modalData.status, modalData._id, modalData);
+      })
+      .catch((err) => {
+        console.log("Error in updating task:", err);
+      });
+  };
+
+  // handle delete
+  const disAppearToast = () => {
+    setDelMsg(false);
+  };
+
   const handleDelete = (task) => {
     deleteTaskApi(task._id)
       .then(() => {
@@ -81,10 +93,6 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
         console.log("Error in deletion:", err);
       });
   };
-
-  const setOriginalTasks = useTaskStore((state) => state.setOriginalTasks);
-  const originalTasks = useTaskStore((state) => state.originalTasks);
-  const copyTasks = useTaskStore((state) => state.copyTasks);
 
   // drag and drop
   const handleDragEnd = (result) => {
@@ -406,7 +414,7 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
                         type="text"
                         id="title"
                         name="title"
-                        value={editedTask.title}
+                        value={modalData.title}
                         className="block w-full rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
                         aria-label="Input"
                         placeholder="Input"
@@ -420,22 +428,23 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
                       </label>
                       <textarea
                         name="description"
-                        id="descg gets deleted from the side bar
-
-                        Tuesday
-                        ￼DELETE
-                        Add option to add links :: 1
-                        User can add links/ resources which related to the task.
-                        
-                        Wednesday
-                        ￼DELETE
-                        Due Date can be edited :: 2ription"
+                        id="description"
                         className="block w-full h-20 max-h-48 rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none resize-vertical"
                         aria-label="Textarea"
                         placeholder="Textarea"
-                        value={editedTask.description}
+                        value={modalData.description}
                         onChange={handleInputChange}
                       ></textarea>
+                      {/* <ReactQuill
+                        className="block  w-full rounded-md   text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
+                        value={modalData.description}
+                        onChange={handleDescription}
+                        style={{
+                          height: " 180px",
+                          maxHeight: "180px",
+                          overflow: "auto",
+                        }}
+                      /> */}
                     </div>
 
                     {/* select tag */}
@@ -448,7 +457,7 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
                         name="tag"
                         className="block w-full xt-select rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
                         aria-label="Select"
-                        value={editedTask.tag}
+                        value={modalData.tag}
                         onChange={handleInputChange}
                       >
                         <option className="bg-red-400" selected value="">
@@ -474,7 +483,7 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
                         name="status"
                         className="block w-full xt-select rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
                         aria-label="Select"
-                        value={editedTask.status}
+                        value={modalData.status}
                         onChange={handleInputChange}
                       >
                         {/* <option selected value="">
@@ -495,7 +504,7 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
                         name="priority"
                         className="block w-full xt-select rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
                         aria-label="Select"
-                        value={editedTask.priority}
+                        value={modalData.priority}
                         onChange={handleInputChange}
                       >
                         {/* <option selected value="">
@@ -507,36 +516,23 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
                       </select>
                     </div>
 
-                    <div></div>
-                    {/* <DatePicker
-                      name="dueDate"
-                      id="dueDate"
-                      selected={
-                        editedTask.dueDate === ""
-                          ? moment().toDate()
-                          : moment(editedTask.dueDate).toDate()
-                      }
-                      onChange={(e) => handleDueDate(e)}
-                    /> */}
+                    {/* Date picker */}
+                    <div className="pt-3">
+                      <label className="block mb-3 font-medium text-gray-700">
+                        Due Date
+                      </label>
+                      <DatePicker
+                        className="block w-full rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
+                        selected={
+                          modalData.dueDate == ""
+                            ? new Date()
+                            : new Date(modalData.dueDate)
+                        }
+                        onChange={handleDate}
+                      />
+                    </div>
 
-                    {/* <div className="w-full">
-                    <label className="block mb-3 font-medium text-gray-700">
-                      Tags
-                    </label>
-                    <select
-                      name="tags"
-                      id="tags"
-                      className="block w-full xt-select rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
-                      multiple
-                      aria-label="Select multiple"
-                      onChange={handleInputChange}
-                    >
-                      <option value="Personal">Personal</option>
-                      <option value="Work">Work</option>
-                      <option value="House">House</option>
-                    </select>
-                  </div> */}
-
+                    {/* submit button */}
                     <div className="w-full mt-3">
                       <button
                         type="submit"

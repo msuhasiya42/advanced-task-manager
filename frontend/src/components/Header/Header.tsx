@@ -18,7 +18,7 @@ const Header = () => {
               alt="Flowbite Logo"
             /> */}
             <span className="uppercase ml-3 self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-              Task-Manager
+              Task Manager
             </span>
           </a>
           <button

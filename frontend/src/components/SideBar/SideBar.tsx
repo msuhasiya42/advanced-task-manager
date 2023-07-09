@@ -120,8 +120,9 @@ const SideBar = () => {
           </div>
         </div>
       )}
-      <aside className="flex text-gray-400 flex-col h-screen w-64  px-5 mt-1  bg-white border-r rtl:border-r-0 rtl:border-l dark:bg-gray-900 dark:border-gray-700">
-        <div className="flex flex-col justify-between flex-1 mt-6">
+      {/* side bar */}
+      <div className="flex text-gray-400 flex-col h-screen w-64  px-5 mt-1  bg-white border-r rtl:border-r-0 rtl:border-l dark:bg-gray-900 dark:border-gray-700">
+        <div className="justify-between  mt-4">
           <nav className="flex-1  space-y-3 ">
             <div className="relative ">
               <span className="absolute inset-y-0 left-0 flex items-center pl-3">
@@ -384,7 +385,7 @@ const SideBar = () => {
             </div>
           </nav>
         </div>
-      </aside>
+      </div>
     </>
   );
 };

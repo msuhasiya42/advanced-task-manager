@@ -172,7 +172,7 @@ const TextAreaModal = ({ status }: StatusType) => {
                 onChange={updateTitle}
                 id="task"
                 type="text"
-                className="block w-full px-2 text-sm text-gray-800 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"
+                className="block w-full px-1 text-sm text-gray-800 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"
                 placeholder="Write about task..."
                 required
               ></input>
@@ -180,19 +180,22 @@ const TextAreaModal = ({ status }: StatusType) => {
           </div>
 
           {/* Add card button */}
-          <button
-            type="submit"
-            className="mb-5 inline-flex items-center px-5 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800"
-          >
-            Add Card
-          </button>
-          <button
-            type="button"
-            onClick={handleClick}
-            className="ml-2 text-gray-900 bg-white border px-5 py-2 border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm  mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-          >
-            Cancel
-          </button>
+          <div className=" grid grid-cols-2 gap-24 md:gap-6">
+            <button
+              type="submit"
+              className=" mb-5 inline-flex items-center justify-center px-4 py-1 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800"
+            >
+              Add
+            </button>
+
+            <button
+              type="button"
+              onClick={handleClick}
+              className=" mb-5 inline-flex justify-center items-center px-4 py-1 text-sm font-medium text-center text-white bg-gray-700 rounded-lg focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-900 hover:bg-gray-800"
+            >
+              Cancel
+            </button>
+          </div>
         </form>
       )}
     </div>
