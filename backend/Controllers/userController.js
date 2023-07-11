@@ -3,6 +3,7 @@ const User = require("../Models/users");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const axios = require("axios"); // node
+const Task = require("../Models/tasks");
 
 const secretKey = process.env.SECRET_KEY;
 
@@ -92,7 +93,7 @@ const updateUser = async (req, res) => {
   const type = req.body.type;
 
   await User.findById(userId)
-    .then((user) => {
+    .then(async (user) => {
       if (!user) {
         return res.status(404).json({ error: "User not found" });
       }
@@ -110,10 +111,20 @@ const updateUser = async (req, res) => {
         if (index > -1) {
           user.tags.splice(index, 1);
           user.save();
-          return res.json(user.tags);
+          res.json(user.tags);
         } else {
           res.status(404).json({ error: "Tag not found" });
         }
+
+        // update task where user == userId and tag == tag
+        Task.updateMany({ user: userId, tag: tag }, { $set: { tag: "" } })
+          .then((result) => {
+            console.log(result);
+            console.log(`Tags updated for tasks linked to user ${userId}`);
+          })
+          .catch((error) => {
+            console.error("Error updating tags:", error);
+          });
       }
     })
     .catch((err) => {
