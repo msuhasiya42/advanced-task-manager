@@ -19,6 +19,7 @@ const SideBar = () => {
   const filterTaskByHavingTagFun = useTaskStore(
     (state) => state.filterTaskByHavingTagFun
   );
+  const removeTagFromTasks = useTaskStore((state) => state.removeTagFromTasks);
 
   // All tasks
   const handleAllTasks = () => {
@@ -33,10 +34,12 @@ const SideBar = () => {
   // delete tag
   const userId = useAuthStore((state) => state.user.id);
 
-  const handleDelete = (tag) => {
+  const handleDeleteTag = (tag) => {
     updateUserApi(userId, "delete", tag)
       .then(() => {
         deleteTag(tag);
+        // update store
+        removeTagFromTasks(tag);
       })
       .catch((error) => {
         // @Todo
@@ -343,7 +346,7 @@ const SideBar = () => {
                                 </AlertDialog.Cancel>
                                 <AlertDialog.Action asChild>
                                   <button
-                                    onClick={() => handleDelete(tag)}
+                                    onClick={() => handleDeleteTag(tag)}
                                     className=" text-red-600 bg-red-200 hover:bg-red5 focus:shadow-red7 inline-flex h-[35px] items-center justify-center rounded-[4px] px-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px]"
                                   >
                                     Yes, delete

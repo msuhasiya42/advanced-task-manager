@@ -155,6 +155,45 @@ const useTaskStore = create((set) => ({
         ),
       },
     })),
+
+  // delete tag from all tasks linked to it
+
+  removeTagFromTasks: (tagName) =>
+    set((state) => ({
+      originalTasks: {
+        todo: removeTagFromTasksByCategory(state.originalTasks.todo, tagName),
+        inProgress: removeTagFromTasksByCategory(
+          state.originalTasks.inProgress,
+          tagName
+        ),
+        completed: removeTagFromTasksByCategory(
+          state.originalTasks.completed,
+          tagName
+        ),
+      },
+      copiedTasks: {
+        todo: removeTagFromTasksByCategory(state.copiedTasks.todo, tagName),
+        inProgress: removeTagFromTasksByCategory(
+          state.copiedTasks.inProgress,
+          tagName
+        ),
+        completed: removeTagFromTasksByCategory(
+          state.copiedTasks.completed,
+          tagName
+        ),
+      },
+    })),
 }));
+
+const removeTagFromTasksByCategory = (tasks, tagName) =>
+  tasks.map((task) => {
+    if (task.tag === tagName) {
+      return {
+        ...task,
+        tag: "", // Remove the tag by setting it to an empty string
+      };
+    }
+    return task;
+  });
 
 export default useTaskStore;
