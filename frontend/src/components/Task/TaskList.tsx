@@ -348,7 +348,7 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
                   <div className="flex w-full max-w-sm overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800">
                     <div className="flex items-center justify-center w-12 bg-red-500">
                       <svg
-                        className="w-6 h-6 text-white fill-current"
+                        className="w-6 h-6 text-gray-200 fill-current"
                         viewBox="0 0 40 40"
                         xmlns="http://www.w3.org/2000/svg"
                       >
@@ -457,10 +457,10 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
                         name="tag"
                         className="block w-full xt-select rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
                         aria-label="Select"
-                        value={modalData.tag}
+                        value={modalData.tag == "" ? "noTag" : modalData.tag}
                         onChange={handleInputChange}
                       >
-                        <option className="bg-red-400" selected value="">
+                        <option value="noTag" className="bg-red-400">
                           No tag
                         </option>
 
@@ -536,7 +536,7 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
                     <div className="w-full mt-3">
                       <button
                         type="submit"
-                        className="xt-button py-2.5 px-3.5 text-sm rounded-md font-medium leading-snug tracking-wider uppercase text-white bg-primary-500 transition hover:text-white hover:bg-primary-600 active:text-white active:bg-primary-700 on:text-white on:bg-primary-600"
+                        className="xt-button py-2.5 px-3.5 text-sm rounded-md font-medium leading-snug tracking-wider uppercase text-gray-200 bg-primary-500 transition hover:text-gray-200 hover:bg-primary-600 active:text-gray-200 active:bg-primary-700 on:text-gray-200 on:bg-primary-600"
                       >
                         submit
                       </button>
