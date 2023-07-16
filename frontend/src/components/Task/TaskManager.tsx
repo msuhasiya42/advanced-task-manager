@@ -4,6 +4,7 @@ import { fetchTask } from "../../ApiCalls";
 import LoadingPage from "../Loading/LoadingPage";
 import useTaskStore from "../../Zustand/taskStore";
 import useAuthStore from "../../Zustand/authStore";
+import { taskSchema } from "../../zodSpecs/task";
 const TaskManager = () => {
   const [loading, setLoading] = useState(false);
 
@@ -22,15 +23,25 @@ const TaskManager = () => {
       fetchTask(user)
         .then((response) => {
           const fetchedTasks = response.data.tasks;
-          // @Remember
-          // Filter tasks into different categories
-          // necessary because when we add task we need to refresh individual comp not all
-          // so add we add task in particular cat. it will refresh only that comp
-          const todos = fetchedTasks.filter((task) => task.status === "todo");
-          const inprogress = fetchedTasks.filter(
+
+          // zod validation
+          const validatedTasks = fetchedTasks.map((task) => {
+            try {
+              return taskSchema.parse(task);
+            } catch (error) {
+              console.error(`Invalid task: ${error.message}`);
+              return null;
+            }
+          });
+
+          console.log(validatedTasks);
+          console.log(fetchedTasks);
+
+          const todos = validatedTasks.filter((task) => task.status === "todo");
+          const inprogress = validatedTasks.filter(
             (task) => task.status === "inProgress"
           );
-          const completed = fetchedTasks.filter(
+          const completed = validatedTasks.filter(
             (task) => task.status === "completed"
           );
 
