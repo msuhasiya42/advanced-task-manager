@@ -153,25 +153,6 @@ const SideBar = () => {
             <ul className="menu h-fit text-base-content bg-gray-900">
               {/* Sidebar content here */}
               <li>
-                <button className="bold flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="w-5 h-5"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
-                    />
-                  </svg>
-                  <span className="ml-3">Journaling</span>
-                </button>
-              </li>
-              <li>
                 <button
                   onClick={handleAllTasks}
                   className="bold flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
@@ -309,7 +290,7 @@ const SideBar = () => {
                       <li>
                         <a
                           onClick={() => filterTaskByTagName(tag)}
-                          className=" h-10 p-2  text-gray-900 transition duration-75 rounded-lg pl-2 group hover:w-full dark:text-gray-300  dark:hover:text-white"
+                          className=" h-10 p-2 text-gray-900 transition duration-75 rounded-lg pl-2 group dark:text-gray-300 my-1 dark:hover:text-white"
                         >
                           #{tag}
                           {/* <button
@@ -344,7 +325,7 @@ const SideBar = () => {
                               viewBox="0 0 24 24"
                               xmlns="http://www.w3.org/2000/svg"
                               aria-hidden="true"
-                              className="flex-shrink-0 w-5 h-5 text-gray-900 transition duration-75 dark: hover:text-gray-900 dark:hover:text-white"
+                              className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark: hover:text-gray-900 dark:hover:text-white"
                             >
                               <path
                                 strokeLinecap="round"
