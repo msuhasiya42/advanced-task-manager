@@ -290,6 +290,7 @@ const SideBar = () => {
                       <li>
                         <a
                           onClick={() => filterTaskByTagName(tag)}
+                          style={{ width: "135px" }}
                           className=" h-10 p-2 text-gray-900 transition duration-75 rounded-lg pl-2 group dark:text-gray-300 my-1 dark:hover:text-white"
                         >
                           #{tag}

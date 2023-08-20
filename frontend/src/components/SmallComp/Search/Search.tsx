@@ -4,7 +4,7 @@ const Search = () => {
   return (
     <div>
       <li>
-        <form>
+        {/* <form>
           <label
             htmlFor="default-search"
             className=" mb-6 text-sm font-medium text-gray-900 sr-only dark:text-white"
@@ -43,7 +43,7 @@ const Search = () => {
               Search
             </button>
           </div>
-        </form>
+        </form> */}
       </li>
     </div>
   );
