@@ -87,50 +87,57 @@ const getUserById = async (req, res) => {
 
 // update the user
 const updateUser = async (req, res) => {
-  // Logic to update a user by ID
   const userId = req.params.id;
   const tag = req.body.tag;
   const type = req.body.type;
+  const photo = req.body.photo;
 
-  await User.findById(userId)
-    .then(async (user) => {
-      if (!user) {
-        return res.status(404).json({ error: "User not found" });
-      }
+  try {
+    const user = await User.findById(userId);
 
-      // Add tag
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // If photo data is provided, update photo and return
+    if (photo) {
+      user.picture = photo;
+      await user.save();
+      return res.json({ user, message: "Photo updated successfully" });
+    }
+
+    // If tag data is provided, handle tag addition or deletion
+    if (tag && type) {
       if (type == "add") {
         user.tags.push(tag);
-        user.save();
-        return res.json(user.tags);
-      }
-
-      // delete tag
-      if (type == "delete") {
+      } else if (type == "delete") {
         const index = user.tags.indexOf(tag);
         if (index > -1) {
           user.tags.splice(index, 1);
-          user.save();
-          res.json(user.tags);
-        } else {
-          res.status(404).json({ error: "Tag not found" });
-        }
-
-        // update task where user == userId and tag == tag
-        Task.updateMany({ user: userId, tag: tag }, { $set: { tag: "" } })
-          .then((result) => {
+          // Update tasks where user == userId and tag == tag
+          try {
+            const result = await Task.updateMany(
+              { user: userId, tag: tag },
+              { $set: { tag: "" } }
+            );
             console.log(result);
             console.log(`Tags updated for tasks linked to user ${userId}`);
-          })
-          .catch((error) => {
+          } catch (error) {
             console.error("Error updating tags:", error);
-          });
+          }
+        } else {
+          return res.status(404).json({ error: "Tag not found" });
+        }
       }
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json({ error: "Failed to add tag" });
-    });
+    }
+
+    await user.save();
+    return res.json({ user });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Failed to update user" });
+  }
 };
 
 // delete user

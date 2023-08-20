@@ -40,10 +40,19 @@ export function getUserData(userId: string) {
 }
 
 // update user : to add new tags into user data
-export function updateUserApi(userId: string, type: string, tag: string) {
-  return API.put(`/users/updateUser/${userId}`, {
-    tag,
-    type,
+export function updateUserApi(
+  userId: string,
+  type: string,
+  tag: string,
+  photo?: string
+) {
+  // If a photo is provided, only send the photo data and skip the tag and type.
+  const body = photo ? { photo } : { tag, type };
+
+  return API.put(`/users/updateUser/${userId}`, body, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
   });
 }
 /*________________________________________________*/

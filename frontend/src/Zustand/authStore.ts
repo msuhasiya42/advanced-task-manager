@@ -15,28 +15,31 @@ export type User = {
 
 
 type AuthStoreState = {
-  user: User ;
+  user: User | null;
   login: (userData: User) => void;
   logout: () => void;
+  updateUser: (updates: Partial<User>) => void;
 };
 
-const initialState = {
-  id: '',
-  name: '',
-  token: '',
-  email: '',
-  picture: '' }
-
 const useAuthStore = create<AuthStoreState>((set) => ({
-  user: initialState,
+  user: null,
   login: (userData: User) => {
     set({ user: userData });
     localStorage.setItem("authState", JSON.stringify({ user: userData }));
   },
   logout: () => {
-    set({ user: initialState });
+    set({ user: null });
     localStorage.removeItem("authState");
     localStorage.removeItem("tags");
+  },
+  updateUser: (updates: Partial<User>) => {
+    set((state) => {
+      const updatedUser = state.user ? { ...state.user, ...updates } : null;
+      if (updatedUser) {
+        localStorage.setItem("authState", JSON.stringify({ user: updatedUser }));
+      }
+      return { user: updatedUser };
+    });
   },
 }));
 

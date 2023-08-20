@@ -1,10 +1,66 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import LogoutButton from "../SmallComp/Logout/LogoutButton";
 import LoadingPage from "../Loading/LoadingPage";
 import useAuthStore from "../../Zustand/authStore";
+import { updateUserApi } from "../../ApiCalls";
+import ImageCompressor from "image-compressor.js";
 
 const UserProfile = () => {
-  const { user } = useAuthStore();
+  const { user, updateUser } = useAuthStore();
+  const [userPhoto, setUserPhoto] = useState(user.picture); // default image
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const fileToBase64 = (file: Blob): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        if (typeof reader.result === "string") {
+          resolve(reader.result);
+        } else {
+          reject(new Error("Expected a string from FileReader"));
+        }
+      };
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      new ImageCompressor(file, {
+        quality: 0.6,
+        maxWidth: 1920,
+        maxHeight: 1920,
+        success: async (compressedResult) => {
+          try {
+            // Ensure the compressed image is under 500KB
+            if (compressedResult.size <= 500 * 1024) {
+              const photoData = await fileToBase64(compressedResult);
+              setUserPhoto(photoData);
+
+              // Assuming you have userId available in this scope or as a prop
+              await updateUserApi(user.id, "", "", photoData);
+              updateUser({ picture: photoData });
+            } else {
+              console.error("Failed to compress the image under 500KB");
+            }
+          } catch (error) {
+            console.error("Failed to update user photo.", error);
+          }
+        },
+        error: (err) => {
+          console.error("Image compression error:", err.message);
+        },
+      });
+    }
+  };
 
   if (!user) {
     return (
@@ -67,12 +123,22 @@ const UserProfile = () => {
       <div className="flex flex-col items-center -mt-20">
         <img
           src={
-            user.picture == undefined
+            userPhoto == undefined
               ? "https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-PNG-Images.png"
               : user.picture
           }
-          alt="User name"
-          className="w-28 h-28 rounded-lg"
+          alt="User Profile"
+          onClick={handleImageClick}
+          style={{ cursor: "pointer" }}
+          className="w-36 h-36 rounded-lg"
+        />
+
+        <input
+          type="file"
+          ref={fileInputRef}
+          style={{ display: "none" }}
+          accept="image/*"
+          onChange={handleImageChange}
         />
         <div className="flex items-center space-x-2 mt-2">
           <p className="text-2xl">{user.name}</p>
@@ -94,36 +160,6 @@ const UserProfile = () => {
           </span>
         </div>
         <p className="text-sm text-gray-500">New York, USA</p>
-      </div>
-      <div className="flex-1 flex flex-col items-center lg:items-end justify-end px-8 mt-2">
-        <div className="flex items-center space-x-4 mt-2">
-          <button className="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"></path>
-            </svg>
-            <span>Connect</span>
-          </button>
-          <button className="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z"
-                clipRule="evenodd"
-              ></path>
-            </svg>
-            <span>Message</span>
-          </button>
-        </div>
       </div>
     </div>
   );
