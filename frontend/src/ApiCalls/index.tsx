@@ -41,7 +41,7 @@ export function getUserData(userId: string) {
 
 // update user : to add new tags into user data
 export function updateUserApi(
-  userId: string,
+  userId: string | undefined,
   type: string,
   tag: string,
   photo?: string

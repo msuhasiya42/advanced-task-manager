@@ -7,7 +7,7 @@ import ImageCompressor from "image-compressor.js";
 
 const UserProfile = () => {
   const { user, updateUser } = useAuthStore();
-  const [userPhoto, setUserPhoto] = useState(user.picture); // default image
+  const [userPhoto, setUserPhoto] = useState(user?.picture); // default image
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageClick = () => {
@@ -46,7 +46,7 @@ const UserProfile = () => {
               setUserPhoto(photoData);
 
               // Assuming you have userId available in this scope or as a prop
-              await updateUserApi(user.id, "", "", photoData);
+              await updateUserApi(user?.id, "", "", photoData);
               updateUser({ picture: photoData });
             } else {
               console.error("Failed to compress the image under 500KB");
