@@ -23,7 +23,7 @@ const SideBar = () => {
 
   // All tasks
   const handleAllTasks = () => {
-    copyTasks(originalTasks);
+    copyTasks();
   };
 
   // toast msg remove
@@ -32,9 +32,9 @@ const SideBar = () => {
   };
 
   // delete tag
-  const userId = useAuthStore((state) => state.user.id);
+  const userId = useAuthStore((state) => state?.user?.id);
 
-  const handleDeleteTag = (tag) => {
+  const handleDeleteTag = (tag: string) => {
     updateUserApi(userId, "delete", tag)
       .then(() => {
         deleteTag(tag);
@@ -56,7 +56,7 @@ const SideBar = () => {
   // filter task where today is dueDate
   const handleTodaysTasks = () => {
     // first get orig store into copy store
-    copyTasks(originalTasks);
+    copyTasks();
     // then apply filter on copied store
     setTodaysTasks("todo");
     setTodaysTasks("inProgress");
@@ -65,7 +65,7 @@ const SideBar = () => {
 
   // Upcoming tasks
   const handleUpcomingTasks = () => {
-    copyTasks(originalTasks);
+    copyTasks();
     // then apply filter on copied store
     setUpcomingTasks("todo");
     setUpcomingTasks("inProgress");
@@ -73,8 +73,8 @@ const SideBar = () => {
   };
 
   // Filter task by tag name
-  const filterTaskByTagName = (tag) => {
-    copyTasks(originalTasks);
+  const filterTaskByTagName = (tag: string) => {
+    copyTasks();
     // then apply filter on copied store
     filterTasksByTag("todo", tag);
     filterTasksByTag("inProgress", tag);
@@ -83,7 +83,7 @@ const SideBar = () => {
 
   // Filter tasks which has Tags
   const filterTaskByHavingTag = () => {
-    copyTasks(originalTasks);
+    copyTasks();
     // then apply filter on copied store
     filterTaskByHavingTagFun("todo");
     filterTaskByHavingTagFun("inProgress");

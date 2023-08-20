@@ -1,13 +1,15 @@
 // static data of tasks
 
 const currentDate = new Date();
-const options = { day: "numeric", month: "long", year: "numeric" };
 
-// to get next day logic
-// currentDate.setDate(currentDate.getDate() + 1);
+const options: Intl.DateTimeFormatOptions = { 
+  day: "numeric", 
+  month: "long", 
+  year: "numeric" 
+};
 
-// @ts-ignore
 const dateString = currentDate.toLocaleString("en-US", options);
+
 
 export const todos = [
   {

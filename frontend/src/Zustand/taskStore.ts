@@ -1,13 +1,44 @@
 import { create } from "zustand";
+import { TaskCategory } from "../components/Task/Types/types";
+import { TaskType } from "../components/Task/Types/types";
 
-const useTaskStore = create((set) => ({
-  // original task store
+type TaskStoreState = {
+  originalTasks: Record<TaskCategory, TaskType[]>;
+  setOriginalTasks: (category: TaskCategory, newTasks: TaskType[]) => void;
+
+  copiedTasks: Record<TaskCategory, TaskType[]>;
+  copyTasks: () => void;
+
+  setTasks: (category: TaskCategory, newTasks: TaskType[]) => void; // Adjusted this
+
+  addTaskOrigStore: (category: TaskCategory, task: TaskType) => void;
+  addTaskCopiedStore: (category: TaskCategory, task: TaskType) => void;
+
+  updateTaskOrigStore: (category: TaskCategory, taskId: string, updatedTask: TaskType) => void;
+  updateTaskCopiedStore: (category: TaskCategory, taskId: string, updatedTask: TaskType) => void;
+
+  deleteTaskOrigStore: (category: TaskCategory, taskId: string) => void;
+  deleteTaskCopiedStore: (category: TaskCategory, taskId: string) => void;
+
+  selectedTag: string;
+  setSelectedTag: (tag: string) => void;
+
+  setTodaysTasks: (category: TaskCategory) => void;
+  setUpcomingTasks: (category: TaskCategory) => void;
+
+  filterTasksByTag: (category: TaskCategory, tag: string) => void;
+  filterTaskByHavingTagFun: (category: TaskCategory) => void;
+
+  removeTagFromTasks: (tagName: string) => void;
+};
+
+const useTaskStore = create<TaskStoreState>((set) => ({
   originalTasks: {
     todo: [],
     inProgress: [],
     completed: [],
   },
-  setOriginalTasks: (category, newTasks) =>
+  setOriginalTasks: (category, newTasks) => // Adjusted the type here
     set((state) => ({
       originalTasks: {
         ...state.originalTasks,
@@ -28,13 +59,13 @@ const useTaskStore = create((set) => ({
     })),
 
   //   set task
-  setTasks: (category, newTasks) =>
-    set((state) => ({
-      tasks: {
-        ...state.tasks,
-        [category]: newTasks,
-      },
-    })),
+  setTasks: (category, newTasks) =>  
+  set((state) => ({
+    originalTasks: {
+      ...state.originalTasks,
+      [category]: newTasks,
+    },
+  })),
 
   //   add new task
   addTaskOrigStore: (category, task) =>
@@ -185,7 +216,7 @@ const useTaskStore = create((set) => ({
     })),
 }));
 
-const removeTagFromTasksByCategory = (tasks, tagName) =>
+const removeTagFromTasksByCategory = (tasks: TaskType[], tagName: string) =>
   tasks.map((task) => {
     if (task.tag === tagName) {
       return {

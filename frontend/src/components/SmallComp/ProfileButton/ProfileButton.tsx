@@ -1,8 +1,17 @@
 import React from "react";
 import useAuthStore from "../../../Zustand/authStore";
+import { User } from "../../../Zustand/authStore";
 
 const ProfileButton = () => {
-  const { name, picture } = useAuthStore((state) => state.user);
+  const user = useAuthStore((state) => state.user);
+  if (!user) {
+    // Handle the case where the user is null
+    // Maybe set default values or throw an error, etc.
+    alert("User null");
+    return; // or handle it accordingly
+  }
+
+  const { name, picture }: User = user;
   const getUserName = () => {
     return name.split(" ")[0];
   };

@@ -1,13 +1,15 @@
+export type TaskCategory = "todo" | "inProgress" | "completed";
+
 export interface TaskType {
-  _id: number;
+  _id: string;
   title: string;
   description: string;
-  startDate: Date;
-  dueDate: Date;
-  attatchments: [string];
+  startDate: string;
+  dueDate: string;
+  attatchments: string[];
   tag: string;
   priority: string;
-  status: string;
+  status: TaskCategory;
   done: boolean;
   collaborators: string[]; // Assuming collaborators can be of any type
   user: string;
@@ -15,8 +17,8 @@ export interface TaskType {
 
 export interface TasksProps {
   task: TaskType;
-  handleDelete: (task) => void;
-  handleTaskClick: (task) => void;
+  handleDelete: (task: TaskType) => void;
+  handleTaskClick: (task: TaskType) => void;
 }
 
 export interface TaskCollection {

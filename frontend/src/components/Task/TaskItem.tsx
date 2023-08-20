@@ -56,7 +56,7 @@ const TaskItem = ({ task, handleDelete, handleTaskClick }: TasksProps) => {
   };
 
   // @Remember
-  const convertToIndianTime = (date) => {
+  const convertToIndianTime = (date: string) => {
     // Convert the input date string to a Date object
     const inputDate = new Date(date);
 

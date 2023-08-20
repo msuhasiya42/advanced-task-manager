@@ -3,14 +3,14 @@ import TaskList from "./TaskList";
 import { fetchTask } from "../../ApiCalls";
 import LoadingPage from "../Loading/LoadingPage";
 import useTaskStore from "../../Zustand/taskStore";
-import useAuthStore from "../../Zustand/authStore";
+import useAuthStore, { User } from "../../Zustand/authStore";
 import { taskSchema } from "../../zodSpecs/task";
+import { TaskType } from "./Types/types";
 const TaskManager = () => {
   const [loading, setLoading] = useState(false);
 
   // using zustand store
   const { user } = useAuthStore();
-  const originalTasks = useTaskStore((state) => state.originalTasks);
   const setOriginalTasks = useTaskStore((state) => state.setOriginalTasks);
   const copyTasks = useTaskStore((state) => state.copyTasks);
   const copiedTasks = useTaskStore((state) => state.copiedTasks);
@@ -19,16 +19,16 @@ const TaskManager = () => {
     setLoading(true);
 
     // fetching all tasks
-    const fetchTaskFun = async (user) => {
+    const fetchTaskFun = async (user: string) => {
       fetchTask(user)
         .then((response) => {
           const fetchedTasks = response.data.tasks;
 
           // zod validation
-          const validatedTasks = fetchedTasks.map((task) => {
+          const validatedTasks = fetchedTasks.map((task: TaskType) => {
             try {
               return taskSchema.parse(task);
-            } catch (error) {
+            } catch (error: any) {
               console.error(`Invalid task: ${error.message}`);
               return null;
             }
@@ -37,12 +37,14 @@ const TaskManager = () => {
           console.log(validatedTasks);
           console.log(fetchedTasks);
 
-          const todos = validatedTasks.filter((task) => task.status === "todo");
+          const todos = validatedTasks.filter(
+            (task: TaskType) => task.status === "todo"
+          );
           const inprogress = validatedTasks.filter(
-            (task) => task.status === "inProgress"
+            (task: TaskType) => task.status === "inProgress"
           );
           const completed = validatedTasks.filter(
-            (task) => task.status === "completed"
+            (task: TaskType) => task.status === "completed"
           );
 
           // Storing data to main store
@@ -51,7 +53,7 @@ const TaskManager = () => {
           setOriginalTasks("completed", completed);
 
           // copying orig store into copied store
-          copyTasks(originalTasks);
+          copyTasks();
         })
         .catch((err) => {
           console.log(err);

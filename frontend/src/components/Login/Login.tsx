@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import NavBar from "../NavBar/NavBarHomePage";
 import { googleLoginApi, loginApi } from "../../ApiCalls";
 import { useNavigate } from "react-router-dom";
-import useAuthStore from "../../Zustand/authStore";
+import useAuthStore, { User } from "../../Zustand/authStore";
 import useTagStore from "../../Zustand/tagStore";
 import { GoogleLogin } from "@react-oauth/google";
 
@@ -24,16 +24,18 @@ const Login = () => {
   // store login infor in store
   const { login } = useAuthStore();
   const { setTags } = useTagStore();
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     // login api call
     loginApi(email, password)
       .then((response) => {
         // user data and token and tags
-        const userData = {
+        const userData: User = {
           id: response.data.userId,
           name: response.data.name,
           token: response.data.token,
+          email,
+          picture: "",
         };
         const tags = response.data.tags;
 
@@ -58,16 +60,17 @@ const Login = () => {
   };
 
   // login with google
-  const loginGoogle = (response) => {
+  const loginGoogle = (response: any) => {
     // call api with access token
     const { credential } = response;
     googleLoginApi(credential)
       .then((res) => {
-        const { userId, name, token, picture, tags } = res.data;
+        const { userId, name, token, picture, tags, email } = res.data;
         const userData = {
           id: userId,
           name,
           token,
+          email,
           picture,
         };
         login(userData);

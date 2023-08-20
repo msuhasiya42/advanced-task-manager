@@ -4,7 +4,7 @@ import TaskAreaModal from "./TextAreaModal";
 import { deleteTaskApi, updateTaskApi } from "../../ApiCalls";
 import useTaskStore from "../../Zustand/taskStore";
 import useTagStore from "../../Zustand/tagStore";
-import { TaskCollection } from "./Types/types";
+import { TaskCollection, TaskType } from "./Types/types";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -13,21 +13,23 @@ import "react-datepicker/dist/react-datepicker.css";
 
 const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
   const [delMsg, setDelMsg] = useState(false);
-  const [modalData, setModalData] = useState({
+  const [modalData, setModalData] = useState<TaskType>({
     _id: "",
     title: "",
     description: "",
     dueDate: "",
-    status: "",
+    status: "todo",
     priority: "",
     tag: "",
     attatchments: [],
-    colloborations: [],
+    collaborators: [],
+    startDate: "",
+    user: "",
+    done: false,
   });
 
   // store
   const setOriginalTasks = useTaskStore((state) => state.setOriginalTasks);
-  const originalTasks = useTaskStore((state) => state.originalTasks);
   const copyTasks = useTaskStore((state) => state.copyTasks);
   const tags = useTagStore((state) => state.tags);
   const updateTaskOrigStore = useTaskStore(
@@ -44,22 +46,17 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
   );
 
   // when clicked on task set editedTask value to currentTask
-  const handleTaskClick = (task) => {
+  const handleTaskClick = (task: TaskType) => {
     setModalData(task);
   };
 
   // handle input change (title,priority, status)
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: { target: { name: string; value: any } }) => {
     setModalData({ ...modalData, [e.target.name]: e.target.value });
   };
 
-  // handle description change
-  const handleDescription = (desc) => {
-    setModalData({ ...modalData, description: desc });
-  };
-
   // handle Date change
-  const handleDate = (date) => {
+  const handleDate = (date: Date) => {
     setModalData({ ...modalData, dueDate: date.toString() });
   };
 
@@ -79,7 +76,7 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
     setDelMsg(false);
   };
 
-  const handleDelete = (task) => {
+  const handleDelete = (task: TaskType) => {
     deleteTaskApi(task._id)
       .then(() => {
         deleteTaskOrigStore(task.status, task._id);
@@ -95,7 +92,7 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
   };
 
   // drag and drop
-  const handleDragEnd = (result) => {
+  const handleDragEnd = (result: any) => {
     const { destination, source } = result;
 
     // Item dropped outside of a droppable area : no destination
@@ -202,7 +199,7 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
       }
     }
     // in end copy state to copied state
-    copyTasks(originalTasks);
+    copyTasks();
   };
 
   return (

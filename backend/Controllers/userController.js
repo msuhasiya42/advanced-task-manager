@@ -158,7 +158,7 @@ const googleLogin = async (req, res) => {
       // if exists then take previous data
       const { _id, name, tags, picture } = existingUser;
 
-      res.json({ token, userId: _id, name, tags, picture });
+      res.json({ token, userId: _id, name, tags, picture,email });
     } else {
       // if new user then add user data to DB
       const newUser = new User({
@@ -172,7 +172,7 @@ const googleLogin = async (req, res) => {
         .save()
         .then(() => {
           const { _id, name, tags, picture } = newUser;
-          res.json({ token, userId: _id, name, tags, picture });
+          res.json({ token, userId: _id, name, tags, picture,email });
         })
         .catch((err) => {
           console.log(err);

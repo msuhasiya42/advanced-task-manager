@@ -12,7 +12,7 @@ const AddTags = () => {
   const [errMsg, setErrMsg] = useState("");
 
   // using add task from store
-  const userId = useAuthStore((state) => state.user.id);
+  const userId = useAuthStore((state) => state?.user?.id);
   const addTag = useTagStore((state) => state.addTag);
   const checkTagExists = useTagStore((state) => state.checkTagExists);
 
@@ -27,7 +27,7 @@ const AddTags = () => {
   };
 
   // handle submit
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: any) => {
     if (checkTagExists(tag)) {
       setErrMsg("Tag already exists");
       setErr(true);

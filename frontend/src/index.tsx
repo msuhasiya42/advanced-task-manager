@@ -5,19 +5,24 @@ import "../public/common.css";
 import App from "./App";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-
+import { ThemeProvider } from "./components/theme-provider";
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const rootType = document.getElementById("root")!;
 const root = ReactDOM.createRoot(rootType);
 const queryClient = new QueryClient();
 
+export default App;
+
 root.render(
   // <React.StrictMode>
-  <GoogleOAuthProvider clientId="1032180948351-qcskgfti1iibbdhq4tavjmjuq3kl3b0k.apps.googleusercontent.com">
-    <QueryClientProvider client={queryClient}>
-      <App />
-    </QueryClientProvider>
-  </GoogleOAuthProvider>
+  <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+    <GoogleOAuthProvider clientId="1032180948351-qcskgfti1iibbdhq4tavjmjuq3kl3b0k.apps.googleusercontent.com">
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
+    </GoogleOAuthProvider>
+  </ThemeProvider>
+
   // </React.StrictMode>
 );
 

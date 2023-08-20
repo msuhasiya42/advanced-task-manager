@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { createTask } from "../../ApiCalls";
 import useTaskStore from "../../Zustand/taskStore";
 import useAuthStore from "../../Zustand/authStore";
+import { TaskCategory } from "./Types/types";
 
 interface StatusType {
-  status: string;
+  status: TaskCategory;
 }
 
 const TextAreaModal = ({ status }: StatusType) => {
@@ -26,7 +27,7 @@ const TextAreaModal = ({ status }: StatusType) => {
   };
 
   // when user saves task
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: any) => {
     event.preventDefault();
     // Perform any necessary actions with the task name
 
@@ -62,7 +63,7 @@ const TextAreaModal = ({ status }: StatusType) => {
   };
 
   // update task title
-  const updateTitle = (event) => {
+  const updateTitle = (event: any) => {
     setTask(event.target.value);
   };
 
@@ -79,7 +80,7 @@ const TextAreaModal = ({ status }: StatusType) => {
     }
 
     // when user click outside the text area -> make textArea disappear
-    const handleClickOutside = (event) => {
+    const handleClickOutside = (event: any) => {
       if (
         textRef.current &&
         !textRef.current.contains(event.target) &&
