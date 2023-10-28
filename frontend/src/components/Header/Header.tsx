@@ -55,7 +55,7 @@ const Header = () => {
               <Search />
 
               {/* filter */}
-              <Filter />
+              {/* <Filter /> */}
 
               {/* user photo with options on it */}
               <ProfileButton />

@@ -3,7 +3,7 @@ import TaskList from "./TaskList";
 import { fetchTask } from "../../ApiCalls";
 import LoadingPage from "../Loading/LoadingPage";
 import useTaskStore from "../../Zustand/taskStore";
-import useAuthStore, { User } from "../../Zustand/authStore";
+import useAuthStore from "../../Zustand/authStore";
 import { taskSchema } from "../../zodSpecs/task";
 import { TaskType } from "./Types/types";
 const TaskManager = () => {
@@ -11,6 +11,7 @@ const TaskManager = () => {
 
   // using zustand store
   const { user } = useAuthStore();
+  const setAllTasks = useTaskStore((state) => state.setAllTasks);
   const setOriginalTasks = useTaskStore((state) => state.setOriginalTasks);
   const copyTasks = useTaskStore((state) => state.copyTasks);
   const copiedTasks = useTaskStore((state) => state.copiedTasks);
@@ -34,8 +35,7 @@ const TaskManager = () => {
             }
           });
 
-          console.log(validatedTasks);
-          console.log(fetchedTasks);
+          setAllTasks(validatedTasks);
 
           const todos = validatedTasks.filter(
             (task: TaskType) => task.status === "todo"

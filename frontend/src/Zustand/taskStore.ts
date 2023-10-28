@@ -3,6 +3,9 @@ import { TaskCategory } from "../components/Task/Types/types";
 import { TaskType } from "../components/Task/Types/types";
 
 type TaskStoreState = {
+  allTasks: TaskType[]; // Add this for a list of all raw tasks
+  setAllTasks: (tasks: TaskType[]) => void; 
+
   originalTasks: Record<TaskCategory, TaskType[]>;
   setOriginalTasks: (category: TaskCategory, newTasks: TaskType[]) => void;
 
@@ -33,6 +36,9 @@ type TaskStoreState = {
 };
 
 const useTaskStore = create<TaskStoreState>((set) => ({
+  allTasks: [],
+  setAllTasks: (tasks) => set({ allTasks: tasks }),
+
   originalTasks: {
     todo: [],
     inProgress: [],
