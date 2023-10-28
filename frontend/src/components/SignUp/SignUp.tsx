@@ -2,78 +2,94 @@ import React, { useState } from "react";
 import NavBar from "../NavBar/NavBarHomePage";
 import { createUser } from "../../ApiCalls";
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PASSWORD_REGEX =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/;
+
 const SignUp = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [conPassword, setConPassword] = useState("");
-  const [errMsg, setErrMsg] = useState("");
-  const [showErrMsg, setShowErrMsg] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [state, setState] = useState({
+    name: "",
+    email: "",
+    password: "",
+    conPassword: "",
+    errMsg: "",
+    showErrMsg: false,
+    success: false,
+    isSubscribed: false,
+  });
   const [isSubscribed, setIsSubscribed] = useState(false);
 
-  // regex for emiall and password
-  const passRegex =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/;
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const isValidForm = () => {
+    if (!state.email.match(EMAIL_REGEX)) {
+      updateErrorMessage("Invalid Email!");
+      return false;
+    }
 
-  // handle submit
+    if (!state.password.match(PASSWORD_REGEX)) {
+      updateErrorMessage(
+        "Password must contain eight characters, one capital letter, one small letter, one number, and one special character."
+      );
+      return false;
+    }
+
+    if (state.password !== state.conPassword) {
+      updateErrorMessage("Password not matched");
+      return false;
+    }
+
+    return true;
+  };
+
+  const updateErrorMessage = (msg: string) => {
+    setState((prevState) => ({
+      ...prevState,
+      errMsg: msg,
+      showErrMsg: true,
+      success: false,
+    }));
+  };
+
+  const handleApiError = (err: any) => {
+    let message = "An unknown error occurred.";
+    if (err.code === "ERR_NETWORK") {
+      message =
+        "There was a problem connecting to the server. Please check your internet connection and try again.";
+    } else if (err.code === "ERR_BAD_RESPONSE") {
+      message = "Internal Server Error";
+    } else {
+      message = "Email Already Registered";
+    }
+    updateErrorMessage(message);
+    console.error(err);
+  };
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    // form validation
-    if (!email.match(emailRegex)) {
-      setErrMsg("Invalid Email!");
-      setShowErrMsg(true);
-      setSuccess(false);
-      return;
-    } else if (!password.match(passRegex)) {
-      setErrMsg(
-        "Password must contain eight characters, one capital letter, one small letter, one number and one special character:"
-      );
-      setShowErrMsg(true);
-      setSuccess(false);
-      return;
-    } else if (password !== conPassword) {
-      setErrMsg("Password not matched");
-      setShowErrMsg(true);
-      setSuccess(false);
-      return;
-    }
-    // process.env.REACT_APP_SIGNUP_URL
+    if (!isValidForm()) return;
 
-    // api call for sign up
-    createUser(name, email, password)
+    createUser(state.name, state.email, state.password)
       .then((response) => {
-        // Handle the API response
         if (response.status === 200) {
-          setSuccess(true);
-          setShowErrMsg(false);
+          setState((prevState) => ({
+            ...prevState,
+            success: true,
+            showErrMsg: false,
+          }));
         }
       })
-      .catch((err) => {
-        // Handle errors
-        // handling internal server err
-        // is remaining : status code : 500
-        setSuccess(false);
-        if (err.code === "ERR_NETWORK") {
-          setErrMsg(
-            "There was a problem connecting to the server. Please check your internet connection and try again "
-          );
-        } else if (err.code === "ERR_BAD_RESPONSE") {
-          setErrMsg("Internal Server Error");
-        } else {
-          setErrMsg("Email Already Registered");
-        }
-        setShowErrMsg(true);
-        console.error(err);
-      });
+      .catch(handleApiError);
   };
 
-  // handle checkbox
-  const handleCheckbox = () => {
-    setIsSubscribed((current) => !current);
+  const handleChange = (e: any) => {
+    const { name, value } = e.target;
+    setState((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
+
+  const handleCheckbox = () => setIsSubscribed((prev) => !prev);
 
   return (
     <div>
@@ -99,7 +115,7 @@ const SignUp = () => {
               </h1>
               <form className="space-y-4 md:space-y-6" action="#">
                 {/*error message */}
-                {showErrMsg === true ? (
+                {state.showErrMsg === true ? (
                   <div
                     className="flex p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800"
                     role="alert"
@@ -119,15 +135,15 @@ const SignUp = () => {
                     </svg>
                     <span className="sr-only">Info</span>
                     <div>
-                      <span className="font-medium">Error :</span> {errMsg}
+                      <span className="font-medium">Error: </span>
+                      {state.errMsg}
                     </div>
                   </div>
                 ) : (
                   ""
                 )}
 
-                {/* success message */}
-                {success === true ? (
+                {state.success === true ? (
                   <div
                     className="flex p-4 mb-4 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:border-green-800"
                     role="alert"
@@ -156,7 +172,6 @@ const SignUp = () => {
                   ""
                 )}
 
-                {/* form starts here */}
                 <div>
                   <label
                     htmlFor="name"
@@ -171,10 +186,8 @@ const SignUp = () => {
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="tom Cruise"
                     required
-                    value={name}
-                    onChange={(e) => {
-                      setName(e.target.value);
-                    }}
+                    value={state.name}
+                    onChange={handleChange}
                   />
                 </div>
                 <div>
@@ -191,10 +204,8 @@ const SignUp = () => {
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="name@company.com"
                     required
-                    value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                    }}
+                    value={state.email}
+                    onChange={handleChange}
                   />
                 </div>
                 <div>
@@ -208,10 +219,8 @@ const SignUp = () => {
                     type="password"
                     name="password"
                     id="password"
-                    value={password}
-                    onChange={(e) => {
-                      setPassword(e.target.value);
-                    }}
+                    value={state.password}
+                    onChange={handleChange}
                     placeholder="••••••••"
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required
@@ -227,12 +236,10 @@ const SignUp = () => {
                   </label>
                   <input
                     type="password"
-                    name="confirm-password"
+                    name="conPassword"
                     id="confirm-password"
-                    value={conPassword}
-                    onChange={(e) => {
-                      setConPassword(e.target.value);
-                    }}
+                    value={state.conPassword}
+                    onChange={handleChange}
                     placeholder="••••••••"
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required
@@ -275,9 +282,9 @@ const SignUp = () => {
                     className="w-full text-white hover:bg-cyan-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 disabled: bg-cyan-400"
                     onClick={(e) => handleSubmit(e)}
                     disabled={
-                      email.length === 0 ||
-                      password.length === 0 ||
-                      conPassword.length === 0 ||
+                      state.email.length === 0 ||
+                      state.password.length === 0 ||
+                      state.conPassword.length === 0 ||
                       !isSubscribed
                     }
                   >
