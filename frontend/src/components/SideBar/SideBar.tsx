@@ -1,93 +1,51 @@
 import React, { useState } from "react";
-import useTaskStore from "../../Zustand/taskStore";
-import AddTags from "../Add Tags/AddTags";
-import useTagStore from "../../Zustand/tagStore";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
-import { updateUserApi } from "../../ApiCalls";
+import useTaskStore from "../../Zustand/taskStore";
+import useTagStore from "../../Zustand/tagStore";
 import useAuthStore from "../../Zustand/authStore";
 
+import { updateUserApi } from "../../ApiCalls";
+import AddTags from "../Add Tags/AddTags";
+import { Toast } from "../SmallComp/ToastMessage/ToastMessage";
+import { TaskCategory } from "../Task/Types/types";
 const SideBar = () => {
   const [err, setErr] = useState(false);
-  // store
-  const tags = useTagStore((state) => state.tags);
-  const deleteTag = useTagStore((state) => state.deleteTag);
-  const originalTasks = useTaskStore((state) => state.originalTasks);
-  const copyTasks = useTaskStore((state) => state.copyTasks);
-  const setTodaysTasks = useTaskStore((state) => state.setTodaysTasks);
-  const setUpcomingTasks = useTaskStore((state) => state.setUpcomingTasks);
-  const filterTasksByTag = useTaskStore((state) => state.filterTasksByTag);
-  const filterTaskByHavingTagFun = useTaskStore(
-    (state) => state.filterTaskByHavingTagFun
-  );
-  const removeTagFromTasks = useTaskStore((state) => state.removeTagFromTasks);
 
-  // All tasks
-  const handleAllTasks = () => {
-    copyTasks();
-  };
+  const { tags, deleteTag } = useTagStore();
+  const {
+    copyTasks,
+    setTodaysTasks,
+    setUpcomingTasks,
+    filterTasksByTag,
+    filterTaskByHavingTagFun,
+    removeTagFromTasks,
+  } = useTaskStore();
 
-  // toast msg remove
-  const disAppearToast = () => {
-    setErr(false);
-  };
-
-  // delete tag
-  const userId = useAuthStore((state) => state?.user?.id);
+  const handleAllTasks = () => copyTasks();
+  const userId = useAuthStore((state) => state?.user?.userId);
 
   const handleDeleteTag = (tag: string) => {
     updateUserApi(userId, "delete", tag)
       .then(() => {
         deleteTag(tag);
-        // update store
         removeTagFromTasks(tag);
       })
-      .catch((error) => {
-        // @Todo
-        // Handle errors
-        // handling internal server err
-        // is remaining : status code : 500
-        console.error(error);
+      .catch(() => {
         setErr(true);
-        setTimeout(disAppearToast, 3000);
+        setTimeout(() => setErr(false), 3000);
       });
-    deleteTag(tag);
   };
 
-  // filter task where today is dueDate
-  const handleTodaysTasks = () => {
-    // first get orig store into copy store
-    copyTasks();
-    // then apply filter on copied store
-    setTodaysTasks("todo");
-    setTodaysTasks("inProgress");
-    setTodaysTasks("completed");
-  };
+  const taskTypes: TaskCategory[] = ["todo", "inProgress", "completed"];
 
-  // Upcoming tasks
-  const handleUpcomingTasks = () => {
-    copyTasks();
-    // then apply filter on copied store
-    setUpcomingTasks("todo");
-    setUpcomingTasks("inProgress");
-    setUpcomingTasks("completed");
-  };
-
-  // Filter task by tag name
   const filterTaskByTagName = (tag: string) => {
     copyTasks();
-    // then apply filter on copied store
-    filterTasksByTag("todo", tag);
-    filterTasksByTag("inProgress", tag);
-    filterTasksByTag("completed", tag);
+    taskTypes.forEach((category) => filterTasksByTag(category, tag));
   };
 
-  // Filter tasks which has Tags
-  const filterTaskByHavingTag = () => {
+  const handleFilter = (handler: any) => {
     copyTasks();
-    // then apply filter on copied store
-    filterTaskByHavingTagFun("todo");
-    filterTaskByHavingTagFun("inProgress");
-    filterTaskByHavingTagFun("completed");
+    taskTypes.forEach(handler);
   };
 
   const handleTemp = () => {
@@ -96,33 +54,7 @@ const SideBar = () => {
   return (
     <>
       {/* server issue: task not added */}
-      {err && (
-        <div className="toast">
-          <div className=" ">
-            <span>
-              <div className="flex w-full max-w-sm overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800">
-                <div className="flex items-center justify-center w-12 bg-red-500">
-                  <svg
-                    className="w-6 h-6 text-white fill-current"
-                    viewBox="0 0 40 40"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M20 3.36667C10.8167 3.36667 3.3667 10.8167 3.3667 20C3.3667 29.1833 10.8167 36.6333 20 36.6333C29.1834 36.6333 36.6334 29.1833 36.6334 20C36.6334 10.8167 29.1834 3.36667 20 3.36667ZM19.1334 33.3333V22.9H13.3334L21.6667 6.66667V17.1H27.25L19.1334 33.3333Z" />
-                  </svg>
-                </div>
-
-                <div className="px-4 py-2 -mx-3">
-                  <div className="mx-3">
-                    <span className="font-semibold text-red-500 dark:text-red-400">
-                      Error in deletion
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </span>
-          </div>
-        </div>
-      )}
+      {err && <Toast type="error" message="Error in deletion" />}
       {/* side bar */}
       <div className="flex text-gray-400 flex-col h-screen w-64  px-5 mt-1  bg-white border-r rtl:border-r-0 rtl:border-l dark:bg-gray-900 dark:border-gray-700">
         <div className="justify-between  mt-4">
@@ -154,7 +86,7 @@ const SideBar = () => {
 
               <li>
                 <button
-                  onClick={handleTodaysTasks}
+                  onClick={() => handleFilter(setTodaysTasks)}
                   className="bold flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                 >
                   <svg
@@ -181,7 +113,7 @@ const SideBar = () => {
               {/* upcoming tasks */}
               <li>
                 <button
-                  onClick={handleUpcomingTasks}
+                  onClick={() => handleFilter(setUpcomingTasks)}
                   className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white "
                 >
                   <svg
@@ -237,7 +169,7 @@ const SideBar = () => {
                 {" "}
                 <button
                   type="button"
-                  onClick={filterTaskByHavingTag}
+                  onClick={() => handleFilter(filterTaskByHavingTagFun)}
                   className="flex items-center w-full mb-3 p-2 text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
                 >
                   <svg
