@@ -13,7 +13,7 @@ const TextAreaModal = ({ status }: StatusType) => {
   const [task, setTask] = useState("");
   const [taskCreated, setTaskCreated] = useState(false);
   const [err, setErr] = useState(false);
-  const user = useAuthStore((state) => state.user.id);
+  const user = useAuthStore((state) => state.user?.userId);
 
   // using add task from store
   const addTaskOrigStore = useTaskStore((state) => state.addTaskOrigStore);
@@ -37,26 +37,21 @@ const TextAreaModal = ({ status }: StatusType) => {
     };
 
     // creat task api
-    createTask(task, status, user)
-      .then((response) => {
-        // Handle the API response
-        // @Remember
-        const newTask = response.data.task;
-        addTaskOrigStore(status, newTask);
-        addTaskCopiedStore(status, newTask);
-        setTaskCreated(true);
-        setTimeout(disAppearToast, 3000);
-      })
-      .catch((error) => {
-        // @Todo
-        // Handle errors
-        // handling internal server err
-        // is remaining : status code : 500
-        console.error(error);
-        setErr(true);
-        setTimeout(disAppearToast, 3000);
-      });
-
+    if (user) {
+      createTask(task, status, user)
+        .then((response) => {
+          const newTask = response.data.task;
+          addTaskOrigStore(status, newTask);
+          addTaskCopiedStore(status, newTask);
+          setTaskCreated(true);
+          setTimeout(disAppearToast, 3000);
+        })
+        .catch((error) => {
+          console.error(error);
+          setErr(true);
+          setTimeout(disAppearToast, 3000);
+        });
+    }
     // Reset the state and hide the text area
     setTask("");
     setShowTextArea(false);

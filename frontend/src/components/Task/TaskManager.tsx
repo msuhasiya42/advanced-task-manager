@@ -60,7 +60,9 @@ const TaskManager = () => {
         });
     };
 
-    fetchTaskFun(user.id);
+    if (user?.userId) {
+      fetchTaskFun(user.userId);
+    }
     setLoading(false);
   }, [user, setOriginalTasks]);
 

@@ -3,95 +3,70 @@ import React, { useState } from "react";
 import NavBar from "../NavBar/NavBarHomePage";
 import { googleLoginApi, loginApi } from "../../ApiCalls";
 import { useNavigate } from "react-router-dom";
-import useAuthStore, { User } from "../../Zustand/authStore";
+import useAuthStore from "../../Zustand/authStore";
 import useTagStore from "../../Zustand/tagStore";
 import { GoogleLogin } from "@react-oauth/google";
-
+import { ErrorResponse, User } from "./types";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
   const [errMsg, setErrMsg] = useState("Invalid Credentials");
   const [showErrMsg, setShowErrMsg] = useState(false);
-  const navigate = useNavigate();
 
-  // show password
+  const navigate = useNavigate();
+  const { login } = useAuthStore();
+  const { setTags } = useTagStore();
+
   const handleShowPasswordToggle = () => {
     setShowPassword(!showPassword);
   };
 
-  // store login infor in store
-  const { login } = useAuthStore();
-  const { setTags } = useTagStore();
+  const processLogin = (data: User) => {
+    const { userId, name, token, picture, tags, email } = data;
+    const userData = {
+      userId,
+      name,
+      token,
+      email,
+      picture,
+    };
+
+    login(userData);
+    if (tags) setTags(tags);
+    navigate("/user-dashboard");
+  };
+
+  const handleLoginError = (err: ErrorResponse) => {
+    console.error("Login error:", err);
+    let message = "An Error Occurred";
+
+    if (err.code === "ERR_NETWORK") {
+      message =
+        "There was a problem connecting to the server. Please check your internet connection and try again.";
+    } else if (err.code === "ERR_BAD_RESPONSE") {
+      message = "Internal Server Error";
+    }
+
+    setErrMsg(message);
+    setShowErrMsg(true);
+  };
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    // login api call
     loginApi(email, password)
-      .then((response) => {
-        // user data and token and tags
-        const userData: User = {
-          id: response.data.userId,
-          name: response.data.name,
-          token: response.data.token,
-          email,
-          picture: "",
-        };
-        const tags = response.data.tags;
-
-        login(userData);
-        setTags(tags);
-        navigate("/user-dashboard");
-      })
-      .catch((err) => {
-        console.error("Login error:", err);
-        if (err.code === "ERR_NETWORK") {
-          setErrMsg(
-            "There was a problem connecting to the server. Please check your internet connection and try again "
-          );
-        } else if (err.code === "ERR_BAD_RESPONSE") {
-          setErrMsg("Internal Server Error");
-        } else {
-          setErrMsg("An Error Occurred");
-        }
-        setShowErrMsg(true);
-        console.log(err);
-      });
+      .then((response) => processLogin(response.data))
+      .catch(handleLoginError);
   };
 
   // login with google
   const loginGoogle = (response: any) => {
-    // call api with access token
     const { credential } = response;
     googleLoginApi(credential)
-      .then((res) => {
-        const { userId, name, token, picture, tags, email } = res.data;
-        const userData = {
-          id: userId,
-          name,
-          token,
-          email,
-          picture,
-        };
-        login(userData);
-        setTags(tags);
-        navigate("/user-dashboard");
-      })
-      .catch((err) => {
-        console.error("Login error:", err);
-        if (err.code === "ERR_NETWORK") {
-          setErrMsg(
-            "There was a problem connecting to the server. Please check your internet connection and try again "
-          );
-        } else if (err.code === "ERR_BAD_RESPONSE") {
-          setErrMsg("Internal Server Error");
-        } else {
-          setErrMsg("An Error Occurred");
-        }
-        setShowErrMsg(true);
-        console.log(err);
-      });
+      .then((res) => processLogin(res.data))
+      .catch(handleLoginError);
   };
+
   return (
     <div>
       <NavBar />
