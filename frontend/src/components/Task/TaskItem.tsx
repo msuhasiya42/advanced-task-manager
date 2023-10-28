@@ -1,22 +1,29 @@
 import React from "react";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
-import { TasksProps } from "./Types/types";
+import { TaskType, TasksProps } from "./Types/types";
 import { updateTaskApi } from "../../ApiCalls";
 import useTaskStore from "../../Zustand/taskStore";
 
 const TaskItem = ({ task, handleDelete, handleTaskClick }: TasksProps) => {
-  // if it's done then green otherwise based on dueDate color will change into yellow or red.
-  const taskDate = new Date(task.dueDate);
+  const {
+    title,
+    description,
+    attatchments,
+    status,
+    done,
+    dueDate,
+    priority,
+    _id,
+    tag,
+  } = task;
+
+  const taskDate = new Date(dueDate);
   const currentDate = new Date();
 
-  // putting selected color into the class
-  function redOrYellow() {
-    return taskDate < currentDate ? "red" : "yellow";
-  }
+  const redOrYellow = () => (taskDate < currentDate ? "red" : "yellow");
   const dateColor = task.done ? "green" : redOrYellow();
   const classNameDueDate = `text-xs ml-1 w-18 bg-${dateColor}-400 text-black font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-${dateColor}-400 dark:text-white border border-white-600  `;
 
-  // After clicking button it will red or green
   const updateTaskOrigStore = useTaskStore(
     (state) => state.updateTaskOrigStore
   );
@@ -24,46 +31,31 @@ const TaskItem = ({ task, handleDelete, handleTaskClick }: TasksProps) => {
     (state) => state.updateTaskCopiedStore
   );
 
-  const hanldeDueDateChange = () => {
-    if (dateColor != "green") {
-      task.done = true;
-      updateTaskApi(task._id, task)
-        .then(() => {
-          // updating store
-          updateTaskOrigStore(task.status, task._id, task);
-          updateTaskCopiedStore(task.status, task._id, task);
-        })
-        .catch((err) => {
-          console.log("err in updating to done:", err);
-        });
-    } else {
-      task.done = false;
-      updateTaskApi(task._id, task)
-        .then(() => {
-          // updating store
-          updateTaskOrigStore(task.status, task._id, task);
-          updateTaskCopiedStore(task.status, task._id, task);
-        })
-        .catch((err) => {
-          console.log("err in updating to done:", err);
-        });
-    }
+  const toggleTaskDone = () => {
+    task.done = !done;
+    updateTask(_id, task);
   };
 
-  // on delete
+  const updateTask = (id: string, updatedTask: TaskType) => {
+    updateTaskApi(id, updatedTask)
+      .then(() => {
+        updateTaskOrigStore(status, id, updatedTask);
+        updateTaskCopiedStore(status, id, updatedTask);
+      })
+      .catch((err) => {
+        console.log("err in updating to done:", err);
+      });
+  };
+
   const handleDeleteFun = () => {
     handleDelete(task);
   };
 
-  // @Remember
   const convertToIndianTime = (date: string) => {
-    // Convert the input date string to a Date object
     const inputDate = new Date(date);
 
-    // Get the current date and time
     const currentDate = new Date();
 
-    // Calculate the start and end dates of the current week
     const currentWeekStart = new Date(
       currentDate.getFullYear(),
       currentDate.getMonth(),
@@ -76,7 +68,6 @@ const TaskItem = ({ task, handleDelete, handleTaskClick }: TasksProps) => {
       currentDate.getDate() + (6 - currentDate.getDay())
     );
 
-    // Check if the input date falls within the current week
     const isCurrentWeek =
       inputDate >= currentWeekStart && inputDate <= currentWeekEnd;
 
@@ -88,15 +79,12 @@ const TaskItem = ({ task, handleDelete, handleTaskClick }: TasksProps) => {
       } else if (currentDate.getDay() - 1 === inputDate.getDay()) {
         return "Yesterday";
       }
-      // Display the week day if the date is in the current week
 
       const weekDay = inputDate.toLocaleDateString("en-In", {
         weekday: "long",
       });
       return weekDay;
     } else {
-      // Display the full date if it's not in the current week
-
       const formattedDate =
         inputDate.getFullYear() == currentDate.getFullYear()
           ? inputDate.toLocaleDateString("en-IN", {
@@ -113,9 +101,7 @@ const TaskItem = ({ task, handleDelete, handleTaskClick }: TasksProps) => {
     }
   };
 
-  // change time zone into indian
-  const date = task.dueDate;
-  const indianTime = convertToIndianTime(date);
+  const indianTime = convertToIndianTime(dueDate);
 
   // handle due date change
 
@@ -136,20 +122,20 @@ const TaskItem = ({ task, handleDelete, handleTaskClick }: TasksProps) => {
             <div className="flex justify-between">
               <div className="w-36">
                 <div className="mb-3">
-                  {task.tag === "" ? (
+                  {tag === "" ? (
                     ""
                   ) : (
                     <span className=" text-xxs text-center px-2 py-1 h-4 w-32  uppercase bg-blue-500 rounded-full dark:bg-blue-600 dark:text-white">
-                      {task.tag}
+                      {tag}
                     </span>
                   )}
                 </div>
                 <h1 className="text-sm font-extralight text-gray-400   dark:text-gray-300">
-                  {task.title}
+                  {title}
                 </h1>
               </div>
               <div>
-                {task.priority == "High" && (
+                {priority == "High" && (
                   <svg
                     fill="none"
                     stroke="currentColor"
@@ -167,7 +153,7 @@ const TaskItem = ({ task, handleDelete, handleTaskClick }: TasksProps) => {
                   </svg>
                 )}
 
-                {task.priority == "Medium" && (
+                {priority == "Medium" && (
                   <svg
                     fill="none"
                     stroke="currentColor"
@@ -185,7 +171,7 @@ const TaskItem = ({ task, handleDelete, handleTaskClick }: TasksProps) => {
                   </svg>
                 )}
 
-                {task.priority == "Low" && (
+                {priority == "Low" && (
                   <svg
                     fill="none"
                     stroke="currentColor"
@@ -206,8 +192,8 @@ const TaskItem = ({ task, handleDelete, handleTaskClick }: TasksProps) => {
             </div>
 
             <div className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-              {task.description == null ||
-              task.description.replace(/<[^>]*>/g, "") == "" ? (
+              {description == null ||
+              description.replace(/<[^>]*>/g, "") == "" ? (
                 ""
               ) : (
                 <div className="w-4 group">
@@ -254,7 +240,7 @@ const TaskItem = ({ task, handleDelete, handleTaskClick }: TasksProps) => {
 
           <div className="flex items-center justify-between ml-1 py-2 bg-transparent">
             {/* Due Date */}
-            <button onClick={hanldeDueDateChange}>
+            <button onClick={toggleTaskDone}>
               <span className={classNameDueDate}>
                 {dateColor != "green" ? (
                   <svg
@@ -295,7 +281,7 @@ const TaskItem = ({ task, handleDelete, handleTaskClick }: TasksProps) => {
 
             {/* links badge */}
             <div className="flex flex-row ml-2">
-              {task.attatchments.length ? (
+              {attatchments.length ? (
                 <>
                   <svg
                     fill="none"
@@ -316,7 +302,7 @@ const TaskItem = ({ task, handleDelete, handleTaskClick }: TasksProps) => {
                     className=" mr-3 text-left whitespace-nowrap"
                     // sidebar-toggle-item
                   >
-                    {task.attatchments.length}
+                    {attatchments.length}
                   </span>
                 </>
               ) : (
