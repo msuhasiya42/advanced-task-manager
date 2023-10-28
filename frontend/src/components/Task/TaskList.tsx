@@ -4,7 +4,7 @@ import TaskAreaModal from "./TextAreaModal";
 import { deleteTaskApi, updateTaskApi } from "../../ApiCalls";
 import useTaskStore from "../../Zustand/taskStore";
 import useTagStore from "../../Zustand/tagStore";
-import { TaskCollection, TaskType } from "./Types/types";
+import { TaskCategory, TaskCollection, TaskType } from "./Types/types";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -12,51 +12,51 @@ import { Toast } from "../SmallComp/ToastMessage/ToastMessage";
 // import ReactQuill from "react-quill";
 // import "react-quill/dist/quill.snow.css";
 
+const initialModalData: TaskType = {
+  _id: "",
+  title: "",
+  description: "",
+  dueDate: "",
+  status: "todo",
+  priority: "",
+  tag: "",
+  attatchments: [],
+  collaborators: [],
+  startDate: "",
+  user: "",
+  done: false,
+};
+
 const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
   const [showDeleteToastMsg, setShowDeleteToastMsg] = useState(false);
-  const [modalData, setModalData] = useState<TaskType>({
-    _id: "",
-    title: "",
-    description: "",
-    dueDate: "",
-    status: "todo",
-    priority: "",
-    tag: "",
-    attatchments: [],
-    collaborators: [],
-    startDate: "",
-    user: "",
-    done: false,
-  });
+  const [modalData, setModalData] = useState<TaskType>(initialModalData);
 
   // store
-  const setOriginalTasks = useTaskStore((state) => state.setOriginalTasks);
-  const copyTasks = useTaskStore((state) => state.copyTasks);
+  const {
+    setOriginalTasks,
+    copyTasks,
+    updateTaskOrigStore,
+    updateTaskCopiedStore,
+    deleteTaskOrigStore,
+    deleteTaskCopiedStore,
+  } = useTaskStore((state) => ({
+    setOriginalTasks: state.setOriginalTasks,
+    copyTasks: state.copyTasks,
+    updateTaskOrigStore: state.updateTaskOrigStore,
+    updateTaskCopiedStore: state.updateTaskCopiedStore,
+    deleteTaskOrigStore: state.deleteTaskOrigStore,
+    deleteTaskCopiedStore: state.deleteTaskCopiedStore,
+  }));
+
   const tags = useTagStore((state) => state.tags);
-  const updateTaskOrigStore = useTaskStore(
-    (state) => state.updateTaskOrigStore
-  );
-  const updateTaskCopiedStore = useTaskStore(
-    (state) => state.updateTaskCopiedStore
-  );
-  const deleteTaskOrigStore = useTaskStore(
-    (state) => state.deleteTaskOrigStore
-  );
-  const deleteTaskCopiedStore = useTaskStore(
-    (state) => state.deleteTaskCopiedStore
-  );
 
-  // when clicked on task set editedTask value to currentTask
-  const handleTaskClick = (task: TaskType) => {
-    setModalData(task);
-  };
+  const handleTaskClick = (task: TaskType) => setModalData(task);
 
-  // handle input change (title,priority, status)
   const handleInputChange = (e: { target: { name: string; value: any } }) => {
-    setModalData({ ...modalData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setModalData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  // handle Date change
   const handleDate = (date: Date) => {
     setModalData({ ...modalData, dueDate: date.toString() });
   };
@@ -64,24 +64,21 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
   const handleFormSubmit = () => {
     updateTaskApi(modalData._id, modalData)
       .then(() => {
-        updateTaskOrigStore(modalData.status, modalData._id, modalData);
-        updateTaskCopiedStore(modalData.status, modalData._id, modalData);
+        const { status, _id } = modalData;
+        updateTaskOrigStore(status, _id, modalData);
+        updateTaskCopiedStore(status, _id, modalData);
       })
-      .catch((err) => {
-        console.log("Error in updating task:", err);
-      });
+      .catch((err) => console.log("Error in updating task:", err));
   };
 
-  // handle delete
   const removeToastMsg = () => setShowDeleteToastMsg(false);
 
   const handleDelete = (task: TaskType) => {
     deleteTaskApi(task._id)
       .then(() => {
-        deleteTaskOrigStore(task.status, task._id);
-        deleteTaskCopiedStore(task.status, task._id);
-
-        // toast msg
+        const { _id, status } = task;
+        deleteTaskOrigStore(status, _id);
+        deleteTaskCopiedStore(status, _id);
         setShowDeleteToastMsg(true);
         setTimeout(removeToastMsg, 3000);
       })
@@ -107,97 +104,29 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
       return;
     }
 
-    // if source and destination are same
-    if (source.droppableId == destination.droppableId) {
-      // if todo
-      if (source.droppableId == "todo") {
-        const updatedTasks = Array.from(todo);
-        const [removed] = updatedTasks.splice(source.index, 1);
-        updatedTasks.splice(destination.index, 0, removed);
-        setOriginalTasks("todo", updatedTasks);
-      }
-      // if inprogress
-      else if (source.droppableId == "inProgress") {
-        const updatedTasks = Array.from(inProgress);
-        const [removed] = updatedTasks.splice(source.index, 1);
-        updatedTasks.splice(destination.index, 0, removed);
-        setOriginalTasks("inProgress", updatedTasks);
-      }
-      // if completed
-      else if (source.droppableId == "completed") {
-        const updatedTasks = Array.from(completed);
-        const [removed] = updatedTasks.splice(source.index, 1);
-        updatedTasks.splice(destination.index, 0, removed);
-        setOriginalTasks("completed", updatedTasks);
-      }
-    }
+    const tasksMap: Record<TaskCategory, TaskType[]> = {
+      todo: todo,
+      inProgress: inProgress,
+      completed: completed,
+    };
 
-    //source and destination are not equal
-    else {
-      if (source.droppableId == "todo") {
-        // first take ele from source and update the store of it
-        const updatedTodo = Array.from(todo);
-        const [removed] = updatedTodo.splice(source.index, 1);
-        setOriginalTasks("todo", updatedTodo);
+    // Update tasks function
+    const updateTasks = (from: TaskCategory, to: TaskCategory) => {
+      const sourceTasks = Array.from(tasksMap[from]);
+      const [removed] = sourceTasks.splice(source.index, 1);
 
-        // todo -> inProgress
-        if (destination.droppableId == "inProgress") {
-          removed.status = "inProgress";
-          const updatedInProgress = Array.from(inProgress);
-          updatedInProgress.splice(destination.index, 0, removed);
-          setOriginalTasks("inProgress", updatedInProgress);
-        }
-        // todo -> completed
-        else {
-          removed.status = "completed";
-          const updatedCompleted = Array.from(completed);
-          updatedCompleted.splice(destination.index, 0, removed);
-          setOriginalTasks("completed", updatedCompleted);
-        }
+      if (from !== to) {
+        removed.status = to;
+        setOriginalTasks(from, sourceTasks);
       }
-      if (source.droppableId == "inProgress") {
-        const updatedInProgress = Array.from(inProgress);
-        const [removed] = updatedInProgress.splice(source.index, 1);
-        setOriginalTasks("inProgress", updatedInProgress);
 
-        // inProg -> todo
-        if (destination.droppableId == "todo") {
-          removed.status = "todo";
-          const updatedTodo = Array.from(todo);
-          updatedTodo.splice(destination.index, 0, removed);
-          setOriginalTasks("todo", updatedTodo);
-        }
+      const destinationTasks =
+        from !== to ? Array.from(tasksMap[to]) : sourceTasks;
+      destinationTasks.splice(destination.index, 0, removed);
+      setOriginalTasks(to, destinationTasks);
+    };
 
-        // inProg -> completed
-        else {
-          removed.status = "completed";
-          const updatedCompleted = Array.from(completed);
-          updatedCompleted.splice(destination.index, 0, removed);
-          setOriginalTasks("completed", updatedCompleted);
-        }
-      }
-      if (source.droppableId == "completed") {
-        const updatedCompleted = Array.from(completed);
-        const [removed] = updatedCompleted.splice(source.index, 1);
-        setOriginalTasks("completed", updatedCompleted);
-
-        // comp -> todo
-        if (destination.droppableId == "todo") {
-          removed.status = "todo";
-          const updatedTodo = Array.from(todo);
-          updatedTodo.splice(destination.index, 0, removed);
-          setOriginalTasks("todo", updatedTodo);
-        }
-        // comp-> inProg
-        else {
-          removed.status = "inProgress";
-          const updatedInProgress = Array.from(inProgress);
-          updatedInProgress.splice(destination.index, 0, removed);
-          setOriginalTasks("inProgress", updatedInProgress);
-        }
-      }
-    }
-    // in end copy state to copied state
+    updateTasks(source.droppableId, destination.droppableId);
     copyTasks();
   };
 
