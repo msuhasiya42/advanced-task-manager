@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 import React, { useState } from "react";
 import NavBar from "../NavBar/NavBarHomePage";
-import { googleLoginApi, loginApi } from "../../ApiCalls";
+import { userAPI } from "../../ApiCalls";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../Zustand/authStore";
 import useTagStore from "../../Zustand/tagStore";
@@ -54,7 +54,8 @@ const Login = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    loginApi(email, password)
+    userAPI
+      .login(email, password)
       .then((response) => processLogin(response.data))
       .catch(handleLoginError);
   };
@@ -62,7 +63,8 @@ const Login = () => {
   // login with google
   const loginGoogle = (response: any) => {
     const { credential } = response;
-    googleLoginApi(credential)
+    userAPI
+      .googleLogin(credential)
       .then((res) => processLogin(res.data))
       .catch(handleLoginError);
   };

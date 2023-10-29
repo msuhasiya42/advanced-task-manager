@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import TaskItem from "./TaskItem";
 import TaskAreaModal from "./TextAreaModal";
-import { deleteTaskApi, updateTaskApi } from "../../ApiCalls";
+import { taskAPI } from "../../ApiCalls";
 import useTaskStore from "../../Zustand/taskStore";
 import useTagStore from "../../Zustand/tagStore";
 import { TaskCategory, TaskCollection, TaskType } from "./Types/types";
@@ -62,7 +62,8 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
   };
 
   const handleFormSubmit = () => {
-    updateTaskApi(modalData._id, modalData)
+    taskAPI
+      .updateTask(modalData._id, modalData)
       .then(() => {
         const { status, _id } = modalData;
         updateTaskOrigStore(status, _id, modalData);
@@ -74,7 +75,8 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
   const removeToastMsg = () => setShowDeleteToastMsg(false);
 
   const handleDelete = (task: TaskType) => {
-    deleteTaskApi(task._id)
+    taskAPI
+      .deleteTask(task._id)
       .then(() => {
         const { _id, status } = task;
         deleteTaskOrigStore(status, _id);

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { updateUserApi } from "../../ApiCalls";
+import { userAPI } from "../../ApiCalls";
 import useAuthStore from "../../Zustand/authStore";
 import useTagStore from "../../Zustand/tagStore";
 import { Toast } from "../SmallComp/ToastMessage/ToastMessage";
@@ -28,7 +28,7 @@ const AddTags = () => {
       setNotification({ type: "error", message: "Tag already exists" });
     } else {
       try {
-        await updateUserApi(userId, "add", tag);
+        await userAPI.updateUser(userId, "add", tag);
         addTag(tag);
         setNotification({ type: "success", message: "Tag Added" });
         setTag("");

@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import LogoutButton from "../SmallComp/Logout/LogoutButton";
 import LoadingPage from "../Loading/LoadingPage";
 import useAuthStore from "../../Zustand/authStore";
-import { updateUserApi } from "../../ApiCalls";
+import { userAPI } from "../../ApiCalls";
 import ImageCompressor from "image-compressor.js";
 
 const UserProfile = () => {
@@ -46,7 +46,7 @@ const UserProfile = () => {
               setUserPhoto(photoData);
 
               // Assuming you have userId available in this scope or as a prop
-              await updateUserApi(user?.id, "", "", photoData);
+              await userAPI.updateUser(user?.userId, "", "", photoData);
               updateUser({ picture: photoData });
             } else {
               console.error("Failed to compress the image under 500KB");

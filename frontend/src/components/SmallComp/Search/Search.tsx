@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import useTaskStore from "../../../Zustand/taskStore";
 import { TaskType } from "../../Task/Types/types";
 import DatePicker from "react-datepicker";
-import { updateTaskApi } from "../../../ApiCalls";
+import { taskAPI } from "../../../ApiCalls";
 import useTagStore from "../../../Zustand/tagStore";
 const Search = () => {
   const tasks = useTaskStore((state) => state.allTasks);
@@ -52,7 +52,8 @@ const Search = () => {
   };
 
   const handleFormSubmit = () => {
-    updateTaskApi(modalData._id, modalData)
+    taskAPI
+      .updateTask(modalData._id, modalData)
       .then(() => {
         updateTaskOrigStore(modalData.status, modalData._id, modalData);
         updateTaskCopiedStore(modalData.status, modalData._id, modalData);

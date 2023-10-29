@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import TaskList from "./TaskList";
-import { fetchTask } from "../../ApiCalls";
+import { taskAPI } from "../../ApiCalls";
 import LoadingPage from "../Loading/LoadingPage";
 import useTaskStore from "../../Zustand/taskStore";
 import useAuthStore from "../../Zustand/authStore";
@@ -23,7 +23,7 @@ const TaskManager = () => {
   const fetchAndProcessTasks = async (userId: string) => {
     try {
       setLoading(true);
-      const response = await fetchTask(userId);
+      const response = await taskAPI.fetchTask(userId);
       const fetchedTasks = response.data.tasks;
 
       const validatedTasks = fetchedTasks.map((task: TaskType) => {

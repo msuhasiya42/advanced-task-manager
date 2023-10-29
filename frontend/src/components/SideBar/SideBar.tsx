@@ -4,7 +4,7 @@ import useTaskStore from "../../Zustand/taskStore";
 import useTagStore from "../../Zustand/tagStore";
 import useAuthStore from "../../Zustand/authStore";
 
-import { updateUserApi } from "../../ApiCalls";
+import { userAPI } from "../../ApiCalls";
 import AddTags from "../Add Tags/AddTags";
 import { Toast } from "../SmallComp/ToastMessage/ToastMessage";
 import { TaskCategory } from "../Task/Types/types";
@@ -25,7 +25,8 @@ const SideBar = () => {
   const userId = useAuthStore((state) => state?.user?.userId);
 
   const handleDeleteTag = (tag: string) => {
-    updateUserApi(userId, "delete", tag)
+    userAPI
+      .updateUser(userId, "delete", tag)
       .then(() => {
         deleteTag(tag);
         removeTagFromTasks(tag);

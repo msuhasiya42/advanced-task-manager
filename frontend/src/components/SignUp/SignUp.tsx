@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import NavBar from "../NavBar/NavBarHomePage";
-import { createUser } from "../../ApiCalls";
+import { userAPI } from "../../ApiCalls";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PASSWORD_REGEX =
@@ -68,7 +68,8 @@ const SignUp = () => {
 
     if (!isValidForm()) return;
 
-    createUser(state.name, state.email, state.password)
+    userAPI
+      .createUser(state.name, state.email, state.password)
       .then((response) => {
         if (response.status === 200) {
           setState((prevState) => ({

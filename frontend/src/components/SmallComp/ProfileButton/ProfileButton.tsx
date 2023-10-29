@@ -1,7 +1,6 @@
 import React from "react";
 import useAuthStore from "../../../Zustand/authStore";
-import { User } from "../../../Zustand/authStore";
-
+import { User } from "../../Login/types";
 const ProfileButton = () => {
   const user = useAuthStore((state) => state.user);
   if (!user) {

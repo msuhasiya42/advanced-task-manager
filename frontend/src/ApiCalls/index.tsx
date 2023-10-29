@@ -1,85 +1,67 @@
 import axios from "redaxios";
 import { TaskType } from "../components/Task/Types/types";
 
+const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:5000";
 const API = axios.create({
-  baseURL: "http://localhost:5000", // use env to store it and fetch
+  baseURL: API_BASE_URL,
 });
 
-// user related apis
-export function createUser(name: string, email: string, password: string) {
-  return API.post("users/signup", {
-    name,
-    email,
-    password,
-  });
+function postToAPI(endpoint: string, data: object) {
+  return API.post(endpoint, data);
 }
 
-export function loginApi(email: string, password: string) {
-  return API.post("users/login", {
-    email,
-    password,
-  });
+function getFromAPI(endpoint: string) {
+  return API.get(endpoint);
 }
 
-// login using google
-export function googleLoginApi(tokenId: string) {
-  return API.post("users/googleLoginApi", {
-    token: tokenId,
-  });
+function putToAPI(endpoint: string, data: object, config?: object) {
+  return API.put(endpoint, data, config);
 }
 
-// check session
-export function verifyToken(token: string) {
-  return API.post("users/verifyToken", {
-    token,
-  });
+function deleteFromAPI(endpoint: string) {
+  return API.delete(endpoint);
 }
 
-export function getUserData(userId: string) {
-  return API.get(`/users/getUserById/${userId}`);
-}
+// User related APIs
+export const userAPI = {
+  createUser: (name: string, email: string, password: string) =>
+    postToAPI("users/signup", { name, email, password }),
 
-// update user : to add new tags into user data
-export function updateUserApi(
-  userId: string | undefined,
-  type: string,
-  tag: string,
-  photo?: string
-) {
-  // If a photo is provided, only send the photo data and skip the tag and type.
-  const body = photo ? { photo } : { tag, type };
+  login: (email: string, password: string) =>
+    postToAPI("users/login", { email, password }),
 
-  return API.put(`/users/updateUser/${userId}`, body, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
-}
-/*________________________________________________*/
+  googleLogin: (tokenId: string) =>
+    postToAPI("users/googleLoginApi", { token: tokenId }),
 
-// task related apis
-// Adding new task
-export function createTask(title: string, status: string, user: string) {
-  return API.post("tasks/createTask", {
-    title,
-    status,
-    user,
-  });
-}
+  verifyToken: (token: string) => postToAPI("users/verifyToken", { token }),
 
-// get list of tasks
-export function fetchTask(userId: string) {
-  return API.get(`/tasks/fetchTasksByUserId/${userId}`);
-}
+  getUserData: (userId: string) => getFromAPI(`/users/getUserById/${userId}`),
 
-// task Delete
-export function deleteTaskApi(id: string) {
-  return API.delete(`/tasks/deleteTask/${id}`);
-}
+  updateUser: (
+    userId: string | undefined,
+    type: string,
+    tag: string,
+    photo?: string
+  ) => {
+    const body = photo ? { photo } : { tag, type };
+    return putToAPI(`/users/updateUser/${userId}`, body, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  },
+};
 
-// task update
-export function updateTaskApi(id: string, task: TaskType) {
-  return API.put(`tasks/updateTask/${id}`, {
-    task,
-  });
-}
+// Task related APIs
+export const taskAPI = {
+  createTask: (title: string, status: string, user: string) =>
+    postToAPI("tasks/createTask", { title, status, user }),
+
+  fetchTask: (userId: string) =>
+    getFromAPI(`/tasks/fetchTasksByUserId/${userId}`),
+
+  deleteTask: (id: string) => deleteFromAPI(`/tasks/deleteTask/${id}`),
+
+  updateTask: (id: string, task: TaskType) =>
+    putToAPI(`tasks/updateTask/${id}`, { task }),
+};

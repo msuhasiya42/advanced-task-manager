@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { createTask } from "../../ApiCalls";
+import { taskAPI } from "../../ApiCalls";
 import useTaskStore from "../../Zustand/taskStore";
 import useAuthStore from "../../Zustand/authStore";
 import { TaskCategory } from "./Types/types";
@@ -26,7 +26,8 @@ const TextAreaModal = ({ status }: StatusType) => {
     event.preventDefault();
 
     if (user) {
-      createTask(task, status, user)
+      taskAPI
+        .createTask(task, status, user)
         .then((response) => {
           const newTask = response.data.task;
           addTaskOrigStore(status, newTask);

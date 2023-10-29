@@ -1,7 +1,7 @@
 import React from "react";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import { TaskType, TasksProps } from "./Types/types";
-import { updateTaskApi } from "../../ApiCalls";
+import { taskAPI } from "../../ApiCalls";
 import useTaskStore from "../../Zustand/taskStore";
 
 const TaskItem = ({ task, handleDelete, handleTaskClick }: TasksProps) => {
@@ -37,7 +37,8 @@ const TaskItem = ({ task, handleDelete, handleTaskClick }: TasksProps) => {
   };
 
   const updateTask = (id: string, updatedTask: TaskType) => {
-    updateTaskApi(id, updatedTask)
+    taskAPI
+      .updateTask(id, updatedTask)
       .then(() => {
         updateTaskOrigStore(status, id, updatedTask);
         updateTaskCopiedStore(status, id, updatedTask);
