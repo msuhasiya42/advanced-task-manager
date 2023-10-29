@@ -70,19 +70,14 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <div className="h-screen bg-gray-900 flex flex-col">
       <NavBar />
-      <div className="h-screen flex  justify-center items-center bg-gray-900 ">
+      <div className="h-screen flex justify-center items-center bg-gray-900 ">
         <div className="w-full max-w-xs">
           <a
             href="/login"
-            className="flex ml-24 items-center mb-6 text-2xl font-semibold text-black dark:text-white"
+            className="flex justify-center items-center mb-6 text-2xl font-semibold text-black dark:text-white"
           >
-            <img
-              className="w-8 h-8 mr-2"
-              src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
-              alt="logo"
-            />
             Log In
           </a>
           <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
