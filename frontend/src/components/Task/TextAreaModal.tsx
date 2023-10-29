@@ -44,7 +44,7 @@ const TextAreaModal = ({ status }: StatusType) => {
     setShowTextArea(false);
   };
 
-  const updateTitle = (event: any) => {
+  const updateTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTask(event.target.value);
   };
 

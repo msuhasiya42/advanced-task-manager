@@ -12,12 +12,7 @@ const Header = () => {
       <nav className=" bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
         <div className="max-w-screen-2xl flex flex-wrap  justify-between mx-auto">
           <a href="/user-dashboard" className="flex items-center">
-            {/* <img
-              src="https://w7.pngwing.com/pngs/209/1016/png-transparent-computer-icons-task-id-miscellaneous-computer-logo.png"
-              className="h-8  mr-2"
-              alt="Flowbite Logo"
-            /> */}
-            <span className="uppercase ml-3 self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
+            <span className=" ml-3 self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
               Task Manager
             </span>
           </a>
@@ -45,32 +40,18 @@ const Header = () => {
           </button>
 
           {/* nav bar right side buttons */}
-
           <div
             className="mt-2 mr-2  w-full md:block md:w-auto"
             id="navbar-dropdown"
           >
             <ul className="flex flex-col  font-medium p-2 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-1 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-              {/* search button */}
               <Search />
-
-              {/* filter */}
-              {/* <Filter /> */}
-
-              {/* user photo with options on it */}
               <ProfileButton />
-
-              {/* theme button */}
               <Theme />
-
-              {/* <!-- Notifications --> */}
               <Notifications />
-              {/* logout button */}
               <LogoutButton />
             </ul>
           </div>
-
-          {/* nav bar right side buttons end */}
         </div>
       </nav>
     </div>
