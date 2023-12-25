@@ -17,7 +17,12 @@ export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   return (
     <AlertDialog.Root>
       <AlertDialog.Trigger asChild>
-        <button className="pr-2">
+        <button
+          className="pr-2"
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
           <svg
             fill="none"
             stroke="currentColor"
@@ -46,13 +51,21 @@ export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
           </AlertDialog.Description>
           <div className="flex justify-end gap-[25px]">
             <AlertDialog.Cancel asChild>
-              <button className="text-mauve11 text-gray-500 bg-gray-200 focus:shadow-mauve7 inline-flex h-[35px] items-center justify-center rounded-[4px] px-[15px] font-medium ">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+                className="text-mauve11 text-gray-500 bg-gray-200 focus:shadow-mauve7 inline-flex h-[35px] items-center justify-center rounded-[4px] px-[15px] font-medium "
+              >
                 Cancel
               </button>
             </AlertDialog.Cancel>
             <AlertDialog.Action asChild>
               <button
-                onClick={onConfirm}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onConfirm();
+                }}
                 className="text-red-600 bg-red-200 hover:bg-red5 focus:shadow-red7 inline-flex h-[35px] items-center justify-center rounded-[4px] px-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px]"
               >
                 Yes, delete

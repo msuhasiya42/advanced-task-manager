@@ -1,5 +1,4 @@
 import React from "react";
-import Filter from "../Filter/Filter";
 import ProfileButton from "../SmallComp/ProfileButton/ProfileButton";
 import Theme from "../SmallComp/Theme/Theme";
 import Search from "../SmallComp/Search/Search";
@@ -12,7 +11,7 @@ const Header = () => {
       <nav className=" bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
         <div className="max-w-screen-2xl flex flex-wrap  justify-between mx-auto">
           <a href="/user-dashboard" className="flex items-center">
-            <span className=" ml-3 self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
+            <span className="ml-6 self-center text-2xl font-semibold bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent whitespace-nowrap">
               Task Manager
             </span>
           </a>

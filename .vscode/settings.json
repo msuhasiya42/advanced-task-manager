@@ -1,4 +1,5 @@
 {
     "editor.formatOnSave": true,
-    "reactSnippets.settings.prettierEnabled": false
+    "reactSnippets.settings.prettierEnabled": false,
+    "typescript.preferences.includePackageJsonAutoImports": "on"
 }

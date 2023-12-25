@@ -10,6 +10,8 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "@types/antd": "^1.0.0",
+    "antd": "^5.12.5",
     "axios": "^1.4.0",
     "body-parser": "^1.20.2",
     "class-variance-authority": "^0.7.0",

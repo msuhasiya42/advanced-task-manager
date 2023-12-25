@@ -1,11 +1,13 @@
-import React from "react";
-import * as AlertDialog from "@radix-ui/react-alert-dialog";
+import React, { useState } from "react";
 import { TaskType, TasksProps } from "./Types/types";
 import { taskAPI } from "../../ApiCalls";
 import useTaskStore from "../../Zustand/taskStore";
 import { ConfirmationDialog } from "../SmallComp/ConfirmationDialog/ConfirmationDialog";
+import { Input, Modal } from "antd";
+import useTagStore from "../../Zustand/tagStore";
+import DatePicker from "react-datepicker";
 
-const TaskItem = ({ task, handleDelete, handleTaskClick }: TasksProps) => {
+const TaskItem = ({ task, handleDelete }: TasksProps) => {
   const {
     title,
     description,
@@ -16,7 +18,39 @@ const TaskItem = ({ task, handleDelete, handleTaskClick }: TasksProps) => {
     priority,
     _id,
     tag,
+    startDate,
+    collaborators,
+    user,
   } = task;
+
+  const initialModalData: TaskType = {
+    _id,
+    title,
+    description,
+    dueDate,
+    status,
+    priority,
+    tag,
+    attatchments,
+    collaborators,
+    startDate,
+    user,
+    done,
+  };
+
+  const [modalData, setModalData] = useState<TaskType>(initialModalData);
+  const [showModal, setShowModal] = useState(false);
+
+  const tags = useTagStore((state) => state.tags);
+
+  const handleInputChange = (e: { target: { name: string; value: any } }) => {
+    const { name, value } = e.target;
+    setModalData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleDate = (date: Date) => {
+    setModalData({ ...modalData, dueDate: date.toString() });
+  };
 
   const taskDate = new Date(dueDate);
   const currentDate = new Date();
@@ -105,16 +139,28 @@ const TaskItem = ({ task, handleDelete, handleTaskClick }: TasksProps) => {
 
   const indianTime = convertToIndianTime(dueDate);
 
+  const handleFormSubmit = () => {
+    taskAPI
+      .updateTask(modalData._id, modalData)
+      .then(() => {
+        const { status, _id } = modalData;
+        updateTaskOrigStore(status, _id, modalData);
+        updateTaskCopiedStore(status, _id, modalData);
+      })
+      .catch((err) => console.log("Error in updating task:", err));
+  };
+
   // handle due date change
 
   return (
     <div>
-      <label
+      <div
         style={{ cursor: "pointer" }}
-        htmlFor="my_modal_6"
-        onClick={() => handleTaskClick(task)}
+        onClick={(e) => {
+          e.stopPropagation(), setShowModal(true);
+        }}
       >
-        <div className="font-thin w-full mb-2 overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800 hover:bg-gray-700 ">
+        <div className="font-thin w-full mb-2 overflow-hidden rounded-lg shadow-lg dark:bg-gray-800 hover:bg-gray-700 ">
           {/* <img
             className="w-full h-48 mt-2"
             src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=320&q=80"
@@ -242,7 +288,11 @@ const TaskItem = ({ task, handleDelete, handleTaskClick }: TasksProps) => {
 
           <div className="flex items-center justify-between ml-1 py-2 bg-transparent">
             {/* Due Date */}
-            <button onClick={toggleTaskDone}>
+            <button
+              onClick={(e) => {
+                e.stopPropagation(), toggleTaskDone();
+              }}
+            >
               <span className={classNameDueDate}>
                 {dateColor != "green" ? (
                   <svg
@@ -321,7 +371,138 @@ const TaskItem = ({ task, handleDelete, handleTaskClick }: TasksProps) => {
             />
           </div>
         </div>
-      </label>
+      </div>
+      <Modal
+        title={<div style={{ textAlign: "center" }}>{"Edit Task"}</div>}
+        centered
+        open={showModal}
+        onCancel={() => setShowModal(false)}
+        onOk={() => {
+          setShowModal(false);
+          handleFormSubmit();
+        }}
+      >
+        <div className="xt-row xt-row-x-6 xt-row-y-4">
+          <div className="w-full">
+            <Input
+              required
+              addonBefore="Title"
+              name="title"
+              defaultValue={modalData.title}
+              value={modalData.title}
+              onChange={handleInputChange}
+            />
+          </div>
+
+          <div className="w-full mt-4">
+            <label className="block mb-3 font-medium text-gray-700">
+              Description
+            </label>
+            <textarea
+              name="description"
+              id="description"
+              className="block w-full h-20 max-h-48 rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none resize-vertical"
+              aria-label="Textarea"
+              placeholder="Add description about your task"
+              value={modalData.description}
+              onChange={handleInputChange}
+            />
+            {/* <ReactQuill
+                        className="block  w-full rounded-md   text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
+                        value={modalData.description}
+                        onChange={handleDescription}
+                        style={{
+                          height: " 180px",
+                          maxHeight: "180px",
+                          overflow: "auto",
+                        }}
+                      /> */}
+          </div>
+
+          {/* select tag */}
+          <div className="w-full mt-4">
+            <label className="block mb-3 font-medium text-gray-700">Tag</label>
+            <select
+              id="tag"
+              name="tag"
+              className="block w-full xt-select rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
+              aria-label="Select"
+              value={modalData.tag ?? ""}
+              onChange={handleInputChange}
+            >
+              <option value="" className="bg-red-400">
+                -- No tag --
+              </option>
+
+              {tags.map((tag, index) => (
+                <option key={index} value={tag}>
+                  {tag}
+                </option>
+              ))}
+              {/* <option value="Low">Low</option>
+                      <option value="Medium">Medium</option>
+                      <option value="High">High</option> */}
+            </select>
+          </div>
+          <div className="w-full mt-4">
+            <label className="block mb-3 font-medium text-gray-700">
+              Status
+            </label>
+            <select
+              id="status"
+              name="status"
+              className="block w-full xt-select rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
+              aria-label="Select"
+              value={modalData.status}
+              onChange={handleInputChange}
+            >
+              {/* <option selected value="">
+                        Select an option
+                      </option> */}
+              <option value="todo">Todo</option>
+              <option value="inProgress">In Progress</option>
+              <option value="completed">Completed</option>
+            </select>
+          </div>
+
+          <div className="w-full mt-4">
+            <label className="block mb-3 font-medium text-gray-700">
+              Priority
+            </label>
+            <select
+              id="priority"
+              name="priority"
+              className="block w-full xt-select rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
+              aria-label="Select"
+              value={modalData.priority}
+              onChange={handleInputChange}
+            >
+              {/* <option selected value="">
+                        Select an option
+                      </option> */}
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
+          </div>
+
+          {/* Date picker */}
+          <div className="pt-3">
+            <label className="block mb-3 font-medium text-gray-700">
+              Due Date
+            </label>
+            <DatePicker
+              className="block w-full rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
+              selected={
+                modalData.dueDate == ""
+                  ? new Date()
+                  : new Date(modalData.dueDate)
+              }
+              onChange={handleDate}
+            />
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };

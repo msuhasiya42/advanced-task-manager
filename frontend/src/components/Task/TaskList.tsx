@@ -3,40 +3,21 @@ import TaskItem from "./TaskItem";
 import TaskAreaModal from "./TextAreaModal";
 import { taskAPI } from "../../ApiCalls";
 import useTaskStore from "../../Zustand/taskStore";
-import useTagStore from "../../Zustand/tagStore";
 import { TaskCategory, TaskCollection, TaskType } from "./Types/types";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Toast } from "../SmallComp/ToastMessage/ToastMessage";
+import { message } from "antd";
 // import ReactQuill from "react-quill";
 // import "react-quill/dist/quill.snow.css";
 
-const initialModalData: TaskType = {
-  _id: "",
-  title: "",
-  description: "",
-  dueDate: "",
-  status: "todo",
-  priority: "",
-  tag: "",
-  attatchments: [],
-  collaborators: [],
-  startDate: "",
-  user: "",
-  done: false,
-};
-
 const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
   const [showDeleteToastMsg, setShowDeleteToastMsg] = useState(false);
-  const [modalData, setModalData] = useState<TaskType>(initialModalData);
 
   // store
   const {
     setOriginalTasks,
     copyTasks,
-    updateTaskOrigStore,
-    updateTaskCopiedStore,
     deleteTaskOrigStore,
     deleteTaskCopiedStore,
   } = useTaskStore((state) => ({
@@ -48,30 +29,6 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
     deleteTaskCopiedStore: state.deleteTaskCopiedStore,
   }));
 
-  const tags = useTagStore((state) => state.tags);
-
-  const handleTaskClick = (task: TaskType) => setModalData(task);
-
-  const handleInputChange = (e: { target: { name: string; value: any } }) => {
-    const { name, value } = e.target;
-    setModalData((prevData) => ({ ...prevData, [name]: value }));
-  };
-
-  const handleDate = (date: Date) => {
-    setModalData({ ...modalData, dueDate: date.toString() });
-  };
-
-  const handleFormSubmit = () => {
-    taskAPI
-      .updateTask(modalData._id, modalData)
-      .then(() => {
-        const { status, _id } = modalData;
-        updateTaskOrigStore(status, _id, modalData);
-        updateTaskCopiedStore(status, _id, modalData);
-      })
-      .catch((err) => console.log("Error in updating task:", err));
-  };
-
   const removeToastMsg = () => setShowDeleteToastMsg(false);
 
   const handleDelete = (task: TaskType) => {
@@ -81,7 +38,7 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
         const { _id, status } = task;
         deleteTaskOrigStore(status, _id);
         deleteTaskCopiedStore(status, _id);
-        setShowDeleteToastMsg(true);
+        void message.success("Task Deleted Successfully");
         setTimeout(removeToastMsg, 3000);
       })
       .catch((err) => {
@@ -163,11 +120,7 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
                           >
-                            <TaskItem
-                              task={task}
-                              handleTaskClick={handleTaskClick}
-                              handleDelete={handleDelete}
-                            />
+                            <TaskItem task={task} handleDelete={handleDelete} />
                           </div>
                         )}
                       </Draggable>
@@ -206,11 +159,7 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
                           >
-                            <TaskItem
-                              task={task}
-                              handleTaskClick={handleTaskClick}
-                              handleDelete={handleDelete}
-                            />
+                            <TaskItem task={task} handleDelete={handleDelete} />
                           </div>
                         )}
                       </Draggable>
@@ -249,11 +198,7 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
                           >
-                            <TaskItem
-                              task={task}
-                              handleTaskClick={handleTaskClick}
-                              handleDelete={handleDelete}
-                            />
+                            <TaskItem task={task} handleDelete={handleDelete} />
                           </div>
                         )}
                       </Draggable>
@@ -265,187 +210,8 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
             </Droppable>
           </div>
 
-          <div className=""></div>
-
           {/* delete toast msg */}
           {showDeleteToastMsg && <Toast type="error" message="Task Deleted" />}
-
-          {/* new modal */}
-          {/* Put this part before </body> tag */}
-          <input type="checkbox" id="my_modal_6" className="modal-toggle" />
-
-          <div className="modal">
-            <div className="modal-box bg-gray-400 text-black">
-              <div>
-                <form className="text-sm" onSubmit={handleFormSubmit}>
-                  <div className="grid grid-cols-2">
-                    <h1 className="text-gray-800 text-xl mb-4">Edit Task</h1>
-
-                    <label
-                      htmlFor="my_modal_6"
-                      className="btn bg-gray-600 w-16 ml-44 h-2"
-                    >
-                      <svg
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                        aria-hidden="true"
-                        className="w-6 h-6"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M6 18L18 6M6 6l12 12"
-                        ></path>
-                      </svg>
-                    </label>
-                  </div>
-                  <div className="xt-row xt-row-x-6 xt-row-y-4">
-                    <div className="w-full">
-                      <div className="modal-action"></div>
-
-                      <label className="block mb-3 font-medium text-gray-700">
-                        Title
-                      </label>
-                      <input
-                        required
-                        type="text"
-                        id="title"
-                        name="title"
-                        value={modalData.title}
-                        className="block w-full rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
-                        aria-label="Input"
-                        placeholder="Input"
-                        onChange={handleInputChange}
-                      />
-                    </div>
-
-                    <div className="w-full mt-4">
-                      <label className="block mb-3 font-medium text-gray-700">
-                        Description
-                      </label>
-                      <textarea
-                        name="description"
-                        id="description"
-                        className="block w-full h-20 max-h-48 rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none resize-vertical"
-                        aria-label="Textarea"
-                        placeholder="Textarea"
-                        value={modalData.description}
-                        onChange={handleInputChange}
-                      ></textarea>
-                      {/* <ReactQuill
-                        className="block  w-full rounded-md   text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
-                        value={modalData.description}
-                        onChange={handleDescription}
-                        style={{
-                          height: " 180px",
-                          maxHeight: "180px",
-                          overflow: "auto",
-                        }}
-                      /> */}
-                    </div>
-
-                    {/* select tag */}
-                    <div className="w-full mt-4">
-                      <label className="block mb-3 font-medium text-gray-700">
-                        Tag
-                      </label>
-                      <select
-                        id="tag"
-                        name="tag"
-                        className="block w-full xt-select rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
-                        aria-label="Select"
-                        value={modalData.tag == "" ? "noTag" : modalData.tag}
-                        onChange={handleInputChange}
-                      >
-                        <option value="noTag" className="bg-red-400">
-                          No tag
-                        </option>
-
-                        {tags.map((tag, index) => (
-                          <option key={index} value={tag}>
-                            {tag}
-                          </option>
-                        ))}
-                        {/* <option value="Low">Low</option>
-                      <option value="Medium">Medium</option>
-                      <option value="High">High</option> */}
-                      </select>
-                    </div>
-                    <div className="w-full mt-4">
-                      <label className="block mb-3 font-medium text-gray-700">
-                        Status
-                      </label>
-                      <select
-                        id="status"
-                        name="status"
-                        className="block w-full xt-select rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
-                        aria-label="Select"
-                        value={modalData.status}
-                        onChange={handleInputChange}
-                      >
-                        {/* <option selected value="">
-                        Select an option
-                      </option> */}
-                        <option value="todo">Todo</option>
-                        <option value="inProgress">In Progress</option>
-                        <option value="completed">Completed</option>
-                      </select>
-                    </div>
-
-                    <div className="w-full mt-4">
-                      <label className="block mb-3 font-medium text-gray-700">
-                        Priority
-                      </label>
-                      <select
-                        id="priority"
-                        name="priority"
-                        className="block w-full xt-select rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
-                        aria-label="Select"
-                        value={modalData.priority}
-                        onChange={handleInputChange}
-                      >
-                        {/* <option selected value="">
-                        Select an option
-                      </option> */}
-                        <option value="Low">Low</option>
-                        <option value="Medium">Medium</option>
-                        <option value="High">High</option>
-                      </select>
-                    </div>
-
-                    {/* Date picker */}
-                    <div className="pt-3">
-                      <label className="block mb-3 font-medium text-gray-700">
-                        Due Date
-                      </label>
-                      <DatePicker
-                        className="block w-full rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
-                        selected={
-                          modalData.dueDate == ""
-                            ? new Date()
-                            : new Date(modalData.dueDate)
-                        }
-                        onChange={handleDate}
-                      />
-                    </div>
-
-                    {/* submit button */}
-                    <div className="w-full mt-3">
-                      <button
-                        type="submit"
-                        className="xt-button py-2.5 px-3.5 text-sm rounded-md font-medium leading-snug tracking-wider uppercase text-gray-200 bg-primary-500 transition hover:text-gray-200 hover:bg-primary-600 active:text-gray-200 active:bg-primary-700 on:text-gray-200 on:bg-primary-600"
-                      >
-                        submit
-                      </button>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
         </div>
       </DragDropContext>
     </div>
