@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import useTaskStore from "../../Zustand/taskStore";
 import useTagStore from "../../Zustand/tagStore";
 import useAuthStore from "../../Zustand/authStore";
@@ -9,6 +8,7 @@ import AddTags from "../Add Tags/AddTags";
 import { Toast } from "../SmallComp/ToastMessage/ToastMessage";
 import { TaskCategory } from "../Task/Types/types";
 import { ConfirmationDialog } from "../SmallComp/ConfirmationDialog/ConfirmationDialog";
+import { message } from "antd";
 const SideBar = () => {
   const [err, setErr] = useState(false);
 
@@ -29,6 +29,7 @@ const SideBar = () => {
     userAPI
       .updateUser(userId, "delete", tag)
       .then(() => {
+        void message.success("Tag Deleted", 1.5);
         deleteTag(tag);
         removeTagFromTasks(tag);
       })

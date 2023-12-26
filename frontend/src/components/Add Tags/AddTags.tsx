@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { userAPI } from "../../ApiCalls";
 import useAuthStore from "../../Zustand/authStore";
 import useTagStore from "../../Zustand/tagStore";
-import { Toast } from "../SmallComp/ToastMessage/ToastMessage";
+import { Input, InputRef, message } from "antd";
 
 const AddTags = () => {
   const [showTextArea, setShowTextArea] = useState(false);
   const [tag, setTag] = useState("");
-  const [notification, setNotification] = useState({ type: "", message: "" });
+  const tagRef = React.useRef<InputRef>(null);
 
   // using add task from store
   const userId = useAuthStore((state) => state?.user?.userId);
@@ -17,49 +17,64 @@ const AddTags = () => {
     setShowTextArea((prev) => !prev);
   };
 
-  const disAppearToast = () => {
-    setNotification({ type: "", message: "" });
+  const handleClickOutside = (event: MouseEvent) => {
+    const inputElement = tagRef.current?.input;
+    if (
+      inputElement &&
+      !inputElement.contains(event.target as Node) &&
+      (event.target as HTMLInputElement).type !== "submit"
+    ) {
+      setShowTextArea(false);
+    }
   };
+
+  useEffect(() => {
+    if (showTextArea && tagRef.current != null) {
+      tagRef.current.focus();
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showTextArea]);
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
 
     if (checkTagExists(tag)) {
-      setNotification({ type: "error", message: "Tag already exists" });
+      void message.error("Tag already exists.", 2);
     } else {
       try {
         await userAPI.updateUser(userId, "add", tag);
         addTag(tag);
-        setNotification({ type: "success", message: "Tag Added" });
+        void message.success("Tag Added.", 1.5);
         setTag("");
         setShowTextArea(false);
       } catch (error) {
         console.error(error);
-        setNotification({ type: "error", message: "Tag Not added" });
-      } finally {
-        setTimeout(disAppearToast, 3000);
+        void message.error("Tag Not added.");
       }
     }
   };
 
   return (
     <div className="flex flex-col">
-      {notification.type && <Toast type="success" message="Tag Added" />}
-
       {showTextArea ? (
         <div>
           <form onSubmit={handleSubmit}>
             <div className="w-48 mb-2 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
               {/* <div className="flex items-center justify-between px-3 py-2 border-b dark:border-gray-600"></div> */}
               <div className="px-4  bg-white rounded-lg dark:bg-gray-800">
-                <input
+                <Input
+                  ref={tagRef}
                   onChange={(e) => setTag(e.target.value)}
                   id="tag"
                   type="text"
                   className="block w-full px-2 text-sm text-gray-800 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"
                   placeholder="Tag name"
                   required
-                ></input>
+                />
               </div>
             </div>
             <div className="flex flex-row">

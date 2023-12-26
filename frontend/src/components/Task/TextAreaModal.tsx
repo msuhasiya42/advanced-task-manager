@@ -3,7 +3,8 @@ import { taskAPI } from "../../ApiCalls";
 import useTaskStore from "../../Zustand/taskStore";
 import useAuthStore from "../../Zustand/authStore";
 import { TaskCategory } from "./Types/types";
-import { Toast } from "../SmallComp/ToastMessage/ToastMessage";
+import { Input, InputRef, message } from "antd";
+import { EditOutlined } from "@ant-design/icons";
 
 interface StatusType {
   status: TaskCategory;
@@ -12,15 +13,12 @@ interface StatusType {
 const TextAreaModal = ({ status }: StatusType) => {
   const [showTextArea, setShowTextArea] = useState(false);
   const [task, setTask] = useState("");
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
   const user = useAuthStore((state) => state.user?.userId);
   const addTaskOrigStore = useTaskStore((state) => state.addTaskOrigStore);
   const addTaskCopiedStore = useTaskStore((state) => state.addTaskCopiedStore);
-  const textRef = React.useRef<HTMLInputElement>(null);
+  const textRef = React.useRef<InputRef>(null);
 
   const handleClick = () => setShowTextArea((prev) => !prev);
-
-  const removeToastMsg = () => setToastMessage(null);
 
   const onSaveTask = (event: React.FormEvent) => {
     event.preventDefault();
@@ -32,13 +30,12 @@ const TextAreaModal = ({ status }: StatusType) => {
           const newTask = response.data.task;
           addTaskOrigStore(status, newTask);
           addTaskCopiedStore(status, newTask);
-          setToastMessage("Task Added");
+          void message.success("Task Added", 1.5);
         })
         .catch((error) => {
           console.error(error);
-          setToastMessage("Error: Task Not added");
+          void message.error("Error: Task Not added", 1.5);
         });
-      setTimeout(removeToastMsg, 2000);
     }
     setTask("");
     setShowTextArea(false);
@@ -48,11 +45,13 @@ const TextAreaModal = ({ status }: StatusType) => {
     setTask(event.target.value);
   };
 
-  const handleClickOutside = (event: any) => {
+  const handleClickOutside = (event: MouseEvent) => {
+    const inputElement = textRef.current?.input;
+
     if (
-      textRef.current &&
-      !textRef.current.contains(event.target) &&
-      event.target.type !== "submit"
+      inputElement &&
+      !inputElement.contains(event.target as Node) &&
+      (event.target as HTMLInputElement).type !== "submit"
     ) {
       setShowTextArea(false);
     }
@@ -80,26 +79,18 @@ const TextAreaModal = ({ status }: StatusType) => {
         </button>
       </div>
 
-      {toastMessage && (
-        <Toast
-          type={toastMessage.includes("Error") ? "error" : "success"}
-          message={toastMessage}
-        />
-      )}
       {showTextArea && (
         <form onSubmit={onSaveTask}>
           <div className="w-full mb-2 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
             {/* <div className="flex items-center justify-between px-3 py-2 border-b dark:border-gray-600"></div> */}
-            <div className="px-4  bg-white rounded-lg dark:bg-gray-800">
-              <input
+            <div>
+              <Input
                 ref={textRef}
-                onChange={updateTitle}
-                id="task"
-                type="text"
-                className="block w-full px-1 text-sm text-gray-800 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-gray-300 dark:placeholder-gray-400"
+                size="small"
                 placeholder="Write about task..."
-                required
-              ></input>
+                prefix={<EditOutlined />}
+                onChange={updateTitle}
+              />
             </div>
           </div>
 

@@ -3,6 +3,7 @@ import { z } from "zod";
 export const taskSchema = z.object({
   _id: z.string(),
   title: z.string().nonempty("Title is required"),
+  description: z.string().default(""),
   tag: z.string().default(""),
   done: z.boolean().default(false),
   status: z.enum(["todo", "inProgress", "completed"]),

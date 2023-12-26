@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { create } from "zustand";
 import { TaskCategory } from "../components/Task/Types/types";
 import { TaskType } from "../components/Task/Types/types";
