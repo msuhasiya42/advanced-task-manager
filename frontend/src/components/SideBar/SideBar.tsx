@@ -11,6 +11,7 @@ import { ConfirmationDialog } from "../SmallComp/ConfirmationDialog/Confirmation
 import { message } from "antd";
 const SideBar = () => {
   const [err, setErr] = useState(false);
+  const [activeTab, setActiveTab] = useState("all");
 
   const { tags, deleteTag } = useTagStore();
   const {
@@ -18,11 +19,13 @@ const SideBar = () => {
     setTodaysTasks,
     setUpcomingTasks,
     filterTasksByTag,
-    filterTaskByHavingTagFun,
     removeTagFromTasks,
   } = useTaskStore();
 
-  const handleAllTasks = () => copyTasks();
+  const handleAllTasks = () => {
+    copyTasks();
+    setActiveTab("all");
+  };
   const userId = useAuthStore((state) => state?.user?.userId);
 
   const handleDeleteTag = (tag: string) => {
@@ -52,7 +55,7 @@ const SideBar = () => {
   };
 
   const handleTemp = () => {
-    // some code
+    setActiveTab("reminders");
   };
   return (
     <>
@@ -67,7 +70,9 @@ const SideBar = () => {
               <li>
                 <button
                   onClick={handleAllTasks}
-                  className="bold flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
+                  className={`bold flex items-center w-full p-2 ${
+                    activeTab === "all" ? "bg-gray-700" : ""
+                  } text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white`}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -89,8 +94,13 @@ const SideBar = () => {
 
               <li>
                 <button
-                  onClick={() => handleFilter(setTodaysTasks)}
-                  className="bold flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                  onClick={() => {
+                    handleFilter(setTodaysTasks);
+                    setActiveTab("todays");
+                  }}
+                  className={`bold flex items-center w-full p-2 ${
+                    activeTab === "todays" ? "bg-gray-700" : ""
+                  } text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white`}
                 >
                   <svg
                     fill="none"
@@ -116,8 +126,13 @@ const SideBar = () => {
               {/* upcoming tasks */}
               <li>
                 <button
-                  onClick={() => handleFilter(setUpcomingTasks)}
-                  className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white "
+                  onClick={() => {
+                    handleFilter(setUpcomingTasks);
+                    setActiveTab("upcomingTasks");
+                  }}
+                  className={`bold flex items-center w-full p-2 ${
+                    activeTab === "upcomingTasks" ? "bg-gray-700" : ""
+                  } text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white`}
                 >
                   <svg
                     fill="none"
@@ -144,7 +159,9 @@ const SideBar = () => {
               <li>
                 <button
                   onClick={handleTemp}
-                  className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
+                  className={`bold flex items-center w-full p-2 ${
+                    activeTab === "reminders" ? "bg-gray-700" : ""
+                  } text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white`}
                 >
                   <svg
                     fill="none"
@@ -168,12 +185,17 @@ const SideBar = () => {
               </li>
 
               {/* tags */}
-              <li>
+              {/* <li>
                 {" "}
                 <button
                   type="button"
-                  onClick={() => handleFilter(filterTaskByHavingTagFun)}
-                  className="flex items-center w-full mb-3 p-2 text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
+                  onClick={() => {
+                    handleFilter(filterTaskByHavingTagFun);
+                    setActiveTab("filters");
+                  }}
+                  className={`bold flex items-center w-full p-2 ${
+                    activeTab === "filters" ? "bg-gray-700" : ""
+                  } text-gray-900 mb-4 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-500 dark:hover:text-white`}
                 >
                   <svg
                     fill="none"
@@ -194,16 +216,21 @@ const SideBar = () => {
                     Filter By Tags
                   </span>
                 </button>
-              </li>
+              </li> */}
               <li>
                 <ul className="border border-gray-500 max-h-[200px] bg-gray-800 rounded-lg overflow-y-auto">
                   {tags.map((tag, index) => (
                     <div className=" grid grid-cols-2 gap-28 " key={index}>
                       <li>
                         <a
-                          onClick={() => filterTaskByTagName(tag)}
+                          onClick={() => {
+                            filterTaskByTagName(tag);
+                            setActiveTab(`${index}-${tag}`);
+                          }}
                           style={{ width: "135px" }}
-                          className=" h-10 p-2 text-gray-900 transition duration-75 rounded-lg pl-2 group dark:text-gray-300 my-1 dark:hover:text-white"
+                          className={`h-10 p-2 text-gray-900 ${
+                            activeTab === `${index}-${tag}` ? "bg-gray-700" : ""
+                          } transition duration-75 rounded-lg pl-2 group dark:text-gray-300 my-1 dark:hover:text-white`}
                         >
                           #{tag}
                         </a>

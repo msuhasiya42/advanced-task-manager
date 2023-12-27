@@ -76,6 +76,8 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
 
       if (from !== to) {
         removed.status = to;
+        // api call to change status of task when drag and drop
+        taskAPI.updateTask(removed._id, removed);
         setOriginalTasks(from, sourceTasks);
       }
 
@@ -92,7 +94,7 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
   return (
     <div className="h-screen">
       <DragDropContext onDragEnd={handleDragEnd}>
-        <div className="grid grid-cols-4 gap-6  mb-4 p-6">
+        <div className="flex gap-10 p-8">
           {/* todo list */}
           <div className="border border-gray-500  max-h-[550px] overflow-y-auto w-full p-3 bg-black rounded-2xl">
             <div>
