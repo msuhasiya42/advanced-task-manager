@@ -178,7 +178,7 @@ const Login = () => {
                 </a>
               </p>
               <p className="text-center text-gray-500 text-xs">
-                &copy;2023 M & R Corp. All rights reserved.
+                &copy;2023 Mayur Corp. All rights reserved.
               </p>
               <div className="">
                 <GoogleLogin
