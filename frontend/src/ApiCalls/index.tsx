@@ -24,8 +24,12 @@ function deleteFromAPI(endpoint: string) {
 
 // User related APIs
 export const userAPI = {
-  createUser: (name: string, email: string, password: string) =>
-    postToAPI("users/signup", { name, email, password }),
+  createUser: (
+    name: string,
+    email: string,
+    password: string,
+    picture: string
+  ) => postToAPI("users/signup", { name, email, password, picture }),
 
   login: (email: string, password: string) =>
     postToAPI("users/login", { email, password }),
