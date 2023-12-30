@@ -10,7 +10,7 @@ interface StatusType {
   status: TaskCategory;
 }
 
-const TextAreaModal = ({ status }: StatusType) => {
+const AddNewTask = ({ status }: StatusType) => {
   const [showTextArea, setShowTextArea] = useState(false);
   const [task, setTask] = useState("");
   const user = useAuthStore((state) => state.user?.userId);
@@ -117,4 +117,4 @@ const TextAreaModal = ({ status }: StatusType) => {
   );
 };
 
-export default TextAreaModal;
+export default AddNewTask;

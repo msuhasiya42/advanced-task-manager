@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import TaskItem from "./TaskItem";
-import TaskAreaModal from "./TextAreaModal";
+import TaskDetails from "./TaskDetails";
+import TaskAreaModal from "./AddNewTask";
 import { taskAPI } from "../../ApiCalls";
 import useTaskStore from "../../Zustand/taskStore";
 import { TaskCategory, TaskCollection, TaskType } from "./Types/types";
@@ -11,7 +11,7 @@ import { message } from "antd";
 // import ReactQuill from "react-quill";
 // import "react-quill/dist/quill.snow.css";
 
-const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
+const TasksList = ({ todo, inProgress, completed }: TaskCollection) => {
   const [showDeleteToastMsg, setShowDeleteToastMsg] = useState(false);
 
   // store
@@ -122,7 +122,10 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
                           >
-                            <TaskItem task={task} handleDelete={handleDelete} />
+                            <TaskDetails
+                              task={task}
+                              handleDelete={handleDelete}
+                            />
                           </div>
                         )}
                       </Draggable>
@@ -161,7 +164,10 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
                           >
-                            <TaskItem task={task} handleDelete={handleDelete} />
+                            <TaskDetails
+                              task={task}
+                              handleDelete={handleDelete}
+                            />
                           </div>
                         )}
                       </Draggable>
@@ -200,7 +206,10 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
                           >
-                            <TaskItem task={task} handleDelete={handleDelete} />
+                            <TaskDetails
+                              task={task}
+                              handleDelete={handleDelete}
+                            />
                           </div>
                         )}
                       </Draggable>
@@ -220,4 +229,4 @@ const TaskList = ({ todo, inProgress, completed }: TaskCollection) => {
   );
 };
 
-export default TaskList;
+export default TasksList;

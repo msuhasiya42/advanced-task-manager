@@ -4,16 +4,19 @@ import LoadingPage from "../Loading/LoadingPage";
 import useAuthStore from "../../Zustand/authStore";
 import { userAPI } from "../../ApiCalls";
 import ImageCompressor from "image-compressor.js";
+import ChooseAvatarModal from "./ChooseAvatarModal";
 
 const UserProfile = () => {
   const { user, updateUser } = useAuthStore();
   const [userPhoto, setUserPhoto] = useState(user?.picture); // default image
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
+    setIsModalOpen(true);
   };
 
   const fileToBase64 = (file: Blob): Promise<string> => {
@@ -132,6 +135,11 @@ const UserProfile = () => {
           style={{ cursor: "pointer" }}
           className="w-36 h-36 rounded-lg"
         />
+        <ChooseAvatarModal
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          setUserPhoto={setUserPhoto}
+        />
 
         <input
           type="file"
@@ -159,6 +167,7 @@ const UserProfile = () => {
             </svg>
           </span>
         </div>
+        {/* take location from user or remove this field */}
         <p className="text-sm text-gray-500">New York, USA</p>
       </div>
     </div>

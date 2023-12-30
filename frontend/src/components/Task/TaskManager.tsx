@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import TaskList from "./TaskList";
+import TasksList from "./TasksList";
 import { taskAPI } from "../../ApiCalls";
 import LoadingPage from "../Loading/LoadingPage";
 import useTaskStore from "../../Zustand/taskStore";
@@ -66,7 +66,7 @@ const TaskManager = () => {
       ) : (
         <div className="bg-gray-900 ml-1 grow h-full rounded">
           <div className="m-1">
-            <TaskList
+            <TasksList
               todo={copiedTasks.todo}
               inProgress={copiedTasks.inProgress}
               completed={copiedTasks.completed}
