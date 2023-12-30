@@ -1,25 +1,23 @@
 {
-    "compilerOptions": {
-      "types": ["node", "react"],
-      "target": "esnext",
-      "module": "esnext",
-      "moduleResolution": "node",
-      "jsx": "react",
-      "jsxFactory": "React.createElement",
-      "jsxFragmentFactory": "React.Fragment",
-      "esModuleInterop": true,
-      "skipLibCheck": true,
-      "lib": ["dom", "esnext"],
-      "strict": true,
-      "forceConsistentCasingInFileNames": true,
-      "isolatedModules": true,
-      "resolveJsonModule": true,
-      "importHelpers": true,
-      "allowSyntheticDefaultImports": true,
-    },
-    "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx"],
-    "baseUrl": ".",
-    "paths": { "@/*": ["./src/*"] }
-
-  }
-  
+  "compilerOptions": {
+    "types": ["node", "react", "uuid"],
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "jsx": "react",
+    "jsxFactory": "React.createElement",
+    "jsxFragmentFactory": "React.Fragment",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "lib": ["dom", "esnext"],
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "importHelpers": true,
+    "allowSyntheticDefaultImports": true,
+  },
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx"],
+  "baseUrl": ".",
+  "paths": { "@/*": ["./src/*"] }
+}
