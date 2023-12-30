@@ -9,7 +9,7 @@ const secretKey = process.env.SECRET_KEY;
 
 // Create a new user
 const createUser = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, picture } = req.body;
 
   try {
     // Check if the username is already taken
@@ -21,7 +21,7 @@ const createUser = async (req, res) => {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
     // Create a new user
-    const user = new User({ name, email, password: hashedPassword });
+    const user = new User({ name, email, password: hashedPassword, picture });
     await user.save();
 
     res.json({ message: "Registration successful" });
@@ -50,9 +50,9 @@ const login = async (req, res) => {
           expiresIn: "1h",
         });
 
-        const { _id, name, tags } = user;
+        const { _id, name, tags, picture } = user;
 
-        res.json({ token, userId: _id, name, tags });
+        res.json({ token, userId: _id, name, tags, picture });
       } else {
         res.status(401).json({ error: "Invalid credentials" });
       }
