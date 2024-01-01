@@ -47,3 +47,5 @@ export const convertToIndianTime = (date: string) => {
     return formattedDate;
   }
 };
+
+export const taskPriorities = ["Low", "Medium", "High"];

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import TaskDetails from "./TaskDetails";
-import TaskAreaModal from "./AddNewTask";
 import { taskAPI } from "../../ApiCalls";
 import useTaskStore from "../../Zustand/taskStore";
 import { TaskCategory, TaskCollection, TaskType } from "./Types/types";
@@ -9,6 +8,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Toast } from "../SmallComp/ToastMessage/ToastMessage";
 import { message } from "antd";
 import NoData from "./NoData";
+import AddNewTask from "./AddNewTask";
 // import ReactQuill from "react-quill";
 // import "react-quill/dist/quill.snow.css";
 
@@ -100,17 +100,16 @@ const TasksList = ({ todo, inProgress, completed }: TaskCollection) => {
           <div className="border border-gray-500  max-h-[550px] overflow-y-auto w-full p-3 bg-black rounded-2xl">
             <div>
               <p className="mb-2 text-center text-lg  text-white ">Todo</p>
-              <TaskAreaModal status={"todo"} />
             </div>
             <Droppable droppableId="todo">
-              {(provided) =>
-                todo.length !== 0 ? (
-                  <div
-                    className="column"
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                  >
-                    {todo.map((task, index) => {
+              {(provided) => (
+                <div
+                  className="column"
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                >
+                  {todo.length !== 0 ? (
+                    todo.map((task, index) => {
                       return (
                         <Draggable
                           key={task._id}
@@ -132,14 +131,17 @@ const TasksList = ({ todo, inProgress, completed }: TaskCollection) => {
                           )}
                         </Draggable>
                       );
-                    })}
-                    {provided.placeholder}
-                  </div>
-                ) : (
-                  <NoData name="Tasks" />
-                )
-              }
+                    })
+                  ) : (
+                    <NoData name="Tasks" />
+                  )}
+                  {provided.placeholder}
+                </div>
+              )}
             </Droppable>
+            <div>
+              <AddNewTask status="todo" />
+            </div>
           </div>
 
           {/* in progress list */}
@@ -154,7 +156,6 @@ const TasksList = ({ todo, inProgress, completed }: TaskCollection) => {
                   <p className="mb-2 text-center text-lg   text-white ">
                     In Progress
                   </p>
-                  <TaskAreaModal status={"inProgress"} />
                   {inProgress.length !== 0 ? (
                     inProgress.map((task, index) => {
                       return (
@@ -186,6 +187,9 @@ const TasksList = ({ todo, inProgress, completed }: TaskCollection) => {
                 </div>
               )}
             </Droppable>
+            <div>
+              <AddNewTask status="inProgress" />
+            </div>
           </div>
 
           {/* completed list */}
@@ -200,7 +204,6 @@ const TasksList = ({ todo, inProgress, completed }: TaskCollection) => {
                   <p className="mb-2 text-center text-lg bg-black text-white ">
                     Completed
                   </p>
-                  <TaskAreaModal status={"completed"} />
                   {completed.length !== 0 ? (
                     completed.map((task, index) => {
                       return (
@@ -232,6 +235,9 @@ const TasksList = ({ todo, inProgress, completed }: TaskCollection) => {
                 </div>
               )}
             </Droppable>
+            <div>
+              <AddNewTask status="completed" />
+            </div>
           </div>
 
           {/* delete toast msg */}

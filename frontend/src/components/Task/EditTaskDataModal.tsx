@@ -35,8 +35,8 @@ const TaskEditDataModal = (props: TaskEditDataModalProps) => {
 
   const handleFormSubmit = () => {
     // Trim title and description before updating
-    const trimmedTitle = modalData.title.trim();
-    const trimmedDescription = modalData.description.trim();
+    const trimmedTitle = modalData.title?.trim();
+    const trimmedDescription = modalData.description?.trim();
 
     if (trimmedTitle === "") {
       void message.error("Title cannot be empty", 1.5);

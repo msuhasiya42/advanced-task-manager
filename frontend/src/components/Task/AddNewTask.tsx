@@ -4,7 +4,7 @@ import useTaskStore from "../../Zustand/taskStore";
 import useAuthStore from "../../Zustand/authStore";
 import { TaskCategory } from "./Types/types";
 import { Input, InputRef, message } from "antd";
-import { EditOutlined } from "@ant-design/icons";
+import { CloseOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 
 interface StatusType {
   status: TaskCategory;
@@ -24,6 +24,10 @@ const AddNewTask = ({ status }: StatusType) => {
     event.preventDefault();
 
     if (user) {
+      if (task.trim() === "") {
+        void message.error("Empty Title", 1.5);
+        return;
+      }
       taskAPI
         .createTask(task, status, user)
         .then((response) => {
@@ -70,23 +74,14 @@ const AddNewTask = ({ status }: StatusType) => {
 
   return (
     <div>
-      <div>
-        <button
-          onClick={handleClick}
-          className="flex items-center justify-center text-sm mb-3 w-full h-8 bg-blue-500 hover:bg-blue-400 text-gray-300 font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded-xl"
-        >
-          Add Card
-        </button>
-      </div>
-
-      {showTextArea && (
+      {showTextArea ? (
         <form onSubmit={onSaveTask}>
           <div className="w-full mb-2 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
             {/* <div className="flex items-center justify-between px-3 py-2 border-b dark:border-gray-600"></div> */}
             <div>
               <Input
                 ref={textRef}
-                size="small"
+                size="large"
                 placeholder="Write about task..."
                 prefix={<EditOutlined />}
                 onChange={updateTitle}
@@ -95,10 +90,10 @@ const AddNewTask = ({ status }: StatusType) => {
           </div>
 
           {/* Add card button */}
-          <div className=" grid grid-cols-2 gap-24 md:gap-6">
+          <div className="flex gap-2">
             <button
               type="submit"
-              className=" mb-5 inline-flex items-center justify-center px-4 py-1 text-sm font-medium text-center text-gray-300 bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800"
+              className="h-7 inline-flex items-center justify-center px-4 py-1 text-sm font-medium text-center text-gray-300 bg-blue-700 rounded-md focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800"
             >
               Add
             </button>
@@ -106,12 +101,19 @@ const AddNewTask = ({ status }: StatusType) => {
             <button
               type="button"
               onClick={handleClick}
-              className=" mb-5 inline-flex justify-center items-center px-4 py-1 text-sm font-medium text-center text-gray-300 bg-gray-700 rounded-lg focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-900 hover:bg-gray-800"
+              className=" mb-5 inline-flex justify-center items-center py-1 text-lg text-center rounded-md p-2 hover:bg-gray-800"
             >
-              Cancel
+              <CloseOutlined />
             </button>
           </div>
         </form>
+      ) : (
+        <div
+          className="hover:bg-slate-700 pl-3 rounded-md py-1 cursor-pointer"
+          onClick={handleClick}
+        >
+          <PlusOutlined /> <span className="text-sm">Add Card</span>
+        </div>
       )}
     </div>
   );
