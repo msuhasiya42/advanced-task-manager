@@ -137,7 +137,7 @@ const SideBar = () => {
               </li>
 
               <li>
-                <ul className="border border-gray-500 max-h-[200px] bg-gray-800 rounded-lg overflow-y-auto">
+                <ul className="border mt-3 border-gray-500 max-h-[200px] bg-gray-800 rounded-lg overflow-y-auto">
                   {tags.map((tag, index) => (
                     <div className=" grid grid-cols-2 gap-28 " key={index}>
                       <li>

@@ -1,12 +1,55 @@
-import React from "react";
-import { members } from "../../utils/data/static";
+import React, { useEffect } from "react";
+// import { members } from "../../utils/data/static";
 import useTagStore from "../../Zustand/tagStore";
+import { Card, Checkbox, Select, SelectProps, Space } from "antd";
+import useAuthStore from "../../Zustand/authStore";
 
 const Filter = () => {
   const tags = useTagStore((state) => state.tags);
+
+  const [showFilter, setShowFilter] = React.useState(false);
+
+  const [filterValues, setFilterValues] = React.useState({
+    dueDate: [],
+    tag: [],
+    member: [],
+  });
+
+  useEffect(() => {
+    // setFilterValues({
+    //   dueDate: [],
+    //   tag: [],
+    //   member: [],
+    // });
+  }, [filterValues]);
+
+  const tagOptions: SelectProps["options"] = tags.map((tag) => {
+    return {
+      label: tag,
+      value: tag,
+    };
+  });
+
+  const allUsers = useAuthStore((state) => state?.allUsers);
+  const user = useAuthStore((state) => state.user);
+  const otherMembers = allUsers?.filter(
+    (member) => member._id !== user?.userId
+  );
+
+  const membersOptions: SelectProps["options"] = otherMembers?.map((user) => {
+    return {
+      key: user._id,
+      label: user.name,
+      value: user._id,
+    };
+  });
+
   return (
-    <details className="dropdown ">
-      <summary className="font-bold flex flex-row justify-center items-center m-1 btn-sm w-20 rounded-md btn-primary hover:cursor-pointer">
+    <>
+      <div
+        onClick={() => setShowFilter(!showFilter)}
+        className="font-bold flex flex-row justify-center items-center m-1 btn-sm w-20 rounded-md btn-primary hover:cursor-pointer"
+      >
         <div>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -24,112 +67,64 @@ const Filter = () => {
           </svg>
         </div>
         <div className="ml-1 pr-1 text-sm uppercase">Filter</div>
-      </summary>
-      <ul className="p-1 flex text-white shadow menu dropdown-content z-[1] bg-purple-800 rounded-box w-88">
-        <div className="form-control flex flex-row text-xs">
-          <div className="ml-2">
-            <label className="cursor-pointer label text-gray-400" htmlFor="">
-              Due Date
-            </label>
-
-            <label className="cursor-pointer label">
-              <input type="checkbox" className="checkbox" />
-
-              <span className=" text-white label-text">
-                {/* <svg
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden="true"
-                  className="h-4 w-4 ml-1 text-white "
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                  ></path>
-                </svg> */}
-                No Dates
-              </span>
-            </label>
-
-            <label className="cursor-pointer label">
-              <input type="checkbox" className="checkbox" />
-
-              <span className="ml-4 text-white label-text">
-                {/* <svg
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden="true"
-                  className="h-4 w-4 ml-1 text-green-500 "
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                  ></path>
-                </svg> */}
-                tommorrow
-              </span>
-            </label>
-
-            <label className="cursor-pointer label">
-              <input type="checkbox" className="checkbox" />
-
-              <span className=" text-white label-text">
-                {/* <svg
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden="true"
-                  className="h-4 w-4 ml-1 text-red-500 "
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                  ></path>
-                </svg> */}
-                Overdue
-              </span>
-            </label>
-          </div>
-
-          {/* members  */}
-          <div className="ml-3">
-            <label className="cursor-pointer label text-gray-400" htmlFor="">
-              Members
-            </label>
-            {members.map((member, index) => (
-              <label key={index} className="cursor-pointer label">
-                <input type="checkbox" className="checkbox checkbox-info" />
-                <span className="ml-4 text-white label-text">{member}</span>
+      </div>
+      {showFilter && (
+        <Card
+          title="Filter"
+          className="absolute"
+          bordered={false}
+          style={{
+            float: "left",
+            width: 450,
+            marginTop: "50px",
+            backgroundColor: "#e8e6e6",
+          }}
+        >
+          <div className="form-control flex flex-row text-xs">
+            <div className="">
+              <label className="cursor-pointer label text-gray-500" htmlFor="">
+                Due Date
               </label>
-            ))}
-          </div>
+              <Checkbox value="Today">Today</Checkbox>
+              <Checkbox value="Tommorrow">Tommorrow</Checkbox>
+              <Checkbox value="Overdue">Overdue</Checkbox>
+            </div>
 
-          {/* tags */}
-          <div className="ml-8 mr-2">
-            <label className="cursor-pointer label text-gray-400" htmlFor="">
-              Tags
-            </label>
-            {tags.map((tag, index) => (
-              <label key={index} className="cursor-pointer label">
-                <input type="checkbox" className="checkbox" />
-                <span className="ml-4 text-sm">{tag}</span>
+            <div className="ml-3">
+              <label className="cursor-pointer label text-gray-500" htmlFor="">
+                Members
               </label>
-            ))}
+              <Select
+                mode="multiple"
+                style={{ width: 110 }}
+                placeholder="Select Members"
+                defaultValue={[]}
+                // onChange={handleChange}
+                optionLabelProp="label"
+                options={membersOptions}
+                optionRender={(member) => <Space>{member.label}</Space>}
+              />
+            </div>
+
+            <div className="ml-8 mr-2">
+              <label className="cursor-pointer label text-gray-500" htmlFor="">
+                Tags
+              </label>
+              <Select
+                mode="multiple"
+                style={{ width: 110 }}
+                placeholder="Select Tag"
+                defaultValue={[]}
+                // onChange={handleChange}
+                optionLabelProp="label"
+                options={tagOptions}
+                optionRender={(option) => <Space>{option.label}</Space>}
+              />
+            </div>
           </div>
-        </div>
-      </ul>
-    </details>
+        </Card>
+      )}
+    </>
   );
 };
 

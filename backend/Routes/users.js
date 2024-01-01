@@ -9,6 +9,7 @@ const {
   googleLogin,
   updateUser,
   verifyToken,
+  getAllUserNamesAndIds
 } = require("../Controllers/userController");
 
 router.post("/signup", createUser);
@@ -17,5 +18,6 @@ router.post("/googleLoginApi", googleLogin);
 router.post("/verifyToken", verifyToken);
 router.put("/updateUser/:id", updateUser);
 router.get("/getUserById/:id", getUserById);
+router.get("/getAllUsers", getAllUserNamesAndIds)
 
 module.exports = router;

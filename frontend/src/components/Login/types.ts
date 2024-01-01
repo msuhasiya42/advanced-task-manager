@@ -12,6 +12,11 @@ export type User = {
     tags?:string[]
     // ... any other properties from your user object ...
   };
+
+export type otherUser = {
+  _id: string;
+  name: string;
+}
   
 
 export interface ErrorResponse {

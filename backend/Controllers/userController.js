@@ -204,6 +204,20 @@ const verifyToken = async (req, res) => {
   }
 };
 
+// Get all users' names and IDs
+const getAllUserNamesAndIds = async (req, res) => {
+  try {
+    // Query the database to retrieve all users with names and IDs
+    const users = await User.find({}, '_id name');
+
+    // Return the array of users with names and IDs
+    res.json(users);
+  } catch (error) {
+    console.error("An error occurred:", error);
+    res.status(500).json({ error: "Failed to retrieve user names and IDs" });
+  }
+};
+
 module.exports = {
   getAllUsers,
   getUserById,
@@ -213,4 +227,5 @@ module.exports = {
   updateUser,
   deleteUser,
   verifyToken,
+  getAllUserNamesAndIds
 };

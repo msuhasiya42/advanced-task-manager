@@ -54,6 +54,8 @@ export const userAPI = {
       },
     });
   },
+
+  getAllUsers: () => getFromAPI("users/getAllUsers"),
 };
 
 // Task related APIs

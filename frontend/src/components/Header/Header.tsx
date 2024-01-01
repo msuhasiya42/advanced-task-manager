@@ -4,6 +4,7 @@ import Theme from "../SmallComp/Theme/Theme";
 import Search from "../SmallComp/Search/Search";
 import LogoutButton from "../SmallComp/Logout/LogoutButton";
 import Notifications from "../SmallComp/Notifications/Notifications";
+import Filter from "../Filter/Filter";
 
 const Header = () => {
   return (
@@ -44,6 +45,7 @@ const Header = () => {
             id="navbar-dropdown"
           >
             <ul className="flex flex-col  font-medium p-2 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-1 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+              <Filter />
               <Search />
               <ProfileButton />
               <Theme />

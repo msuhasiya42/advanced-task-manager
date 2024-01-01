@@ -15,7 +15,7 @@ const Login = () => {
   const [showErrMsg, setShowErrMsg] = useState(false);
 
   const navigate = useNavigate();
-  const { login } = useAuthStore();
+  const { login, addListOfUser } = useAuthStore();
   const { setTags } = useTagStore();
 
   const handleShowPasswordToggle = () => {
@@ -33,6 +33,9 @@ const Login = () => {
     };
 
     login(userData);
+    userAPI.getAllUsers().then((response) => {
+      addListOfUser(response.data);
+    });
     if (tags) setTags(tags);
     navigate("/user-dashboard");
   };
