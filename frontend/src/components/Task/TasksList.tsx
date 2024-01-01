@@ -8,6 +8,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import "react-datepicker/dist/react-datepicker.css";
 import { Toast } from "../SmallComp/ToastMessage/ToastMessage";
 import { message } from "antd";
+import NoData from "./NoData";
 // import ReactQuill from "react-quill";
 // import "react-quill/dist/quill.snow.css";
 
@@ -102,38 +103,42 @@ const TasksList = ({ todo, inProgress, completed }: TaskCollection) => {
               <TaskAreaModal status={"todo"} />
             </div>
             <Droppable droppableId="todo">
-              {(provided) => (
-                <div
-                  className="column"
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                >
-                  {todo.map((task, index) => {
-                    return (
-                      <Draggable
-                        key={task._id}
-                        draggableId={task._id}
-                        index={index}
-                      >
-                        {(provided) => (
-                          <div
-                            className="task"
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                          >
-                            <TaskDetails
-                              task={task}
-                              handleDelete={handleDelete}
-                            />
-                          </div>
-                        )}
-                      </Draggable>
-                    );
-                  })}
-                  {provided.placeholder}
-                </div>
-              )}
+              {(provided) =>
+                todo.length !== 0 ? (
+                  <div
+                    className="column"
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                  >
+                    {todo.map((task, index) => {
+                      return (
+                        <Draggable
+                          key={task._id}
+                          draggableId={task._id}
+                          index={index}
+                        >
+                          {(provided) => (
+                            <div
+                              className="task"
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                            >
+                              <TaskDetails
+                                task={task}
+                                handleDelete={handleDelete}
+                              />
+                            </div>
+                          )}
+                        </Draggable>
+                      );
+                    })}
+                    {provided.placeholder}
+                  </div>
+                ) : (
+                  <NoData name="Tasks" />
+                )
+              }
             </Droppable>
           </div>
 
@@ -150,29 +155,33 @@ const TasksList = ({ todo, inProgress, completed }: TaskCollection) => {
                     In Progress
                   </p>
                   <TaskAreaModal status={"inProgress"} />
-                  {inProgress.map((task, index) => {
-                    return (
-                      <Draggable
-                        key={task._id}
-                        draggableId={task._id}
-                        index={index}
-                      >
-                        {(provided) => (
-                          <div
-                            className="task"
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                          >
-                            <TaskDetails
-                              task={task}
-                              handleDelete={handleDelete}
-                            />
-                          </div>
-                        )}
-                      </Draggable>
-                    );
-                  })}
+                  {inProgress.length !== 0 ? (
+                    inProgress.map((task, index) => {
+                      return (
+                        <Draggable
+                          key={task._id}
+                          draggableId={task._id}
+                          index={index}
+                        >
+                          {(provided) => (
+                            <div
+                              className="task"
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                            >
+                              <TaskDetails
+                                task={task}
+                                handleDelete={handleDelete}
+                              />
+                            </div>
+                          )}
+                        </Draggable>
+                      );
+                    })
+                  ) : (
+                    <NoData name="Tasks" />
+                  )}
                   {provided.placeholder}
                 </div>
               )}
@@ -192,29 +201,33 @@ const TasksList = ({ todo, inProgress, completed }: TaskCollection) => {
                     Completed
                   </p>
                   <TaskAreaModal status={"completed"} />
-                  {completed.map((task, index) => {
-                    return (
-                      <Draggable
-                        key={task._id}
-                        draggableId={task._id}
-                        index={index}
-                      >
-                        {(provided) => (
-                          <div
-                            className="task"
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                          >
-                            <TaskDetails
-                              task={task}
-                              handleDelete={handleDelete}
-                            />
-                          </div>
-                        )}
-                      </Draggable>
-                    );
-                  })}
+                  {completed.length !== 0 ? (
+                    completed.map((task, index) => {
+                      return (
+                        <Draggable
+                          key={task._id}
+                          draggableId={task._id}
+                          index={index}
+                        >
+                          {(provided) => (
+                            <div
+                              className="task"
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                            >
+                              <TaskDetails
+                                task={task}
+                                handleDelete={handleDelete}
+                              />
+                            </div>
+                          )}
+                        </Draggable>
+                      );
+                    })
+                  ) : (
+                    <NoData name="Tasks" />
+                  )}
                   {provided.placeholder}
                 </div>
               )}
