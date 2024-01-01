@@ -16,6 +16,7 @@ export type User = {
 export type otherUser = {
   _id: string;
   name: string;
+  picture: string;
 }
   
 

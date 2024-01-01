@@ -208,7 +208,7 @@ const verifyToken = async (req, res) => {
 const getAllUserNamesAndIds = async (req, res) => {
   try {
     // Query the database to retrieve all users with names and IDs
-    const users = await User.find({}, '_id name');
+    const users = await User.find({}, '_id name picture');
 
     // Return the array of users with names and IDs
     res.json(users);

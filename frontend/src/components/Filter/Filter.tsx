@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 // import { members } from "../../utils/data/static";
 import useTagStore from "../../Zustand/tagStore";
-import { Card, Checkbox, Select, SelectProps, Space } from "antd";
+import { Card, Checkbox, Select, SelectProps, Space, Tooltip } from "antd";
 import useAuthStore from "../../Zustand/authStore";
+import { dummyProfile } from "../../utils/strings";
 
 const Filter = () => {
   const tags = useTagStore((state) => state.tags);
@@ -30,19 +31,13 @@ const Filter = () => {
     };
   });
 
-  const allUsers = useAuthStore((state) => state?.allUsers);
   const user = useAuthStore((state) => state.user);
+  const allUsers = useAuthStore((state) => state.allUsers);
   const otherMembers = allUsers?.filter(
     (member) => member._id !== user?.userId
   );
 
-  const membersOptions: SelectProps["options"] = otherMembers?.map((user) => {
-    return {
-      key: user._id,
-      label: user.name,
-      value: user._id,
-    };
-  });
+  const maxChar = 10;
 
   return (
     <>
@@ -75,7 +70,7 @@ const Filter = () => {
           bordered={false}
           style={{
             float: "left",
-            width: 450,
+            width: 470,
             marginTop: "50px",
             backgroundColor: "#e8e6e6",
           }}
@@ -96,14 +91,31 @@ const Filter = () => {
               </label>
               <Select
                 mode="multiple"
-                style={{ width: 110 }}
+                style={{ width: 150 }}
                 placeholder="Select Members"
-                defaultValue={[]}
-                // onChange={handleChange}
-                optionLabelProp="label"
-                options={membersOptions}
-                optionRender={(member) => <Space>{member.label}</Space>}
-              />
+              >
+                {otherMembers?.map((member: any) => {
+                  const nameLen = member.name.length;
+                  const name =
+                    nameLen > maxChar
+                      ? member.name.slice(0, maxChar) + "..."
+                      : member.name;
+                  return (
+                    <Select.Option key={member._id} value={member._id}>
+                      <Tooltip title={nameLen > maxChar ? member.name : ""}>
+                        <div className="flex">
+                          <img
+                            src={member.picture ?? dummyProfile}
+                            alt={member.name}
+                            className="w-6 rounded-xl mr-2"
+                          />
+                          <span>{name}</span>
+                        </div>
+                      </Tooltip>
+                    </Select.Option>
+                  );
+                })}
+              </Select>
             </div>
 
             <div className="ml-8 mr-2">
