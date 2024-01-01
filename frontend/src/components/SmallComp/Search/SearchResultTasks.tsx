@@ -21,9 +21,9 @@ const SearchResultTasks = ({ searchedString }: { searchedString: string }) => {
       <List.Item.Meta
         avatar={
           item.done ? (
-            <ClockCircleTwoTone className="text-lg text-red-400 mt-2 ml-3" />
-          ) : (
             <CheckCircleTwoTone className="text-lg mt-2 ml-3" />
+          ) : (
+            <ClockCircleTwoTone className="text-lg mt-2 ml-3" />
           )
         }
         title={
