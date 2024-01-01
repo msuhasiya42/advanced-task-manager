@@ -24,18 +24,20 @@ const Filter = () => {
     // });
   }, [filterValues]);
 
-  const tagOptions: SelectProps["options"] = tags.map((tag) => {
-    return {
-      label: tag,
-      value: tag,
-    };
-  });
+  const tagOptions: SelectProps["options"] = tags
+    .map((tag) => {
+      return {
+        label: tag,
+        value: tag,
+      };
+    })
+    .sort((a, b) => a.label.localeCompare(b.label));
 
   const user = useAuthStore((state) => state.user);
   const allUsers = useAuthStore((state) => state.allUsers);
-  const otherMembers = allUsers?.filter(
-    (member) => member._id !== user?.userId
-  );
+  const otherMembers = allUsers
+    ?.filter((member) => member._id !== user?.userId)
+    .sort((a, b) => a.name.localeCompare(b.name));
 
   const maxChar = 10;
 
