@@ -4,6 +4,7 @@ import useTagStore from "../../Zustand/tagStore";
 import { Card, Checkbox, Select, SelectProps, Space, Tooltip } from "antd";
 import useAuthStore from "../../Zustand/authStore";
 import { dummyProfile } from "../../utils/strings";
+import { taskPriorities } from "../Task/utils";
 
 const Filter = () => {
   const tags = useTagStore((state) => state.tags);
@@ -33,6 +34,12 @@ const Filter = () => {
     })
     .sort((a, b) => a.label.localeCompare(b.label));
 
+  const priorities: SelectProps["options"] = taskPriorities.map((priority) => {
+    return {
+      label: priority,
+      value: priority,
+    };
+  });
   const user = useAuthStore((state) => state.user);
   const allUsers = useAuthStore((state) => state.allUsers);
   const otherMembers = allUsers
@@ -118,6 +125,19 @@ const Filter = () => {
                   );
                 })}
               </Select>
+
+              <label className="cursor-pointer label text-gray-500" htmlFor="">
+                Sort By
+              </label>
+              <Select
+                style={{ width: 110 }}
+                placeholder="Sort By"
+                defaultValue={[]}
+                // onChange={handleChange}
+                optionLabelProp="label"
+                options={priorities}
+                optionRender={(option) => <Space>{option.label}</Space>}
+              />
             </div>
 
             <div className="ml-8 mr-2">

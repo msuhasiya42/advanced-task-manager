@@ -13,9 +13,9 @@ const UserProfile = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
+    // if (fileInputRef.current) {
+    //   fileInputRef.current.click();
+    // }
     setIsModalOpen(true);
   };
 
@@ -72,6 +72,9 @@ const UserProfile = () => {
       </div>
     );
   }
+
+  const userName = user.name.charAt(0).toUpperCase() + user.name.slice(1);
+
   return (
     <div>
       <nav className="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
@@ -149,7 +152,7 @@ const UserProfile = () => {
           onChange={handleImageChange}
         />
         <div className="flex items-center space-x-2 mt-2">
-          <p className="text-2xl">{user.name}</p>
+          <p className="text-2xl">{userName}</p>
           <span className="bg-blue-500 rounded-full p-1" title="Verified">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -168,7 +171,7 @@ const UserProfile = () => {
           </span>
         </div>
         {/* take location from user or remove this field */}
-        <p className="text-sm text-gray-500">New York, USA</p>
+        {/* <p className="text-sm text-gray-500">New York, USA</p> */}
       </div>
     </div>
   );
