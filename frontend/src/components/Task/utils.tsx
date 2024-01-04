@@ -68,7 +68,7 @@ export const getPriorityIcon = (priority: string): React.JSX.Element => {
       icon = <ArrowUpOutlined className="text-red-400 text-xl" />;
       break;
     case "Medium":
-      icon = <PauseOutlined className="text-yellow-300 text-xl rotate-90" />;
+      icon = <PauseOutlined className="text-yellow-500 text-xl rotate-90" />;
       break;
     default:
       icon = <ArrowDownOutlined className="text-blue-400 text-xl" />;
