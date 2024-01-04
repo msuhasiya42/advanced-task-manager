@@ -168,7 +168,12 @@ const UserProfile = () => {
                 d="M5 13l4 4L19 7"
               ></path>
             </svg>
-          </span>
+          </span>{" "}
+          <br />
+        </div>
+        <div>
+          <span className="text-xl">Email : </span>
+          <span className="text-lg">{user.email}</span>
         </div>
         {/* take location from user or remove this field */}
         {/* <p className="text-sm text-gray-500">New York, USA</p> */}
