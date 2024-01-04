@@ -1,3 +1,10 @@
+import {
+  ArrowDownOutlined,
+  ArrowUpOutlined,
+  PauseOutlined,
+} from "@ant-design/icons";
+import React from "react";
+
 export const convertToIndianTime = (date: string) => {
   const inputDate = new Date(date);
 
@@ -48,4 +55,24 @@ export const convertToIndianTime = (date: string) => {
   }
 };
 
-export const taskPriorities = ["Low", "Medium", "High"];
+export const taskPriorities = ["Low", "Medium", "High", "Urgent"];
+
+export const getPriorityIcon = (priority: string): React.JSX.Element => {
+  let icon;
+
+  switch (priority) {
+    case "Urgent":
+      icon = <ArrowUpOutlined className="text-red-700 text-xl" />;
+      break;
+    case "High":
+      icon = <ArrowUpOutlined className="text-red-400 text-xl" />;
+      break;
+    case "Medium":
+      icon = <PauseOutlined className="text-yellow-300 text-xl rotate-90" />;
+      break;
+    default:
+      icon = <ArrowDownOutlined className="text-blue-400 text-xl" />;
+      break;
+  }
+  return icon;
+};

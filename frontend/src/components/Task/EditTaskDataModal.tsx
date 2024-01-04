@@ -5,6 +5,7 @@ import useTagStore from "../../Zustand/tagStore";
 import { taskAPI } from "../../ApiCalls";
 import useTaskStore from "../../Zustand/taskStore";
 import DatePicker from "react-datepicker";
+import { taskPriorities } from "./utils";
 interface TaskEditDataModalProps {
   task: TaskType;
   showModal: boolean;
@@ -150,9 +151,11 @@ const TaskEditDataModal = (props: TaskEditDataModalProps) => {
           value={modalData.priority}
           onChange={handleInputChange}
         >
-          <option value="Low">Low</option>
-          <option value="Medium">Medium</option>
-          <option value="High">High</option>
+          {taskPriorities.map((priority, index) => (
+            <option key={index} value={priority}>
+              {priority}
+            </option>
+          ))}
         </select>
       </div>
 

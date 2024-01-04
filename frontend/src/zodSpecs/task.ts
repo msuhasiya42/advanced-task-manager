@@ -7,7 +7,7 @@ export const taskSchema = z.object({
   tag: z.string().default(""),
   done: z.boolean().default(false),
   status: z.enum(["todo", "inProgress", "completed"]),
-  priority: z.enum(["High", "Medium", "Low"]).default("Medium"),
+  priority: z.enum(["High", "Medium", "Low", "Urgent"]).default("Medium"),
   attatchments: z.array(z.string()).default([]),
   collaborators: z.array(z.string()).default([]),
   user: z.string(),

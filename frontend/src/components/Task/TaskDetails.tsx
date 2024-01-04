@@ -2,18 +2,16 @@ import React, { useState } from "react";
 import { TaskType, TasksProps } from "./Types/types";
 import { taskAPI } from "../../ApiCalls";
 import useTaskStore from "../../Zustand/taskStore";
-import { Popconfirm, message } from "antd";
+import { Button, Dropdown, MenuProps, Popconfirm, message } from "antd";
 import TaskEditDataModal from "./EditTaskDataModal";
 import {
   AlignLeftOutlined,
-  ArrowDownOutlined,
-  ArrowUpOutlined,
   CheckCircleOutlined,
   ClockCircleOutlined,
   DeleteOutlined,
   LinkOutlined,
 } from "@ant-design/icons";
-import { convertToIndianTime } from "./utils";
+import { convertToIndianTime, getPriorityIcon, taskPriorities } from "./utils";
 import { deleteDesc, deleteText } from "../../utils/strings";
 
 const TaskDetails = ({ task, handleDelete }: TasksProps) => {
@@ -54,6 +52,30 @@ const TaskDetails = ({ task, handleDelete }: TasksProps) => {
   const toggleTaskDone = () => {
     task.done = !done;
     updateTask(_id, task);
+  };
+
+  const handlePriority: MenuProps["onClick"] = (e) => {
+    task.priority = e.key;
+    taskAPI
+      .updateTask(_id, task)
+      .then(() => {
+        updateTaskOrigStore(status, _id, task);
+        updateTaskCopiedStore(status, _id, task);
+      })
+      .catch((err) => {
+        void message.error("Err in changing priority: ", err);
+      });
+  };
+
+  const items: MenuProps["items"] = taskPriorities.map((priority) => ({
+    label: priority,
+    key: priority,
+    icon: getPriorityIcon(priority),
+  }));
+
+  const priorityOptions = {
+    items,
+    onClick: handlePriority,
   };
 
   const updateTask = (id: string, updatedTask: TaskType) => {
@@ -104,32 +126,12 @@ const TaskDetails = ({ task, handleDelete }: TasksProps) => {
                   {title}
                 </h1>
               </div>
-              <div>
-                {priority == "High" && (
-                  <ArrowUpOutlined className="text-red-400 text-xl mt-2" />
-                )}
-
-                {priority == "Medium" && (
-                  <svg
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-hidden="true"
-                    className="w-5 h-5 mt-2 text-yellow-300"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M3.75 9h16.5m-16.5 6.75h16.5"
-                    ></path>
-                  </svg>
-                )}
-
-                {priority == "Low" && (
-                  <ArrowDownOutlined className="text-blue-400 text-xl mt-2" />
-                )}
+              <div onClick={(e) => e.stopPropagation()}>
+                <Dropdown menu={priorityOptions}>
+                  <Button style={{ border: "none" }}>
+                    {getPriorityIcon(priority)}
+                  </Button>
+                </Dropdown>
               </div>
             </div>
 
