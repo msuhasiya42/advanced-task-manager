@@ -46,10 +46,8 @@ const TaskEditDataModal = (props: TaskEditDataModalProps) => {
   };
 
   const handleDate = (date: Date) => {
-    setModalData({ ...modalData, dueDate: date.toString() });
+    setModalData((prevData) => ({ ...prevData, dueDate: date.toString() }));
   };
-
-  console.log("task.description", modalData.description);
 
   const handleFormSubmit = () => {
     // Trim title and description before updating
@@ -71,7 +69,7 @@ const TaskEditDataModal = (props: TaskEditDataModalProps) => {
     setModalData(updatedModalData);
 
     taskAPI
-      .updateTask(updatedModalData._id, updatedModalData)
+      .updateTask(task._id, updatedModalData)
       .then(() => {
         void message.success("Task updated successfully", 1.5);
         const { status, _id } = updatedModalData;
@@ -87,12 +85,15 @@ const TaskEditDataModal = (props: TaskEditDataModalProps) => {
       title={<div className="text-lg text-center mb-6">{"Edit Task"}</div>}
       centered
       open={showModal}
-      onCancel={() => setShowModal(false)}
+      onCancel={() => {
+        setShowModal(false);
+        setModalData(task);
+      }}
       onOk={() => {
         handleFormSubmit();
       }}
       okText="Save"
-      width={700}
+      width={650}
       okButtonProps={{ style: { backgroundColor: "#1890ff", color: "#fff" } }}
     >
       <div className="flex gap-8">
