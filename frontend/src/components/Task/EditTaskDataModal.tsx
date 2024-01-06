@@ -80,6 +80,25 @@ const TaskEditDataModal = (props: TaskEditDataModalProps) => {
       .catch((err) => void message.error("Error in updating task:", err));
   };
 
+  const indianTimeOptions: Intl.DateTimeFormatOptions = {
+    timeZone: "Asia/Kolkata", // Indian Standard Time (IST)
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+    day: "numeric",
+    month: "short",
+    year: "numeric" as "numeric" | "2-digit" | undefined,
+  };
+
+  const updatedAt = new Date(task.updatedAt).toLocaleString(
+    "en-IN",
+    indianTimeOptions
+  );
+  const createdAt = new Date(task.createdAt).toLocaleString(
+    "en-IN",
+    indianTimeOptions
+  );
+
   return (
     <Modal
       title={<div className="text-lg text-center mb-6">{"Edit Task"}</div>}
@@ -117,6 +136,15 @@ const TaskEditDataModal = (props: TaskEditDataModalProps) => {
               description={modalData.description}
               handleDescChange={handleDescChange}
             />
+          </div>
+          <div>
+            <label className="block mb-3 font-medium text-gray-700">
+              Created at :<span className="text-gray-500"> {createdAt}</span>
+            </label>
+            <label className="block mb-3 font-medium text-gray-700">
+              Last updated at :
+              <span className="text-gray-500"> {updatedAt}</span>
+            </label>
           </div>
         </div>
         <div>

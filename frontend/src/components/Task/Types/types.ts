@@ -13,10 +13,13 @@ export interface TaskType {
   done: boolean;
   collaborators: string[]; // Assuming collaborators can be of any type
   user: string;
+  createdAt: string
+  updatedAt: string
 }
 
 export interface TasksProps {
   task: TaskType;
+  // eslint-disable-next-line no-unused-vars
   handleDelete: (task: TaskType) => void;
 }
 

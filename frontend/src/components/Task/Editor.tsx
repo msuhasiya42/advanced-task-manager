@@ -4,6 +4,7 @@ import "react-quill/dist/quill.snow.css";
 
 interface editorProps {
   description: string;
+  // eslint-disable-next-line no-unused-vars
   handleDescChange: (value: string) => void;
 }
 
