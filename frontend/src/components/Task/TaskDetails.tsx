@@ -2,7 +2,15 @@ import React, { useState } from "react";
 import { TaskType, TasksProps } from "./Types/types";
 import { taskAPI } from "../../ApiCalls";
 import useTaskStore from "../../Zustand/taskStore";
-import { Button, Dropdown, MenuProps, Popconfirm, message } from "antd";
+import {
+  Button,
+  Card,
+  Dropdown,
+  MenuProps,
+  Popconfirm,
+  Popover,
+  message,
+} from "antd";
 import TaskEditDataModal from "./EditTaskDataModal";
 import {
   AlignLeftOutlined,
@@ -76,6 +84,8 @@ const TaskDetails = ({ task, handleDelete }: TasksProps) => {
   const priorityOptions = {
     items,
     onClick: handlePriority,
+    selectable: true,
+    defaultSelectedKeys: [priority],
   };
 
   const updateTask = (id: string, updatedTask: TaskType) => {
@@ -98,6 +108,15 @@ const TaskDetails = ({ task, handleDelete }: TasksProps) => {
   };
 
   const indianTime = convertToIndianTime(dueDate);
+
+  const content = (
+    <Card className="bg-gray-700" onClick={(e) => e.stopPropagation()}>
+      <div
+        dangerouslySetInnerHTML={{ __html: description }}
+        className="text-white"
+      />
+    </Card>
+  );
   return (
     <div>
       <div
@@ -137,29 +156,9 @@ const TaskDetails = ({ task, handleDelete }: TasksProps) => {
 
             <div className="mt-1 text-sm text-gray-600 dark:text-gray-400">
               {description && description?.replace(/<[^>]*>/g, "") !== "" && (
-                <div className="w-4 group">
+                <Popover content={content} trigger="hover">
                   <AlignLeftOutlined />
-                  <p
-                    className="
-                      text-s
-                      font-semibold
-                      absolute
-                      h-6
-                      w-42
-                      ml-6
-                      px-2
-                      border border-gray-700
-                      bg-white
-                      text-black
-                      rounded
-                      hidden
-                      group-hover:block"
-                  >
-                    {description?.length > 20
-                      ? description?.slice(0, 20) + "..."
-                      : description}
-                  </p>
-                </div>
+                </Popover>
               )}
             </div>
           </div>

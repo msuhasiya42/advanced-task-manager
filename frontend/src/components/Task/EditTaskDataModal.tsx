@@ -6,6 +6,9 @@ import { taskAPI } from "../../ApiCalls";
 import useTaskStore from "../../Zustand/taskStore";
 import DatePicker from "react-datepicker";
 import { taskPriorities } from "./utils";
+import Editor from "./Editor";
+import DOMPurify from "dompurify";
+
 interface TaskEditDataModalProps {
   task: TaskType;
   showModal: boolean;
@@ -15,7 +18,12 @@ interface TaskEditDataModalProps {
 const TaskEditDataModal = (props: TaskEditDataModalProps) => {
   const { task, setShowModal, showModal } = props;
 
-  const [modalData, setModalData] = useState<TaskType>(task);
+  const sanitizedTask = {
+    ...task,
+    description: DOMPurify.sanitize(task.description),
+  };
+
+  const [modalData, setModalData] = useState<TaskType>(sanitizedTask);
 
   const tags = useTagStore((state) => state.tags);
   const updateTaskOrigStore = useTaskStore(
@@ -30,9 +38,18 @@ const TaskEditDataModal = (props: TaskEditDataModalProps) => {
     setModalData((prevData) => ({ ...prevData, [name]: value }));
   };
 
+  const handleDescChange = (value: string) => {
+    setModalData((prevData) => ({
+      ...prevData,
+      description: value,
+    }));
+  };
+
   const handleDate = (date: Date) => {
     setModalData({ ...modalData, dueDate: date.toString() });
   };
+
+  console.log("task.description", modalData.description);
 
   const handleFormSubmit = () => {
     // Trim title and description before updating
@@ -67,7 +84,7 @@ const TaskEditDataModal = (props: TaskEditDataModalProps) => {
 
   return (
     <Modal
-      title={<div style={{ textAlign: "center" }}>{"Edit Task"}</div>}
+      title={<div className="text-lg text-center mb-6">{"Edit Task"}</div>}
       centered
       open={showModal}
       onCancel={() => setShowModal(false)}
@@ -75,100 +92,109 @@ const TaskEditDataModal = (props: TaskEditDataModalProps) => {
         handleFormSubmit();
       }}
       okText="Save"
+      width={700}
       okButtonProps={{ style: { backgroundColor: "#1890ff", color: "#fff" } }}
     >
-      <div className="w-full">
-        <Input
-          required
-          addonBefore="Title"
-          name="title"
-          defaultValue={modalData.title}
-          value={modalData.title}
-          onChange={handleInputChange}
-        />
-      </div>
+      <div className="flex gap-8">
+        <div>
+          <div className="w-full">
+            <Input
+              required
+              addonBefore="Title"
+              name="title"
+              defaultValue={modalData.title}
+              value={modalData.title}
+              onChange={handleInputChange}
+            />
+          </div>
 
-      <div className="w-full mt-4">
-        <label className="block mb-3 font-medium text-gray-700">
-          Description
-        </label>
-        <textarea
-          name="description"
-          id="description"
-          className="block w-full h-20 max-h-48 rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none resize-vertical"
-          aria-label="Textarea"
-          placeholder="Add description about your task"
-          value={modalData.description}
-          onChange={handleInputChange}
-        />
-      </div>
+          <div className="w-full mt-4">
+            <label className="block mb-3 font-medium text-gray-700">
+              Description
+            </label>
+            <Editor
+              description={modalData.description}
+              handleDescChange={handleDescChange}
+            />
+          </div>
+        </div>
+        <div>
+          {/* select tag */}
+          <div className="w-full mt-4">
+            <label className="block mb-3 font-medium text-gray-700">Tag</label>
+            <select
+              id="tag"
+              name="tag"
+              className="block w-full xt-select rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
+              aria-label="Select"
+              value={modalData.tag ?? ""}
+              onChange={handleInputChange}
+            >
+              <option value="" className="bg-red-400">
+                -- No tag --
+              </option>
 
-      {/* select tag */}
-      <div className="w-full mt-4">
-        <label className="block mb-3 font-medium text-gray-700">Tag</label>
-        <select
-          id="tag"
-          name="tag"
-          className="block w-full xt-select rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
-          aria-label="Select"
-          value={modalData.tag ?? ""}
-          onChange={handleInputChange}
-        >
-          <option value="" className="bg-red-400">
-            -- No tag --
-          </option>
+              {tags.map((tag, index) => (
+                <option key={index} value={tag}>
+                  {tag}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="w-full mt-4">
+            <label className="block mb-3 font-medium text-gray-700">
+              Status
+            </label>
+            <select
+              id="status"
+              name="status"
+              className="block w-full xt-select rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
+              aria-label="Select"
+              value={modalData.status}
+              onChange={handleInputChange}
+            >
+              <option value="todo">Todo</option>
+              <option value="inProgress">In Progress</option>
+              <option value="completed">Completed</option>
+            </select>
+          </div>
 
-          {tags.map((tag, index) => (
-            <option key={index} value={tag}>
-              {tag}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="w-full mt-4">
-        <label className="block mb-3 font-medium text-gray-700">Status</label>
-        <select
-          id="status"
-          name="status"
-          className="block w-full xt-select rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
-          aria-label="Select"
-          value={modalData.status}
-          onChange={handleInputChange}
-        >
-          <option value="todo">Todo</option>
-          <option value="inProgress">In Progress</option>
-          <option value="completed">Completed</option>
-        </select>
-      </div>
+          <div className="w-full mt-4">
+            <label className="block mb-3 font-medium text-gray-700">
+              Priority
+            </label>
+            <select
+              id="priority"
+              name="priority"
+              className="block w-full xt-select rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
+              aria-label="Select"
+              value={modalData.priority}
+              onChange={handleInputChange}
+            >
+              {taskPriorities.map((priority, index) => (
+                <option key={index} value={priority}>
+                  {priority}
+                </option>
+              ))}
+            </select>
+          </div>
 
-      <div className="w-full mt-4">
-        <label className="block mb-3 font-medium text-gray-700">Priority</label>
-        <select
-          id="priority"
-          name="priority"
-          className="block w-full xt-select rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
-          aria-label="Select"
-          value={modalData.priority}
-          onChange={handleInputChange}
-        >
-          {taskPriorities.map((priority, index) => (
-            <option key={index} value={priority}>
-              {priority}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Date picker */}
-      <div className="pt-3">
-        <label className="block mb-3 font-medium text-gray-700">Due Date</label>
-        <DatePicker
-          className="block w-full rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
-          selected={
-            modalData.dueDate == "" ? new Date() : new Date(modalData.dueDate)
-          }
-          onChange={handleDate}
-        />
+          {/* Date picker */}
+          <div className="pt-3">
+            <label className="block mb-3 font-medium text-gray-700">
+              Due Date
+            </label>
+            <DatePicker
+              className="block w-full rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
+              selected={
+                modalData.dueDate == ""
+                  ? new Date()
+                  : new Date(modalData.dueDate)
+              }
+              onChange={handleDate}
+            />
+          </div>
+        </div>
       </div>
     </Modal>
   );
