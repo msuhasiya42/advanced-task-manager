@@ -22,6 +22,8 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+const PORT = process.env.PORT || 5000;
+
 // mongodb connections
 const DB = process.env.MONGODB_URL;
 mongoose
@@ -33,8 +35,8 @@ mongoose
   })
   .then(() => {
     console.log("connection successfull");
-    app.listen(port, () => {
-      console.log(`Server started on port ${port}`);
+    app.listen(PORT, () => {
+      console.log(`Server started on port ${PORT}`);
     });
   })
   .catch((err) => {
@@ -45,4 +47,3 @@ const routes = require("./Routes");
 app.use("/", routes);
 
 // Start the server
-const port = 5000;
