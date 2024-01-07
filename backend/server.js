@@ -7,10 +7,10 @@ const app = express();
 const cors = require("cors");
 
 const corsOptions = {
-  origin: '*', // Update with your client's origin
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  origin: '*',
+  methods: '*',
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
-  optionsSuccessStatus: 204,
 };
 
 app.use(cors(corsOptions));
