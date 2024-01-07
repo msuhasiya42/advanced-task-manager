@@ -14,7 +14,8 @@
     ],
     "env": {
       "MONGODB_URL": "mongodb+srv://mayursuhasiya:mayur123@cluster0.0wbcu84.mongodb.net/Users?retryWrites=true&w=majority",
-      "SECRET_KEY": "mayur123"
+      "SECRET_KEY": "mayur123",
+      "PORT": "5000"
     }
   }
   
