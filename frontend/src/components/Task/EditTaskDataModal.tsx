@@ -64,6 +64,7 @@ const TaskEditDataModal = (props: TaskEditDataModalProps) => {
       ...modalData,
       title: trimmedTitle,
       description: trimmedDescription,
+      updatedAt: new Date().toString(),
     };
 
     setModalData(updatedModalData);
