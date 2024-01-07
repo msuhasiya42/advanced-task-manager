@@ -6,7 +6,7 @@ import path from "path"
 export default defineConfig(() => {
   return {
     define: {
-      "process.env": {},
+      'process.env.VITE_API_BASE_URL': JSON.stringify(process.env.VITE_API_BASE_URL || 'http://localhost:5000'),
     },
     server: {
       port: 4000,
