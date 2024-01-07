@@ -57,6 +57,8 @@ export const userAPI = {
     });
   },
 
+  deleteUser: (id: string) => deleteFromAPI(`/users/deleteUser/${id}`),
+
   getAllUsers: () => getFromAPI("users/getAllUsers"),
 };
 

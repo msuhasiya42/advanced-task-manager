@@ -5,6 +5,14 @@ import useAuthStore from "../../Zustand/authStore";
 import { userAPI } from "../../ApiCalls";
 import ImageCompressor from "image-compressor.js";
 import ChooseAvatarModal from "./ChooseAvatarModal";
+import { Button, Popconfirm } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
+import {
+  deleteAccountDesc,
+  deleteAccountText,
+  deleteDesc,
+  deleteText,
+} from "../../utils/strings";
 
 const UserProfile = () => {
   const { user, updateUser } = useAuthStore();
@@ -74,6 +82,12 @@ const UserProfile = () => {
   }
 
   const userName = user.name.charAt(0).toUpperCase() + user.name.slice(1);
+  const { logout } = useAuthStore();
+
+  const handleDeleteUser = () => {
+    userAPI.deleteUser(user?.userId);
+    logout();
+  };
 
   return (
     <div>
@@ -174,6 +188,30 @@ const UserProfile = () => {
         <div>
           <span className="text-xl">Email : </span>
           <span className="text-lg">{user.email}</span>
+        </div>
+        <div>
+          <Popconfirm
+            title={deleteAccountText}
+            description={deleteAccountDesc}
+            okText={<span className="bg-blue-500 px-3 rounded-sm ">Yes</span>}
+            onConfirm={(e) => {
+              e?.stopPropagation();
+              handleDeleteUser();
+            }}
+            onCancel={(e) => {
+              e?.stopPropagation();
+            }}
+            cancelText="No"
+          >
+            <Button
+              className="mt-6"
+              icon={<DeleteOutlined onClick={(e) => e.stopPropagation()} />}
+              type="primary"
+              danger
+            >
+              Delete Account
+            </Button>
+          </Popconfirm>
         </div>
         {/* take location from user or remove this field */}
         {/* <p className="text-sm text-gray-500">New York, USA</p> */}

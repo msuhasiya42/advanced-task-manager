@@ -141,9 +141,29 @@ const updateUser = async (req, res) => {
 };
 
 // delete user
-const deleteUser = (req, res) => {
-  // Logic to delete a user by ID
+const deleteUser = async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Find tasks associated with the user and delete
+    await Task.deleteMany({ user: userId });
+
+    // Delete the user
+    await user.deleteOne();
+
+    return res.json({ message: "User and associated tasks deleted successfully" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Failed to delete user and associated tasks" });
+  }
 };
+
 
 const getAllUsers = (req, res) => {
   // Logic to get all users
