@@ -25,7 +25,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const PORT = process.env.PORT || 5000;
 
 // mongodb connections
-const DB = process.env.MONGODB_URL;
+const DB = process.env.MONGODB_URI;
 mongoose
   .connect(DB, {
     useNewUrlParser: true,
