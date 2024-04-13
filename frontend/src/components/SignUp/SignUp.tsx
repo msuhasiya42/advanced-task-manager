@@ -100,9 +100,9 @@ const SignUp = () => {
   const handleCheckbox = () => setIsSubscribed((prev) => !prev);
 
   return (
-    <div className="bg-gray-900 flex  flex-col overflow-y-hidden overflow-x-hidden">
+    <div className="bg-gray-900 flex h-screen flex-col overflow-y-hidden overflow-x-hidden">
       <NavBar />
-      <section className="bg-gray-900 pb-8">
+      <section>
         {/* <form onSubmit={handleSubmit}> */}
         <div className="flex flex-col items-center justify-center mx-auto  lg:py-0">
           <a
