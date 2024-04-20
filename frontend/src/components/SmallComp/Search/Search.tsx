@@ -1,35 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import SearchResultTasks from "./SearchResultTasks";
 import { SearchOutlined } from "@ant-design/icons";
 const Search = () => {
   const [showResult, setShowResult] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const containerRef = React.createRef<HTMLDivElement>();
-
-  // when clicked on task set editedTask value to currentTask
-
-  // When the component is mounted
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        setShowResult(false);
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   return (
     <div>
       <li>
-        <div className="relative " ref={containerRef}>
+        <div className="relative">
           <span className="absolute inset-y-0 left-0 flex items-center pl-3">
             <SearchOutlined />
           </span>
@@ -48,7 +27,10 @@ const Search = () => {
           />
         </div>
         {showResult && inputValue && (
-          <SearchResultTasks searchedString={inputValue} />
+          <SearchResultTasks
+            searchedString={inputValue}
+            setShowResult={setShowResult}
+          />
         )}
       </li>
     </div>

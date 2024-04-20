@@ -1,11 +1,17 @@
 import { List } from "antd";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import useTaskStore from "../../../Zustand/taskStore";
 import { TaskType } from "../../Task/Types/types";
 import { CheckCircleTwoTone, ClockCircleTwoTone } from "@ant-design/icons";
 // import TaskEditDataModal from "../../Task/TaskEditDataModal";
 
-const SearchResultTasks = ({ searchedString }: { searchedString: string }) => {
+const SearchResultTasks = ({
+  searchedString,
+  setShowResult,
+}: {
+  searchedString: string;
+  setShowResult: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   // const [showModal, setShowModal] = useState(false);
 
   const tasks = useTaskStore((state) => state.allTasks);
@@ -51,8 +57,30 @@ const SearchResultTasks = ({ searchedString }: { searchedString: string }) => {
     </List.Item>
   );
 
+  const searchResultRef = useRef<HTMLDivElement>(null); // Ref for the filter card
+
+  useEffect(() => {
+    // Function to handle click outside of the filter card
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchResultRef.current &&
+        !searchResultRef.current.contains(event.target as Node)
+      ) {
+        // Clicked outside of filter card, hide the filter
+        setShowResult(false);
+      }
+    };
+
+    // Add event listener when component mounts
+    document.addEventListener("mousedown", handleClickOutside);
+    // Remove event listener when component unmounts
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [searchResultRef]);
+
   return (
-    <>
+    <div ref={searchResultRef}>
       <List
         style={{
           position: "absolute",
@@ -69,7 +97,7 @@ const SearchResultTasks = ({ searchedString }: { searchedString: string }) => {
         dataSource={filteredTasks}
         renderItem={renderListItem}
       />
-    </>
+    </div>
   );
 };
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 // import { members } from "../../utils/data/static";
 import useTagStore from "../../Zustand/tagStore";
 import { Card, Checkbox, Select, SelectProps, Space, Tooltip } from "antd";
@@ -10,12 +10,33 @@ const Filter = () => {
   const tags = useTagStore((state) => state.tags);
 
   const [showFilter, setShowFilter] = React.useState(false);
+  const filterRef = useRef<HTMLDivElement>(null); // Ref for the filter card
 
   const [filterValues, setFilterValues] = React.useState({
     dueDate: [],
     tag: [],
     member: [],
   });
+
+  useEffect(() => {
+    // Function to handle click outside of the filter card
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        filterRef.current &&
+        !filterRef.current.contains(event.target as Node)
+      ) {
+        // Clicked outside of filter card, hide the filter
+        setShowFilter(false);
+      }
+    };
+
+    // Add event listener when component mounts
+    document.addEventListener("mousedown", handleClickOutside);
+    // Remove event listener when component unmounts
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [filterRef]);
 
   useEffect(() => {
     // setFilterValues({
@@ -83,6 +104,7 @@ const Filter = () => {
             marginTop: "50px",
             backgroundColor: "#e8e6e6",
           }}
+          ref={filterRef}
         >
           <div className="form-control flex flex-row text-xs">
             <div className="">
