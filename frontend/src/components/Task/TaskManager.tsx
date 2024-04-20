@@ -60,19 +60,19 @@ const TaskManager = () => {
   }, [user, setOriginalTasks]);
 
   return (
-    <div className="border-gray-900 border-dashed rounded-lg">
+    <div className="border-gray-900 border-dashed rounded-lg w-full">
       {loading ? (
         <LoadingPage />
       ) : (
-        <div className="bg-gray-900 ml-1 grow h-full rounded">
-          <div className="m-1">
-            <TasksList
-              todo={copiedTasks.todo}
-              inProgress={copiedTasks.inProgress}
-              completed={copiedTasks.completed}
-            />
-          </div>
-        </div>
+        // <div className="bg-gray-900 ml-1 grow h-full rounded">
+        //   <div className="m-1">
+        <TasksList
+          todo={copiedTasks.todo}
+          inProgress={copiedTasks.inProgress}
+          completed={copiedTasks.completed}
+        />
+        //   </div>
+        // </div>
       )}
     </div>
   );

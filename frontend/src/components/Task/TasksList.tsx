@@ -93,9 +93,9 @@ const TasksList = ({ todo, inProgress, completed }: TaskCollection) => {
   };
 
   return (
-    <div className="h-screen">
+    <div className="h-full bg-gray-900">
       <DragDropContext onDragEnd={handleDragEnd}>
-        <div className="flex gap-10 p-8">
+        <div className="flex gap-8 p-8">
           {/* todo list */}
           <div className="border border-gray-500  max-h-[550px] overflow-y-auto w-full p-3 bg-black rounded-2xl">
             <div>

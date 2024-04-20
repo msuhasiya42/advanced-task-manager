@@ -6,23 +6,14 @@ import SideBar from "../SideBar/SideBar";
 
 const UserDashboard = () => {
   return (
-    <div>
-      <Header />
-      <div className="App  justify-center items-center ">
-        <header className="App-header">
-          <div className=" text-white">
-            <header className="App-header">
-              <div className="flex flex-row h-screen ">
-                <div className="h-screen">
-                  <SideBar />
-                </div>
-                <div className="w-screen ">
-                  <TaskManager />
-                </div>
-              </div>
-            </header>
-          </div>
-        </header>
+    <div className="App flex flex-col h-screen">
+      <div className="Header-container fixed top-0 w-full z-40">
+        <Header />
+      </div>
+      {/* overflow hidden will create issue when many tasks and overflowing to bottom */}
+      <div className="App-body flex flex-1 mt-14 overflow-hidden">
+        <SideBar />
+        <TaskManager />
       </div>
       {/* <Footer /> */}
     </div>
