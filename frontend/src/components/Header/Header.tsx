@@ -47,7 +47,7 @@ const Header = () => {
           <Search />
           <ProfileButton />
           <Theme />
-          <Notifications />
+          {/* <Notifications /> */}
           <LogoutButton />
         </ul>
       </div>
