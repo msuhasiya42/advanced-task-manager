@@ -13,7 +13,7 @@ const useAuthStore = create<AuthStoreState>((set) => ({
   user: null,
   login: (userData: User) => {
     set({ user: userData });
-    localStorage.setItem("authState", JSON.stringify({ user: userData }));
+    localStorage.setItem("auth", JSON.stringify({ user: userData }));
   },
 
   addListOfUser: (users: otherUser[]) => {
@@ -23,7 +23,7 @@ const useAuthStore = create<AuthStoreState>((set) => ({
 
   logout: () => {
     set({ user: null });
-    localStorage.removeItem("authState");
+    localStorage.removeItem("auth");
     localStorage.removeItem("tags");
     localStorage.removeItem("allUsers");
   },
@@ -31,14 +31,14 @@ const useAuthStore = create<AuthStoreState>((set) => ({
     set((state) => {
       const updatedUser = state.user ? { ...state.user, ...updates } : null;
       if (updatedUser) {
-        localStorage.setItem("authState", JSON.stringify({ user: updatedUser }));
+        localStorage.setItem("auth", JSON.stringify({ user: updatedUser }));
       }
       return { user: updatedUser };
     });
   },
 }));
 
-const userData = localStorage.getItem("authState");
+const userData = localStorage.getItem("auth");
 const allUserData = localStorage.getItem("allUsers")
 if (userData) {
   useAuthStore.setState(JSON.parse(userData));

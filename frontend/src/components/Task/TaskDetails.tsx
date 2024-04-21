@@ -32,7 +32,7 @@ const TaskDetails = ({ task, handleDelete }: TasksProps) => {
     dueDate,
     priority,
     _id,
-    tag,
+    tags,
     // startDate,
     // collaborators,
     // user,
@@ -131,15 +131,20 @@ const TaskDetails = ({ task, handleDelete }: TasksProps) => {
             src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=320&q=80"
             alt="NIKE AIR"
           /> */}
-          <div className="pl-3">
+          <div className="ml-2">
             <div className="flex justify-between">
-              <div className="w-36">
-                <div className="mb-3">
-                  {tag !== "" && (
-                    <span className=" text-xxs text-center px-2 py-1 h-4 w-32  uppercase bg-blue-500 rounded-full dark:bg-blue-600 dark:text-white">
-                      {tag}
-                    </span>
-                  )}
+              <div className="w-30">
+                <div className="mb-3 flex flex-wrap">
+                  {tags &&
+                    tags.length !== 0 &&
+                    tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="text-xxs text-center px-2 py-1 my-1 mr-1 bg-blue-500 rounded-xl dark:bg-blue-600 dark:text-white"
+                      >
+                        {tag}
+                      </span>
+                    ))}
                 </div>
                 <h1 className="text-sm font-extralight text-gray-400   dark:text-gray-300">
                   {title}

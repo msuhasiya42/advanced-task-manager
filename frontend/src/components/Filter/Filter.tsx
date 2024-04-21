@@ -1,21 +1,29 @@
 import React, { useEffect, useRef } from "react";
 // import { members } from "../../utils/data/static";
-import useTagStore from "../../Zustand/tagStore";
+import useTaskStore from "../../Zustand/taskStore";
 import { Card, Checkbox, Select, SelectProps, Space, Tooltip } from "antd";
 import useAuthStore from "../../Zustand/authStore";
 import { dummyProfile } from "../../utils/strings";
 import { taskPriorities } from "../Task/utils";
 
+// separate out the type into types.ts
+interface FilterType {
+  dueDate: string[];
+  tags: string[];
+  members: string[];
+  sortBy: string;
+}
 const Filter = () => {
-  const tags = useTagStore((state) => state.tags);
+  const tags = useTaskStore((state) => state.tags);
 
   const [showFilter, setShowFilter] = React.useState(false);
   const filterRef = useRef<HTMLDivElement>(null); // Ref for the filter card
 
-  const [filterValues, setFilterValues] = React.useState({
+  const [filterValues, setFilterValues] = React.useState<FilterType>({
     dueDate: [],
-    tag: [],
-    member: [],
+    tags: [],
+    members: [],
+    sortBy: "",
   });
 
   useEffect(() => {
@@ -26,7 +34,7 @@ const Filter = () => {
         !filterRef.current.contains(event.target as Node)
       ) {
         // Clicked outside of filter card, hide the filter
-        setShowFilter(false);
+        // setShowFilter(false);
       }
     };
 
@@ -68,6 +76,33 @@ const Filter = () => {
     .sort((a, b) => a.name.localeCompare(b.name));
 
   const maxChar = 10;
+
+  const handleFilterChange = (type: string, value: string | string[]): void => {
+    if (type === "sortBy") {
+      setFilterValues((prevFilterValues) => ({
+        ...prevFilterValues,
+        sortBy: value as string,
+      }));
+    } else if (type === "dueDate") {
+      // due date can be type of number, need to handle it in different way
+      setFilterValues((prevFilterValues) => ({
+        ...prevFilterValues,
+        dueDate: [...prevFilterValues.dueDate, value as string],
+      }));
+    } else if (type === "tag") {
+      setFilterValues((prevFilterValues) => ({
+        ...prevFilterValues,
+        tag: value as string[],
+      }));
+    } else if (type === "member") {
+      setFilterValues((prevFilterValues) => ({
+        ...prevFilterValues,
+        member: value as string[],
+      }));
+    }
+
+    console.log("filterChange", type, value, filterValues);
+  };
 
   return (
     <>
@@ -124,6 +159,10 @@ const Filter = () => {
                 mode="multiple"
                 style={{ width: 150 }}
                 placeholder="Select Members"
+                onChange={(value: string[]) =>
+                  handleFilterChange("member", value)
+                }
+                defaultValue={filterValues.members}
               >
                 {otherMembers?.map((member: any) => {
                   const nameLen = member.name.length;
@@ -154,8 +193,10 @@ const Filter = () => {
               <Select
                 style={{ width: 110 }}
                 placeholder="Sort By"
-                defaultValue={[]}
-                // onChange={handleChange}
+                defaultValue={filterValues.sortBy}
+                onChange={(value: string) =>
+                  handleFilterChange("sortBy", value)
+                }
                 optionLabelProp="label"
                 options={priorities}
                 optionRender={(option) => <Space>{option.label}</Space>}
@@ -170,8 +211,8 @@ const Filter = () => {
                 mode="multiple"
                 style={{ width: 110 }}
                 placeholder="Select Tag"
-                defaultValue={[]}
-                // onChange={handleChange}
+                defaultValue={filterValues.tags}
+                onChange={(value: string[]) => handleFilterChange("tag", value)}
                 optionLabelProp="label"
                 options={tagOptions}
                 optionRender={(option) => <Space>{option.label}</Space>}

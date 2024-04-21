@@ -3,7 +3,7 @@ import { create } from "zustand";
 import { TaskCategory } from "../components/Task/Types/types";
 import { TaskType } from "../components/Task/Types/types";
 
-type TaskStoreState = {
+export type TaskStoreState = {
   allTasks: TaskType[]; // Add this for a list of all raw tasks
   setAllTasks: (tasks: TaskType[]) => void; 
 
@@ -24,9 +24,6 @@ type TaskStoreState = {
   deleteTaskOrigStore: (category: TaskCategory, taskId: string) => void;
   deleteTaskCopiedStore: (category: TaskCategory, taskId: string) => void;
 
-  selectedTag: string;
-  setSelectedTag: (tag: string) => void;
-
   setTodaysTasks: (category: TaskCategory) => void;
   setUpcomingTasks: (category: TaskCategory) => void;
 
@@ -34,9 +31,21 @@ type TaskStoreState = {
   filterTaskByHavingTagFun: (category: TaskCategory) => void;
 
   removeTagFromTasks: (tagName: string) => void;
+
+  // from tag store
+  tags: string[];
+  setTags: (newTags: string[]) => void;
+  checkTagExists: (tag: string) => boolean;
+  addTag: (tag: string) => void;
+  deleteTag: (tag: string) => void;
 };
 
-const useTaskStore = create<TaskStoreState>((set) => ({
+const useTaskStore = create<TaskStoreState>((set) => {
+    
+  const persistedTags = localStorage.getItem("tags");
+  const initialTags: string[] = persistedTags ? JSON.parse(persistedTags) : [];
+
+  return {
   allTasks: [],
   setAllTasks: (tasks) => set({ allTasks: tasks }),
 
@@ -59,6 +68,8 @@ const useTaskStore = create<TaskStoreState>((set) => ({
     inProgress: [],
     completed: [],
   },
+
+  tags: initialTags,
 
   copyTasks: () =>
     set((state) => ({
@@ -133,9 +144,6 @@ const useTaskStore = create<TaskStoreState>((set) => ({
       },
     })),
 
-  selectedTag: "",
-  setSelectedTag: (tag) => set({ selectedTag: tag }),
-
   // today's task: due date today
   setTodaysTasks: (category) => {
     set((state) => ({
@@ -178,7 +186,7 @@ const useTaskStore = create<TaskStoreState>((set) => ({
       copiedTasks: {
         ...state.copiedTasks,
         [category]: state.copiedTasks[category].filter(
-          (task) => task.tag === tag
+          (task) => task.tags.includes(tag)
         ),
       },
     })),
@@ -189,13 +197,12 @@ const useTaskStore = create<TaskStoreState>((set) => ({
       copiedTasks: {
         ...state.copiedTasks,
         [category]: state.copiedTasks[category].filter(
-          (task) => task.tag !== ""
+          (task) => task.tags.length !== 0
         ),
       },
     })),
 
   // delete tag from all tasks linked to it
-
   removeTagFromTasks: (tagName) =>
     set((state) => ({
       originalTasks: {
@@ -221,14 +228,45 @@ const useTaskStore = create<TaskStoreState>((set) => ({
         ),
       },
     })),
-}));
+
+  // for tags
+  // setting tags when we fetch
+  setTags: (newTags: string[]) =>
+    set(() => {
+      localStorage.setItem("tags", JSON.stringify(newTags));
+      return { tags: newTags };
+    }),
+
+  // check tag is already there or not
+  checkTagExists: (tag: string) => {
+    const state: TaskStoreState = useTaskStore.getState();
+    return state.tags.includes(tag);
+  },
+
+  // Add new tag
+  addTag: (tag: string) =>
+    set((state) => {
+      const updatedTags = [...state.tags, tag];
+      localStorage.setItem("tags", JSON.stringify(updatedTags));
+      return { tags: updatedTags };
+    }),
+
+  // Delete tag from store and local storage
+  deleteTag: (tag: string) =>
+    set((state) => {
+      const updatedTags = state.tags.filter((t: string) => t !== tag);
+      localStorage.setItem("tags", JSON.stringify(updatedTags));
+      return { tags: updatedTags };
+    }),
+  }
+});
 
 const removeTagFromTasksByCategory = (tasks: TaskType[], tagName: string) =>
   tasks.map((task) => {
-    if (task.tag === tagName) {
+    if (task.tags.includes(tagName)) {
       return {
         ...task,
-        tag: "", // Remove the tag by setting it to an empty string
+        tags: task.tags.filter((tag) => tag !== tagName)
       };
     }
     return task;

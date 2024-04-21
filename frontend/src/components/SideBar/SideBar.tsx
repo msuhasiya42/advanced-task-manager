@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import useTaskStore from "../../Zustand/taskStore";
-import useTagStore from "../../Zustand/tagStore";
 import useAuthStore from "../../Zustand/authStore";
 import { userAPI } from "../../ApiCalls";
 import AddTags from "../Add Tags/AddTags";
@@ -20,7 +19,7 @@ const SideBar = () => {
   const [err, setErr] = useState(false);
   const [activeTab, setActiveTab] = useState("all");
 
-  const { tags, deleteTag } = useTagStore();
+  const { tags, deleteTag } = useTaskStore();
   const {
     copyTasks,
     setTodaysTasks,
@@ -136,10 +135,10 @@ const SideBar = () => {
                 </button>
               </li>
             </ul>
-            <div className="border mt-1 border-gray-500 max-h-[350px] bg-gray-800 rounded-lg overflow-y-auto">
+            <div className="border border-gray-500 max-h-[500px] bg-gray-800 rounded-lg overflow-y-auto">
               {tags.map((tag, index) => (
                 <div
-                  className="flex flex-row mx-2 gap-20 items-center"
+                  className="flex flex-row items-center justify-between mx-2 my-1"
                   key={index}
                 >
                   <div
@@ -147,37 +146,37 @@ const SideBar = () => {
                       filterTaskByTagName(tag);
                       setActiveTab(`${index}-${tag}`);
                     }}
-                    style={{ width: "205px" }}
-                    className={`h-10 cursor-pointer text-gray-900 ${
-                      activeTab === `${index}-${tag}` ? "bg-gray-700" : ""
-                    } transition duration-75 rounded-lg group dark:text-gray-300 my-1 dark:hover:text-white flex items-center`}
+                    className={`flex items-center h-10 cursor-pointer ${
+                      activeTab === `${index}-${tag}` ? "text-cyan-500" : ""
+                    } transition duration-75 rounded-lg group text-gray-300 dark:hover:text-white`}
                   >
                     <TagOutlined style={{ marginRight: "5px" }} />
                     {tag}
                   </div>
-
-                  <Popconfirm
-                    placement="bottomLeft"
-                    title={deleteTagTitle}
-                    description={deleteTagStr}
-                    okText={
-                      <span className="bg-blue-500 rounded-sm ">Yes</span>
-                    }
-                    onConfirm={(e) => {
-                      e?.stopPropagation();
-                      handleDeleteTag(tag);
-                    }}
-                    onCancel={(e) => {
-                      e?.stopPropagation();
-                    }}
-                    cancelText="No"
-                    style={{ height: "200px" }}
-                  >
-                    <DeleteOutlined
-                      className=""
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                  </Popconfirm>
+                  <div>
+                    <Popconfirm
+                      placement="bottomLeft"
+                      title={deleteTagTitle}
+                      description={deleteTagStr}
+                      okText={
+                        <span className="bg-blue-500 rounded-sm">Yes</span>
+                      }
+                      onConfirm={(e) => {
+                        e?.stopPropagation();
+                        handleDeleteTag(tag);
+                      }}
+                      onCancel={(e) => {
+                        e?.stopPropagation();
+                      }}
+                      cancelText="No"
+                      style={{ height: "200px" }}
+                    >
+                      <DeleteOutlined
+                        className="text-white hover:text-red-400 cursor-pointer"
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    </Popconfirm>
+                  </div>
                 </div>
               ))}
             </div>

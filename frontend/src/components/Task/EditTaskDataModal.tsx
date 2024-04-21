@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { TaskType } from "./Types/types";
-import { Input, Modal, message } from "antd";
-import useTagStore from "../../Zustand/tagStore";
+import { Input, Modal, Select, SelectProps, Space, message } from "antd";
 import { taskAPI } from "../../ApiCalls";
 import useTaskStore from "../../Zustand/taskStore";
 import DatePicker from "react-datepicker";
@@ -25,7 +24,7 @@ const TaskEditDataModal = (props: TaskEditDataModalProps) => {
 
   const [modalData, setModalData] = useState<TaskType>(sanitizedTask);
 
-  const tags = useTagStore((state) => state.tags);
+  const tags = useTaskStore((state) => state.tags);
   const updateTaskOrigStore = useTaskStore(
     (state) => state.updateTaskOrigStore
   );
@@ -36,6 +35,10 @@ const TaskEditDataModal = (props: TaskEditDataModalProps) => {
   const handleInputChange = (e: { target: { name: string; value: any } }) => {
     const { name, value } = e.target;
     setModalData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleTagsChange = (tags: string[]) => {
+    setModalData((prevData) => ({ ...prevData, tags }));
   };
 
   const handleDescChange = (value: string) => {
@@ -100,6 +103,15 @@ const TaskEditDataModal = (props: TaskEditDataModalProps) => {
     indianTimeOptions
   );
 
+  const tagOptions: SelectProps["options"] = tags
+    .map((tag) => {
+      return {
+        label: tag,
+        value: tag,
+      };
+    })
+    .sort((a, b) => a.label.localeCompare(b.label));
+
   return (
     <Modal
       title={<div className="text-lg text-center mb-6">{"Edit Task"}</div>}
@@ -152,24 +164,17 @@ const TaskEditDataModal = (props: TaskEditDataModalProps) => {
           {/* select tag */}
           <div className="w-full mt-4">
             <label className="block mb-3 font-medium text-gray-700">Tag</label>
-            <select
+            <Select
+              mode="multiple"
               id="tag"
-              name="tag"
-              className="block w-full xt-select rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
-              aria-label="Select"
-              value={modalData.tag ?? ""}
-              onChange={handleInputChange}
-            >
-              <option value="" className="bg-red-400">
-                -- No tag --
-              </option>
-
-              {tags.map((tag, index) => (
-                <option key={index} value={tag}>
-                  {tag}
-                </option>
-              ))}
-            </select>
+              style={{ width: 190 }}
+              placeholder="Select Tag"
+              defaultValue={modalData.tags}
+              onChange={(tags) => handleTagsChange(tags)}
+              optionLabelProp="label"
+              options={tagOptions}
+              optionRender={(option) => <Space>{option.label}</Space>}
+            />
           </div>
           <div className="w-full mt-4">
             <label className="block mb-3 font-medium text-gray-700">

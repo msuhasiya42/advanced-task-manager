@@ -12,9 +12,13 @@ const taskSchema = new mongoose.Schema(
       type: String,
     },
 
-    tag: {
-      type: String,
-      default: "",
+    tags: {
+      type:  [
+        {
+          type: String,
+        },
+      ],
+      default: [],
     },
 
     done: {

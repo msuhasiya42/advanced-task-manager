@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { userAPI } from "../../ApiCalls";
 import useAuthStore from "../../Zustand/authStore";
-import useTagStore from "../../Zustand/tagStore";
 import { Input, InputRef, message } from "antd";
+import useTaskStore from "../../Zustand/taskStore";
 
 const AddTags = () => {
   const [showTextArea, setShowTextArea] = useState(false);
@@ -11,7 +11,7 @@ const AddTags = () => {
 
   // using add task from store
   const userId = useAuthStore((state) => state?.user?.userId);
-  const { addTag, checkTagExists } = useTagStore();
+  const { addTag, checkTagExists } = useTaskStore();
 
   const handleToggle = () => {
     setShowTextArea((prev) => !prev);

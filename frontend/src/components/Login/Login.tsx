@@ -4,7 +4,7 @@ import NavBar from "../NavBar/NavBarHomePage";
 import { userAPI } from "../../ApiCalls";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../Zustand/authStore";
-import useTagStore from "../../Zustand/tagStore";
+import useTaskStore from "../../Zustand/taskStore";
 import { GoogleLogin } from "@react-oauth/google";
 import { ErrorResponse, User } from "./types";
 const Login = () => {
@@ -16,7 +16,7 @@ const Login = () => {
 
   const navigate = useNavigate();
   const { login, addListOfUser } = useAuthStore();
-  const { setTags } = useTagStore();
+  const { setTags } = useTaskStore();
 
   const handleShowPasswordToggle = () => {
     setShowPassword(!showPassword);

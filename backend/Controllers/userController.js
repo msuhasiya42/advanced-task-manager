@@ -50,9 +50,9 @@ const login = async (req, res) => {
           expiresIn: "1h",
         });
 
-        const { _id, name, tags, picture } = user;
+        const { _id, name, tags, picture, email } = user;
 
-        res.json({ token, userId: _id, name, tags, picture });
+        res.json({ token, userId: _id, name, tags, picture, email });
       } else {
         res.status(401).json({ error: "Invalid credentials" });
       }
@@ -117,8 +117,10 @@ const updateUser = async (req, res) => {
           // Update tasks where user == userId and tag == tag
           try {
             const result = await Task.updateMany(
-              { user: userId, tag: tag },
-              { $set: { tag: "" } }
+              // Find tasks where user is userId and tag array contains the specified tag
+              { user: userId, tags: { $in: [tag] } },
+              // Update those tasks
+              { $pull: { tags: tag } }
             );
             console.log(result);
             console.log(`Tags updated for tasks linked to user ${userId}`);
