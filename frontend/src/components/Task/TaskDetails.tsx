@@ -105,10 +105,10 @@ const TaskDetails = ({ task, handleDelete }: TasksProps) => {
   const indianTime = convertToIndianTime(dueDate);
 
   const content = (
-    <Card className="bg-gray-700" onClick={(e) => e.stopPropagation()}>
+    <Card onClick={(e) => e.stopPropagation()}>
       <div
         dangerouslySetInnerHTML={{ __html: description }}
-        className="text-white"
+        className="text-black"
       />
     </Card>
   );

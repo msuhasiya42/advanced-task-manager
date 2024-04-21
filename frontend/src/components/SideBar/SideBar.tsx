@@ -137,8 +137,10 @@ const SideBar = () => {
                   setActiveTab(`${index}-${tag}`);
                 }}
                 className={`flex items-center h-10 cursor-pointer ${
-                  activeTab === `${index}-${tag}` ? "text-cyan-500" : ""
-                } transition duration-75 rounded-lg group text-gray-300 dark:hover:text-white`}
+                  activeTab === `${index}-${tag}`
+                    ? "text-cyan-500"
+                    : "text-gray-300"
+                } transition duration-75 rounded-lg group  dark:hover:text-white`}
               >
                 <TagOutlined style={{ marginRight: "5px" }} />
                 {tag}

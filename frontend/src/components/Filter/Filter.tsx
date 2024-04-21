@@ -1,7 +1,15 @@
 import React, { useEffect, useRef } from "react";
 // import { members } from "../../utils/data/static";
 import useTaskStore from "../../Zustand/taskStore";
-import { Card, Checkbox, Select, SelectProps, Space, Tooltip } from "antd";
+import {
+  Card,
+  Checkbox,
+  DatePicker,
+  Select,
+  SelectProps,
+  Space,
+  Tooltip,
+} from "antd";
 import useAuthStore from "../../Zustand/authStore";
 import { dummyProfile } from "../../utils/strings";
 import { taskPriorities } from "../Task/utils";
@@ -33,8 +41,7 @@ const Filter = () => {
         filterRef.current &&
         !filterRef.current.contains(event.target as Node)
       ) {
-        // Clicked outside of filter card, hide the filter
-        // setShowFilter(false);
+        setShowFilter(false);
       }
     };
 
@@ -77,7 +84,10 @@ const Filter = () => {
 
   const maxChar = 10;
 
-  const handleFilterChange = (type: string, value: string | string[]): void => {
+  const handleFilterChange = (
+    type: string,
+    value?: string | string[]
+  ): void => {
     if (type === "sortBy") {
       setFilterValues((prevFilterValues) => ({
         ...prevFilterValues,
@@ -135,24 +145,29 @@ const Filter = () => {
           bordered={false}
           style={{
             float: "left",
-            width: 470,
-            marginTop: "50px",
+            width: 500,
+            marginTop: "40px",
             backgroundColor: "#e8e6e6",
           }}
           ref={filterRef}
         >
           <div className="form-control flex flex-row text-xs">
             <div className="">
-              <label className="cursor-pointer label text-gray-500" htmlFor="">
+              <label className="cursor-pointer label text-gray-700" htmlFor="">
                 Due Date
               </label>
               <Checkbox value="Today">Today</Checkbox>
               <Checkbox value="Tommorrow">Tommorrow</Checkbox>
               <Checkbox value="Overdue">Overdue</Checkbox>
+              <DatePicker
+                onChange={(value) =>
+                  handleFilterChange("dueDate", value?.toString())
+                }
+              />
             </div>
 
             <div className="ml-3">
-              <label className="cursor-pointer label text-gray-500" htmlFor="">
+              <label className="cursor-pointer label text-gray-700" htmlFor="">
                 Members
               </label>
               <Select
@@ -187,13 +202,15 @@ const Filter = () => {
                 })}
               </Select>
 
-              <label className="cursor-pointer label text-gray-500" htmlFor="">
+              <label className="cursor-pointer label text-gray-700" htmlFor="">
                 Sort By
               </label>
               <Select
                 style={{ width: 110 }}
                 placeholder="Sort By"
-                defaultValue={filterValues.sortBy}
+                defaultValue={
+                  filterValues.sortBy === "" ? undefined : filterValues.sortBy
+                }
                 onChange={(value: string) =>
                   handleFilterChange("sortBy", value)
                 }
@@ -204,7 +221,7 @@ const Filter = () => {
             </div>
 
             <div className="ml-8 mr-2">
-              <label className="cursor-pointer label text-gray-500" htmlFor="">
+              <label className="cursor-pointer label text-gray-700" htmlFor="">
                 Tags
               </label>
               <Select
