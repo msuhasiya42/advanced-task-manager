@@ -7,7 +7,7 @@ import Filter from "../Filter/Filter";
 
 const Header = () => {
   return (
-    <div className="w-full border-b-4 flex flex-wrap  justify-between mx-auto dark:bg-gray-900 dark:border-gray-700">
+    <div className="w-full border-b-2 py-1 flex flex-wrap  justify-between mx-auto dark:bg-gray-900 dark:border-gray-700">
       <a href="/user-dashboard" className="flex items-center">
         <span className="ml-6 self-center text-2xl font-semibold bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent whitespace-nowrap">
           Task Manager
