@@ -14,8 +14,7 @@ const AddNewTask = ({ status }: StatusType) => {
   const [showTextArea, setShowTextArea] = useState(false);
   const [task, setTask] = useState("");
   const user = useAuthStore((state) => state.user?.userId);
-  const addTaskOrigStore = useTaskStore((state) => state.addTaskOrigStore);
-  const addTaskCopiedStore = useTaskStore((state) => state.addTaskCopiedStore);
+  const { addTaskDataStore, addTaskFilteredTasksStore } = useTaskStore();
   const textRef = React.useRef<InputRef>(null);
 
   const handleClick = () => setShowTextArea((prev) => !prev);
@@ -32,8 +31,8 @@ const AddNewTask = ({ status }: StatusType) => {
         .createTask(task, status, user)
         .then((response) => {
           const newTask = response.data.task;
-          addTaskOrigStore(status, newTask);
-          addTaskCopiedStore(status, newTask);
+          addTaskDataStore(status, newTask);
+          addTaskFilteredTasksStore(status, newTask);
           void message.success("Task Added", 1.5);
         })
         .catch((error) => {

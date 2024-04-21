@@ -7,18 +7,16 @@ import useAuthStore from "../../Zustand/authStore";
 import { taskSchema } from "../../zodSpecs/task";
 import { TaskType } from "./Types/types";
 
+export const filterTasksByStatus = (tasks: TaskType[], status: string) => {
+  return tasks.filter((task) => task.status === status);
+};
+
 const TaskManager = () => {
   const [loading, setLoading] = useState(false);
   const { user } = useAuthStore();
 
-  const setAllTasks = useTaskStore((state) => state.setAllTasks);
-  const setOriginalTasks = useTaskStore((state) => state.setOriginalTasks);
-  const copyTasks = useTaskStore((state) => state.copyTasks);
-  const copiedTasks = useTaskStore((state) => state.copiedTasks);
-
-  const filterTasksByStatus = (tasks: TaskType[], status: string) => {
-    return tasks.filter((task) => task.status === status);
-  };
+  const { setAllTasks, setTasksDataByCategory, copyTasks, filteredTasks } =
+    useTaskStore();
 
   const fetchAndProcessTasks = async (userId: string) => {
     try {
@@ -41,9 +39,9 @@ const TaskManager = () => {
       const inprogress = filterTasksByStatus(validatedTasks, "inProgress");
       const completed = filterTasksByStatus(validatedTasks, "completed");
 
-      setOriginalTasks("todo", todos);
-      setOriginalTasks("inProgress", inprogress);
-      setOriginalTasks("completed", completed);
+      setTasksDataByCategory("todo", todos);
+      setTasksDataByCategory("inProgress", inprogress);
+      setTasksDataByCategory("completed", completed);
 
       copyTasks();
     } catch (err) {
@@ -57,22 +55,18 @@ const TaskManager = () => {
     if (user?.userId) {
       fetchAndProcessTasks(user.userId);
     }
-  }, [user, setOriginalTasks]);
+  }, [user]);
 
   return (
     <div className="border-gray-900 border-dashed rounded-lg w-full">
       {loading ? (
         <LoadingPage />
       ) : (
-        // <div className="bg-gray-900 ml-1 grow h-full rounded">
-        //   <div className="m-1">
         <TasksList
-          todo={copiedTasks.todo}
-          inProgress={copiedTasks.inProgress}
-          completed={copiedTasks.completed}
+          todo={filteredTasks.todo}
+          inProgress={filteredTasks.inProgress}
+          completed={filteredTasks.completed}
         />
-        //   </div>
-        // </div>
       )}
     </div>
   );

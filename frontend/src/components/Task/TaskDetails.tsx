@@ -50,12 +50,7 @@ const TaskDetails = ({ task, handleDelete }: TasksProps) => {
   const dateColor = task.done ? "green" : redOrYellow();
   const classNameDueDate = `text-xs ml-1 w-18 bg-${dateColor}-400 text-black font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-${dateColor}-400 dark:text-white border border-white-600  `;
 
-  const updateTaskOrigStore = useTaskStore(
-    (state) => state.updateTaskOrigStore
-  );
-  const updateTaskCopiedStore = useTaskStore(
-    (state) => state.updateTaskCopiedStore
-  );
+  const { updateTaskDataStore, updateTaskFilteredTasksStore } = useTaskStore();
 
   const toggleTaskDone = () => {
     task.done = !done;
@@ -67,8 +62,8 @@ const TaskDetails = ({ task, handleDelete }: TasksProps) => {
     taskAPI
       .updateTask(_id, task)
       .then(() => {
-        updateTaskOrigStore(status, _id, task);
-        updateTaskCopiedStore(status, _id, task);
+        updateTaskDataStore(status, _id, task);
+        updateTaskFilteredTasksStore(status, _id, task);
       })
       .catch((err) => {
         void message.error("Err in changing priority: ", err);
@@ -95,8 +90,8 @@ const TaskDetails = ({ task, handleDelete }: TasksProps) => {
         updatedTask.done
           ? void message.success("Task set to done.")
           : void message.warning("Task set to undone.");
-        updateTaskOrigStore(status, id, updatedTask);
-        updateTaskCopiedStore(status, id, updatedTask);
+        updateTaskDataStore(status, id, updatedTask);
+        updateTaskFilteredTasksStore(status, id, updatedTask);
       })
       .catch((err) => {
         console.log("err in updating to done:", err);

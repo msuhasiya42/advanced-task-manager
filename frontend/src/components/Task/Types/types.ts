@@ -16,11 +16,11 @@ export interface TaskType {
   createdAt: string
   updatedAt: string
 }
-
+/* eslint-disable no-unused-vars */
 export interface TasksProps {
   task: TaskType;
   handleDelete: (task: TaskType) => void;
-  handleTaskClick: (task: TaskType) => void;
+  handleTaskClick?: (task: TaskType) => void;
 }
 
 export interface TaskCollection {

@@ -24,13 +24,8 @@ const TaskEditDataModal = (props: TaskEditDataModalProps) => {
 
   const [modalData, setModalData] = useState<TaskType>(sanitizedTask);
 
-  const tags = useTaskStore((state) => state.tags);
-  const updateTaskOrigStore = useTaskStore(
-    (state) => state.updateTaskOrigStore
-  );
-  const updateTaskCopiedStore = useTaskStore(
-    (state) => state.updateTaskCopiedStore
-  );
+  const { tags, updateTaskDataStore, updateTaskFilteredTasksStore } =
+    useTaskStore();
 
   const handleInputChange = (e: { target: { name: string; value: any } }) => {
     const { name, value } = e.target;
@@ -77,8 +72,8 @@ const TaskEditDataModal = (props: TaskEditDataModalProps) => {
       .then(() => {
         void message.success("Task updated successfully", 1.5);
         const { status, _id } = updatedModalData;
-        updateTaskOrigStore(status, _id, updatedModalData);
-        updateTaskCopiedStore(status, _id, updatedModalData);
+        updateTaskDataStore(status, _id, updatedModalData);
+        updateTaskFilteredTasksStore(status, _id, updatedModalData);
         setShowModal(false);
       })
       .catch((err) => void message.error("Error in updating task:", err));

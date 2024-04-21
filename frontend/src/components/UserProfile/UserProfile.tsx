@@ -7,12 +7,7 @@ import ImageCompressor from "image-compressor.js";
 import ChooseAvatarModal from "./ChooseAvatarModal";
 import { Button, Popconfirm } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
-import {
-  deleteAccountDesc,
-  deleteAccountText,
-  deleteDesc,
-  deleteText,
-} from "../../utils/strings";
+import { deleteAccountDesc, deleteAccountText } from "../../utils/strings";
 
 const UserProfile = () => {
   const { user, updateUser } = useAuthStore();

@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import { User, otherUser } from "../components/Login/types";
+
+/* eslint-disable no-unused-vars */
 type AuthStoreState = {
   user: User | null;
   allUsers?: otherUser[];

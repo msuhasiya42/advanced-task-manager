@@ -4,33 +4,31 @@ import { TaskCategory } from "../components/Task/Types/types";
 import { TaskType } from "../components/Task/Types/types";
 
 export type TaskStoreState = {
-  allTasks: TaskType[]; // Add this for a list of all raw tasks
+  allTasks: TaskType[];
   setAllTasks: (tasks: TaskType[]) => void; 
 
-  originalTasks: Record<TaskCategory, TaskType[]>;
-  setOriginalTasks: (category: TaskCategory, newTasks: TaskType[]) => void;
+  tasksDataByCategory: Record<TaskCategory, TaskType[]>;
+  setTasksDataByCategory: (category: TaskCategory, newTasks: TaskType[]) => void;
 
-  copiedTasks: Record<TaskCategory, TaskType[]>;
+  filteredTasks: Record<TaskCategory, TaskType[]>;
   copyTasks: () => void;
 
-  setTasks: (category: TaskCategory, newTasks: TaskType[]) => void; // Adjusted this
+  addTaskDataStore: (category: TaskCategory, task: TaskType) => void;
+  addTaskFilteredTasksStore: (category: TaskCategory, task: TaskType) => void;
 
-  addTaskOrigStore: (category: TaskCategory, task: TaskType) => void;
-  addTaskCopiedStore: (category: TaskCategory, task: TaskType) => void;
+  updateTaskDataStore: (category: TaskCategory, taskId: string, updatedTask: TaskType) => void;
+  updateTaskFilteredTasksStore: (category: TaskCategory, taskId: string, updatedTask: TaskType) => void;
 
-  updateTaskOrigStore: (category: TaskCategory, taskId: string, updatedTask: TaskType) => void;
-  updateTaskCopiedStore: (category: TaskCategory, taskId: string, updatedTask: TaskType) => void;
-
-  deleteTaskOrigStore: (category: TaskCategory, taskId: string) => void;
-  deleteTaskCopiedStore: (category: TaskCategory, taskId: string) => void;
+  deleteTaskFromDataStore: (category: TaskCategory, taskId: string) => void;
+  deleteTaskFilteredTasksStore: (category: TaskCategory, taskId: string) => void;
 
   setTodaysTasks: (category: TaskCategory) => void;
   setUpcomingTasks: (category: TaskCategory) => void;
 
   filterTasksByTag: (category: TaskCategory, tag: string) => void;
-  filterTaskByHavingTagFun: (category: TaskCategory) => void;
+  filterTaskByHavingTag: (category: TaskCategory) => void;
 
-  removeTagFromTasks: (tagName: string) => void;
+  removeTagFromAllTasks: (tagName: string) => void;
 
   // from tag store
   tags: string[];
@@ -47,98 +45,94 @@ const useTaskStore = create<TaskStoreState>((set) => {
 
   return {
   allTasks: [],
-  setAllTasks: (tasks) => set({ allTasks: tasks }),
 
-  originalTasks: {
+  // tasks data store by category
+  tasksDataByCategory: {
     todo: [],
     inProgress: [],
     completed: [],
   },
-  setOriginalTasks: (category, newTasks) => // Adjusted the type here
+
+  // filtered task store
+  filteredTasks: {
+    todo: [],
+    inProgress: [],
+    completed: [],
+  },
+
+  // tags
+  tags: initialTags,
+
+
+  setAllTasks: (tasks) => set({ allTasks: tasks }),
+
+  setTasksDataByCategory: (category, newTasks) => // Adjusted the type here
     set((state) => ({
-      originalTasks: {
-        ...state.originalTasks,
+      tasksDataByCategory: {
+        ...state.tasksDataByCategory,
         [category]: newTasks,
       },
     })),
 
-  // copied task store
-  copiedTasks: {
-    todo: [],
-    inProgress: [],
-    completed: [],
-  },
-
-  tags: initialTags,
-
   copyTasks: () =>
     set((state) => ({
-      copiedTasks: { ...state.originalTasks },
+      filteredTasks: state.tasksDataByCategory
     })),
 
-  //   set task
-  setTasks: (category, newTasks) =>  
-  set((state) => ({
-    originalTasks: {
-      ...state.originalTasks,
-      [category]: newTasks,
-    },
-  })),
-
-  //   add new task
-  addTaskOrigStore: (category, task) =>
+  // add new task
+  addTaskDataStore: (category, task) =>
     set((state) => ({
-      originalTasks: {
-        ...state.originalTasks,
-        [category]: [...state.originalTasks[category], task],
+      tasksDataByCategory: {
+        ...state.tasksDataByCategory,
+        [category]: [...state.tasksDataByCategory[category], task],
       },
     })),
 
-  addTaskCopiedStore: (category, task) =>
+  addTaskFilteredTasksStore: (category, task) =>
     set((state) => ({
-      copiedTasks: {
-        ...state.copiedTasks,
-        [category]: [...state.copiedTasks[category], task],
+      filteredTasks: {
+        ...state.filteredTasks,
+        [category]: [...state.filteredTasks[category], task],
       },
     })),
 
   // update task
-  updateTaskOrigStore: (category, taskId, updatedTask) =>
+  updateTaskDataStore: (category, taskId, updatedTask) =>
     set((state) => ({
-      originalTasks: {
-        ...state.originalTasks,
-        [category]: state.originalTasks[category].map((task) =>
+      tasksDataByCategory: {
+        ...state.tasksDataByCategory,
+        [category]: state.tasksDataByCategory[category].map((task) =>
           task._id === taskId ? updatedTask : task
         ),
       },
     })),
 
-  updateTaskCopiedStore: (category, taskId, updatedTask) =>
+  updateTaskFilteredTasksStore: (category, taskId, updatedTask) =>
     set((state) => ({
-      copiedTasks: {
-        ...state.copiedTasks,
-        [category]: state.copiedTasks[category].map((task) =>
+      filteredTasks: {
+        ...state.filteredTasks,
+        [category]: state.filteredTasks[category].map((task) =>
           task._id === taskId ? updatedTask : task
         ),
       },
     })),
 
   // delete task
-  deleteTaskOrigStore: (category, taskId) =>
+  deleteTaskFromDataStore: (category, taskId) =>
     set((state) => ({
-      originalTasks: {
-        ...state.originalTasks,
-        [category]: state.originalTasks[category].filter(
+      tasksDataByCategory: {
+        ...state.tasksDataByCategory,
+        [category]: state.tasksDataByCategory[category].filter(
           (task) => task._id !== taskId
         ),
       },
     })),
 
-  deleteTaskCopiedStore: (category, taskId) =>
+  deleteTaskFilteredTasksStore: (category, taskId) =>
     set((state) => ({
-      copiedTasks: {
-        ...state.copiedTasks,
-        [category]: state.copiedTasks[category].filter(
+      filteredTasks: {
+        ...state.filteredTasks,
+        [category]: state.filteredTasks[category].filter(
           (task) => task._id !== taskId
         ),
       },
@@ -147,9 +141,9 @@ const useTaskStore = create<TaskStoreState>((set) => {
   // today's task: due date today
   setTodaysTasks: (category) => {
     set((state) => ({
-      copiedTasks: {
-        ...state.copiedTasks,
-        [category]: state.copiedTasks[category].filter((task) => {
+      filteredTasks: {
+        ...state.filteredTasks,
+        [category]: state.filteredTasks[category].filter((task) => {
           const dueDate = new Date(task.dueDate);
           const today = new Date();
           return (
@@ -165,9 +159,9 @@ const useTaskStore = create<TaskStoreState>((set) => {
   // Upcoming tasks
   setUpcomingTasks: (category) => {
     set((state) => ({
-      copiedTasks: {
-        ...state.copiedTasks,
-        [category]: state.copiedTasks[category].filter((task) => {
+      filteredTasks: {
+        ...state.filteredTasks,
+        [category]: state.filteredTasks[category].filter((task) => {
           const dueDate = new Date(task.dueDate);
           const today = new Date();
           return (
@@ -183,48 +177,48 @@ const useTaskStore = create<TaskStoreState>((set) => {
   // Filter by tag
   filterTasksByTag: (category, tag) =>
     set((state) => ({
-      copiedTasks: {
-        ...state.copiedTasks,
-        [category]: state.copiedTasks[category].filter(
+      filteredTasks: {
+        ...state.filteredTasks,
+        [category]: state.filteredTasks[category].filter(
           (task) => task.tags.includes(tag)
         ),
       },
     })),
 
-  // Filter task by having atleast one tag
-  filterTaskByHavingTagFun: (category) =>
+  // Filter task by having at least one tag
+  filterTaskByHavingTag: (category) =>
     set((state) => ({
-      copiedTasks: {
-        ...state.copiedTasks,
-        [category]: state.copiedTasks[category].filter(
+      filteredTasks: {
+        ...state.filteredTasks,
+        [category]: state.filteredTasks[category].filter(
           (task) => task.tags.length !== 0
         ),
       },
     })),
 
   // delete tag from all tasks linked to it
-  removeTagFromTasks: (tagName) =>
+  removeTagFromAllTasks: (tag) =>
     set((state) => ({
-      originalTasks: {
-        todo: removeTagFromTasksByCategory(state.originalTasks.todo, tagName),
+      tasksDataByCategory: {
+        todo: removeTagFromTasksByCategory(state.tasksDataByCategory.todo, tag),
         inProgress: removeTagFromTasksByCategory(
-          state.originalTasks.inProgress,
-          tagName
+          state.tasksDataByCategory.inProgress,
+          tag
         ),
         completed: removeTagFromTasksByCategory(
-          state.originalTasks.completed,
-          tagName
+          state.tasksDataByCategory.completed,
+          tag
         ),
       },
-      copiedTasks: {
-        todo: removeTagFromTasksByCategory(state.copiedTasks.todo, tagName),
+      filteredTasks: {
+        todo: removeTagFromTasksByCategory(state.filteredTasks.todo, tag),
         inProgress: removeTagFromTasksByCategory(
-          state.copiedTasks.inProgress,
-          tagName
+          state.filteredTasks.inProgress,
+          tag
         ),
         completed: removeTagFromTasksByCategory(
-          state.copiedTasks.completed,
-          tagName
+          state.filteredTasks.completed,
+          tag
         ),
       },
     })),

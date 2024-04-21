@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import TaskDetails from "./TaskDetails";
 import { taskAPI } from "../../ApiCalls";
 import useTaskStore from "../../Zustand/taskStore";
 import { TaskCategory, TaskCollection, TaskType } from "./Types/types";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import "react-datepicker/dist/react-datepicker.css";
-import { Toast } from "../SmallComp/ToastMessage/ToastMessage";
 import { message } from "antd";
 import NoData from "./NoData";
 import AddNewTask from "./AddNewTask";
@@ -13,34 +12,22 @@ import AddNewTask from "./AddNewTask";
 // import "react-quill/dist/quill.snow.css";
 
 const TasksList = ({ todo, inProgress, completed }: TaskCollection) => {
-  const [showDeleteToastMsg, setShowDeleteToastMsg] = useState(false);
-
   // store
   const {
-    setOriginalTasks,
+    setTasksDataByCategory,
     copyTasks,
-    deleteTaskOrigStore,
-    deleteTaskCopiedStore,
-  } = useTaskStore((state) => ({
-    setOriginalTasks: state.setOriginalTasks,
-    copyTasks: state.copyTasks,
-    updateTaskOrigStore: state.updateTaskOrigStore,
-    updateTaskCopiedStore: state.updateTaskCopiedStore,
-    deleteTaskOrigStore: state.deleteTaskOrigStore,
-    deleteTaskCopiedStore: state.deleteTaskCopiedStore,
-  }));
-
-  const removeToastMsg = () => setShowDeleteToastMsg(false);
+    deleteTaskFromDataStore,
+    deleteTaskFilteredTasksStore,
+  } = useTaskStore();
 
   const handleDelete = (task: TaskType) => {
     taskAPI
       .deleteTask(task._id)
       .then(() => {
         const { _id, status } = task;
-        deleteTaskOrigStore(status, _id);
-        deleteTaskCopiedStore(status, _id);
+        deleteTaskFromDataStore(status, _id);
+        deleteTaskFilteredTasksStore(status, _id);
         void message.success("Task Deleted Successfully");
-        setTimeout(removeToastMsg, 3000);
       })
       .catch((err) => {
         console.log("Error in deletion:", err);
@@ -79,13 +66,13 @@ const TasksList = ({ todo, inProgress, completed }: TaskCollection) => {
         removed.status = to;
         // api call to change status of task when drag and drop
         taskAPI.updateTask(removed._id, removed);
-        setOriginalTasks(from, sourceTasks);
+        setTasksDataByCategory(from, sourceTasks);
       }
 
       const destinationTasks =
         from !== to ? Array.from(tasksMap[to]) : sourceTasks;
       destinationTasks.splice(destination.index, 0, removed);
-      setOriginalTasks(to, destinationTasks);
+      setTasksDataByCategory(to, destinationTasks);
     };
 
     updateTasks(source.droppableId, destination.droppableId);
@@ -239,9 +226,6 @@ const TasksList = ({ todo, inProgress, completed }: TaskCollection) => {
               <AddNewTask status="completed" />
             </div>
           </div>
-
-          {/* delete toast msg */}
-          {showDeleteToastMsg && <Toast type="error" message="Task Deleted" />}
         </div>
       </DragDropContext>
     </div>
