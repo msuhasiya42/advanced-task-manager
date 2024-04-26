@@ -84,7 +84,7 @@ const TasksList = ({ todo, inProgress, completed }: TaskCollection) => {
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="flex gap-8 p-8">
           {/* todo list */}
-          <div className="border border-gray-500  max-h-[550px] overflow-y-auto w-full p-3 bg-black rounded-2xl">
+          <div className="max-h-[550px] overflow-y-auto w-full p-3 bg-black rounded-2xl">
             <div>
               <p className="mb-2 text-center text-lg  text-white ">Todo</p>
             </div>
@@ -132,7 +132,7 @@ const TasksList = ({ todo, inProgress, completed }: TaskCollection) => {
           </div>
 
           {/* in progress list */}
-          <div className="border border-gray-500  max-h-[550px] overflow-y-auto w-full p-3 bg-black rounded-2xl">
+          <div className="max-h-[550px] overflow-y-auto w-full p-3 bg-black rounded-2xl">
             <Droppable droppableId="inProgress">
               {(provided) => (
                 <div
@@ -180,7 +180,7 @@ const TasksList = ({ todo, inProgress, completed }: TaskCollection) => {
           </div>
 
           {/* completed list */}
-          <div className="border border-gray-500 max-h-[550px] overflow-y-auto w-full p-3 bg-black rounded-2xl">
+          <div className="max-h-[550px] overflow-y-auto w-full p-3 bg-black rounded-2xl">
             <Droppable droppableId="completed">
               {(provided) => (
                 <div
