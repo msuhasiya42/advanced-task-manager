@@ -80,7 +80,6 @@
     "@typescript-eslint/parser": "^5.60.1",
     "@vitejs/plugin-react": "^4.0.1",
     "autoprefixer": "^10.4.15",
-    "daisyui": "^3.5.1",
     "eslint": "^8.43.0",
     "eslint-plugin-react": "^7.32.2",
     "postcss": "^8.4.28",

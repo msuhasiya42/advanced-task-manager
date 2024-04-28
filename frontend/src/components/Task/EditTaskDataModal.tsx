@@ -123,7 +123,7 @@ const TaskEditDataModal = (props: TaskEditDataModalProps) => {
       width={650}
       okButtonProps={{ style: { backgroundColor: "#1890ff", color: "#fff" } }}
     >
-      <div className="flex gap-8">
+      <div className="flex flex-col gap-4 sm:flex-row sm:gap-8">
         <div>
           <div className="w-full">
             <Input
@@ -155,7 +155,7 @@ const TaskEditDataModal = (props: TaskEditDataModalProps) => {
             </label>
           </div>
         </div>
-        <div>
+        <div className="flex flex-col md:flex-col  gap-4">
           {/* select tag */}
           <div className="w-full mt-4">
             <label className="block mb-3 font-medium text-gray-700">Tag</label>

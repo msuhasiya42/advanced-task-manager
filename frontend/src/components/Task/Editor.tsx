@@ -16,7 +16,7 @@ const Editor = ({ description, handleDescChange }: editorProps) => {
       onChange={(changeDesc) => {
         handleDescChange(changeDesc);
       }}
-      style={{ height: "300px", marginBottom: "60px" }}
+      style={{ height: "100px", marginBottom: "70px" }}
     />
   );
 };
