@@ -145,7 +145,7 @@ const TaskEditDataModal = (props: TaskEditDataModalProps) => {
               handleDescChange={handleDescChange}
             />
           </div>
-          <div>
+          <div className="hidden sm:block">
             <label className="block mb-3 font-medium text-gray-700">
               Created at :<span className="text-gray-500"> {createdAt}</span>
             </label>
@@ -223,6 +223,15 @@ const TaskEditDataModal = (props: TaskEditDataModalProps) => {
               }
               onChange={handleDate}
             />
+          </div>
+          <div className="sm:hidden">
+            <label className="block mb-3 font-medium text-gray-700">
+              Created at :<span className="text-gray-500"> {createdAt}</span>
+            </label>
+            <label className="block mb-3 font-medium text-gray-700">
+              Last updated at :
+              <span className="text-gray-500"> {updatedAt}</span>
+            </label>
           </div>
         </div>
       </div>

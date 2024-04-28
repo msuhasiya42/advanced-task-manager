@@ -104,7 +104,7 @@ const SignUp = () => {
       <NavBar />
       <section>
         {/* <form onSubmit={handleSubmit}> */}
-        <div className="flex flex-col items-center justify-center mx-auto  lg:py-0">
+        <div className="flex flex-col items-center mt-20 mx-auto  lg:py-0">
           <a
             href="/signup"
             className="flex items-center mb-6 text-xl font-semibold text-gray-900 dark:text-white"
