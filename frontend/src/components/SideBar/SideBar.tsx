@@ -63,7 +63,14 @@ const SideBar = () => {
     setActiveTab("reminders");
   };
   return (
-    <div className="flex text-gray-400 flex-col w-72 px-5  bg-white border-r  dark:bg-gray-900 dark:border-gray-700">
+    <div className="fixed h-screen pt-4 sm:static text-gray-400 flex-col w-72 px-5 bg-white border-r dark:bg-gray-900 dark:border-gray-700">
+      <div className="flex flex-row ml-[-4px] sm:hidden ">
+        <ProfileButton />
+        <div className="ml-24">
+          <LogoutButton />
+        </div>
+      </div>
+      <hr className="border-t sm:hidden border-gray-300 my-4" />
       <nav className="flex-1 space-y-3 ">
         <ul className="menu text-base-content bg-gray-900">
           {/* Sidebar content here */}
@@ -126,10 +133,6 @@ const SideBar = () => {
               <span className="flex-1 ml-3 whitespace-nowrap">Reminders</span>
             </button>
           </li>
-          <div className="block sm:hidden">
-            <ProfileButton />
-            <LogoutButton />
-          </div>
         </ul>
         <div className="border border-gray-500 max-h-[500px] bg-gray-800 rounded-lg overflow-y-auto">
           {tags.map((tag, index) => (

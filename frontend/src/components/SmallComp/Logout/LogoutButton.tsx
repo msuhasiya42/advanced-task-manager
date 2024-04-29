@@ -13,7 +13,7 @@ const LogoutButton = () => {
         className=" text-white flex flex-row justify-center items-center m-1 btn-sm w-24 rounded-md hover:cursor-pointer"
       >
         <LogoutOutlined className="mr-2" />
-        Logout
+        <p className="hidden sm:block"> Logout</p>
       </button>
     </div>
   );
