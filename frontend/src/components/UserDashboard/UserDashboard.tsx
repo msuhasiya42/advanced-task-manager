@@ -86,25 +86,10 @@ const UserDashboard = () => {
     setShowAddTaskModal(false);
   };
 
-  const handleClickOutside = (event: MouseEvent) => {
-    const inputElement = inputRef.current?.input;
-    if (
-      inputElement &&
-      !inputElement.contains(event.target as Node) &&
-      (event.target as HTMLInputElement).type !== "submit"
-    ) {
-      setShowAddTaskModal(false);
-    }
-  };
   useEffect(() => {
     if (showAddTaskModal && inputRef.current != null) {
       inputRef.current.focus();
     }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
   }, [showAddTaskModal]);
 
   return (
