@@ -46,6 +46,11 @@ const AddTags = () => {
       void message.error("Tag already exists.", 2);
     } else {
       try {
+        if (tag.trim() === "") {
+          void message.error("Empty Tag.", 1.5);
+          setShowTextArea(false);
+          return;
+        }
         await userAPI.updateUser(userId, "add", tag);
         addTag(tag);
         void message.success("Tag Added.", 1.5);
