@@ -3,6 +3,7 @@ import {
   ArrowUpOutlined,
   PauseOutlined,
 } from "@ant-design/icons";
+import { SelectProps } from "antd";
 import React from "react";
 
 export const convertToIndianTime = (date: string) => {
@@ -76,3 +77,26 @@ export const getPriorityIcon = (priority: string): React.JSX.Element => {
   }
   return icon;
 };
+
+export const dateOptions = [
+  { label: "Today", value: "today" },
+  { label: "Tomorrow", value: "tomorrow" },
+  { label: "Last Week", value: "lastWeek" },
+  { label: "Next Week", value: "nextWeek" },
+  { label: "Overdue", value: "overdue" },
+];
+
+export const statusOptions = [
+  { label: "Todo", value: "todo" },
+  { label: "In Progress", value: "inProgress" },
+  { label: "Completed", value: "completed" },
+];
+
+export const priorityOptions: SelectProps["options"] = taskPriorities.map(
+  (priority) => {
+    return {
+      label: priority,
+      value: priority,
+    };
+  }
+);

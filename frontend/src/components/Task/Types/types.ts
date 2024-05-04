@@ -1,3 +1,5 @@
+import { CheckboxValueType } from "antd/es/checkbox/Group";
+
 export type TaskCategory = "todo" | "inProgress" | "completed";
 
 export interface TaskType {
@@ -27,4 +29,12 @@ export interface TaskCollection {
   todo: TaskType[];
   inProgress: TaskType[];
   completed: TaskType[];
+}
+
+export interface FilterType {
+  dueDateShortCuts: CheckboxValueType[];
+  dueDate: string;
+  tags: string[];
+  priority: string;
+  status: string
 }

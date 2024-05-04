@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { create } from "zustand";
-import { TaskCategory } from "../components/Task/Types/types";
+import { FilterType, TaskCategory } from "../components/Task/Types/types";
 import { TaskType } from "../components/Task/Types/types";
 
 export type TaskStoreState = {
@@ -36,6 +36,11 @@ export type TaskStoreState = {
   checkTagExists: (tag: string) => boolean;
   addTag: (tag: string) => void;
   deleteTag: (tag: string) => void;
+
+  // filter data
+  filter: FilterType;
+  applyFilter: (filter: FilterType) => void;
+  clearFilter: () => void;
 };
 
 const useTaskStore = create<TaskStoreState>((set) => {

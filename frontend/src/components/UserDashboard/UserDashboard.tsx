@@ -7,16 +7,20 @@ import {
   AlignLeftOutlined,
   DoubleLeftOutlined,
   DownOutlined,
+  FilterOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import { Button, Input, InputRef, Modal, message } from "antd";
+import { Button, Input, InputRef, Modal, Popover, message } from "antd";
 import { taskAPI } from "../../ApiCalls";
 import useAuthStore from "../../Zustand/authStore";
 import useTaskStore from "../../Zustand/taskStore";
+import Filter from "../Filter/Filter";
+import { TaskCategory } from "../Task/Types/types";
 
 const UserDashboard = () => {
   const [showSidebar, setShowSidebar] = useState(true); // Set to true by default
   const [showAddTaskModal, setShowAddTaskModal] = useState(false);
+  const [showFilter, setShowFilter] = useState(false);
 
   useEffect(() => {
     // Check screen size on component mount
@@ -38,15 +42,26 @@ const UserDashboard = () => {
     setShowSidebar(!showSidebar);
   };
 
+  const toggleFilter = () => {
+    setShowFilter(!showFilter);
+  };
+
   const toggleAddTaskFunc = () => {
     setShowAddTaskModal(!showAddTaskModal);
+  };
+
+  const filterContent = () => {
+    return <Filter setShowFilter={setShowFilter} />;
   };
 
   const user = useAuthStore((state) => state.user?.userId);
   const { addTaskDataStore, addTaskFilteredTasksStore } = useTaskStore();
   const inputRef = useRef<InputRef>(null);
 
-  const [taskData, setTaskData] = useState({
+  const [taskData, setTaskData] = useState<{
+    title: string;
+    status: TaskCategory;
+  }>({
     title: "",
     status: "todo",
   });
@@ -170,6 +185,31 @@ const UserDashboard = () => {
           </div>
         </div>
       </Modal>
+
+      <Popover
+        content={filterContent}
+        title={
+          <div className="flex gap-1">
+            <FilterOutlined className="text-lg" />{" "}
+            <p className="text-lg">Filter</p>
+          </div>
+        }
+        trigger="click"
+        open={showFilter}
+      >
+        <Button
+          icon={
+            showAddTaskModal ? (
+              <DownOutlined className="text-white" />
+            ) : (
+              <FilterOutlined className="text-white" />
+            )
+          }
+          onClick={toggleFilter}
+          className=" fixed bottom-14 right-4 bg-blue-500 text-white rounded-full shadow-md z-50"
+        ></Button>
+      </Popover>
+
       <Button
         icon={
           showAddTaskModal ? (
