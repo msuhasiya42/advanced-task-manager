@@ -64,10 +64,10 @@ const useTaskStore = create<TaskStoreState>((set) => {
   tags: initialTags,
 
 
-  setAllTasks: (tasks) => set({ allTasks: tasks }),
+  setAllTasks: (tasks: TaskType[]) => set({ allTasks: tasks }),
 
-  setTasksDataByCategory: (category, newTasks) => // Adjusted the type here
-    set((state) => ({
+  setTasksDataByCategory: (category:TaskCategory, newTasks: TaskType[]) => // Adjusted the type here
+    set((state: TaskStoreState) => ({
       tasksDataByCategory: {
         ...state.tasksDataByCategory,
         [category]: newTasks,
@@ -75,21 +75,21 @@ const useTaskStore = create<TaskStoreState>((set) => {
     })),
 
   copyTasks: () =>
-    set((state) => ({
+    set((state:TaskStoreState) => ({
       filteredTasks: state.tasksDataByCategory
     })),
 
   // add new task
-  addTaskDataStore: (category, task) =>
-    set((state) => ({
+  addTaskDataStore: (category: TaskCategory, task: TaskType) =>
+    set((state: TaskStoreState) => ({
       tasksDataByCategory: {
         ...state.tasksDataByCategory,
         [category]: [...state.tasksDataByCategory[category], task],
       },
     })),
 
-  addTaskFilteredTasksStore: (category, task) =>
-    set((state) => ({
+  addTaskFilteredTasksStore: (category: TaskCategory, task: TaskType) =>
+    set((state: TaskStoreState) => ({
       filteredTasks: {
         ...state.filteredTasks,
         [category]: [...state.filteredTasks[category], task],
@@ -97,29 +97,29 @@ const useTaskStore = create<TaskStoreState>((set) => {
     })),
 
   // update task
-  updateTaskDataStore: (category, taskId, updatedTask) =>
-    set((state) => ({
+  updateTaskDataStore: (category: TaskCategory, taskId: string, updatedTask: TaskType) =>
+    set((state: TaskStoreState) => ({
       tasksDataByCategory: {
         ...state.tasksDataByCategory,
-        [category]: state.tasksDataByCategory[category].map((task) =>
+        [category]: state.tasksDataByCategory[category].map((task: TaskType) =>
           task._id === taskId ? updatedTask : task
         ),
       },
     })),
 
-  updateTaskFilteredTasksStore: (category, taskId, updatedTask) =>
-    set((state) => ({
+  updateTaskFilteredTasksStore: (category: TaskCategory, taskId: string, updatedTask: TaskType) =>
+    set((state: TaskStoreState) => ({
       filteredTasks: {
         ...state.filteredTasks,
-        [category]: state.filteredTasks[category].map((task) =>
+        [category]: state.filteredTasks[category].map((task: TaskType) =>
           task._id === taskId ? updatedTask : task
         ),
       },
     })),
 
   // delete task
-  deleteTaskFromDataStore: (category, taskId) =>
-    set((state) => ({
+  deleteTaskFromDataStore: (category: TaskCategory, taskId: string) =>
+    set((state: TaskStoreState) => ({
       tasksDataByCategory: {
         ...state.tasksDataByCategory,
         [category]: state.tasksDataByCategory[category].filter(
@@ -128,8 +128,8 @@ const useTaskStore = create<TaskStoreState>((set) => {
       },
     })),
 
-  deleteTaskFilteredTasksStore: (category, taskId) =>
-    set((state) => ({
+  deleteTaskFilteredTasksStore: (category: TaskCategory, taskId: string) =>
+    set((state: TaskStoreState) => ({
       filteredTasks: {
         ...state.filteredTasks,
         [category]: state.filteredTasks[category].filter(
@@ -139,11 +139,11 @@ const useTaskStore = create<TaskStoreState>((set) => {
     })),
 
   // today's task: due date today
-  setTodaysTasks: (category) => {
-    set((state) => ({
+  setTodaysTasks: (category: TaskCategory) => {
+    set((state: TaskStoreState) => ({
       filteredTasks: {
         ...state.filteredTasks,
-        [category]: state.filteredTasks[category].filter((task) => {
+        [category]: state.filteredTasks[category].filter((task: TaskType) => {
           const dueDate = new Date(task.dueDate);
           const today = new Date();
           return (
@@ -157,11 +157,11 @@ const useTaskStore = create<TaskStoreState>((set) => {
   },
 
   // Upcoming tasks
-  setUpcomingTasks: (category) => {
-    set((state) => ({
+  setUpcomingTasks: (category: TaskCategory) => {
+    set((state: TaskStoreState) => ({
       filteredTasks: {
         ...state.filteredTasks,
-        [category]: state.filteredTasks[category].filter((task) => {
+        [category]: state.filteredTasks[category].filter((task: TaskType) => {
           const dueDate = new Date(task.dueDate);
           const today = new Date();
           return (
@@ -175,30 +175,30 @@ const useTaskStore = create<TaskStoreState>((set) => {
   },
 
   // Filter by tag
-  filterTasksByTag: (category, tag) =>
-    set((state) => ({
+  filterTasksByTag: (category: TaskCategory, tag: string) =>
+    set((state: TaskStoreState) => ({
       filteredTasks: {
         ...state.filteredTasks,
         [category]: state.filteredTasks[category].filter(
-          (task) => task.tags.includes(tag)
+          (task: TaskType) => task.tags.includes(tag)
         ),
       },
     })),
 
   // Filter task by having at least one tag
-  filterTaskByHavingTag: (category) =>
-    set((state) => ({
+  filterTaskByHavingTag: (category: TaskCategory) =>
+    set((state: TaskStoreState) => ({
       filteredTasks: {
         ...state.filteredTasks,
         [category]: state.filteredTasks[category].filter(
-          (task) => task.tags.length !== 0
+          (task: TaskType) => task.tags.length !== 0
         ),
       },
     })),
 
   // delete tag from all tasks linked to it
-  removeTagFromAllTasks: (tag) =>
-    set((state) => ({
+  removeTagFromAllTasks: (tag: string) =>
+    set((state: TaskStoreState) => ({
       tasksDataByCategory: {
         todo: removeTagFromTasksByCategory(state.tasksDataByCategory.todo, tag),
         inProgress: removeTagFromTasksByCategory(
@@ -239,7 +239,7 @@ const useTaskStore = create<TaskStoreState>((set) => {
 
   // Add new tag
   addTag: (tag: string) =>
-    set((state) => {
+    set((state: TaskStoreState) => {
       const updatedTags = [...state.tags, tag];
       localStorage.setItem("tags", JSON.stringify(updatedTags));
       return { tags: updatedTags };
@@ -247,7 +247,7 @@ const useTaskStore = create<TaskStoreState>((set) => {
 
   // Delete tag from store and local storage
   deleteTag: (tag: string) =>
-    set((state) => {
+    set((state: TaskStoreState) => {
       const updatedTags = state.tags.filter((t: string) => t !== tag);
       localStorage.setItem("tags", JSON.stringify(updatedTags));
       return { tags: updatedTags };
