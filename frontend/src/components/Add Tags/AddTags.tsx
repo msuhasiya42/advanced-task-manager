@@ -11,7 +11,7 @@ const AddTags = () => {
 
   // using add task from store
   const userId = useAuthStore((state) => state?.user?.userId);
-  const { addTag, checkTagExists } = useTaskStore();
+  const { addTag, checkTagExists, tags } = useTaskStore();
 
   const handleToggle = () => {
     setShowTextArea((prev) => !prev);
@@ -51,7 +51,8 @@ const AddTags = () => {
           setShowTextArea(false);
           return;
         }
-        await userAPI.updateUser(userId, "add", tag);
+        const updatedTags = tags.filter((t: string) => t !== tag);
+        await userAPI.updateUserTag(userId, updatedTags);
         addTag(tag);
         void message.success("Tag Added.", 1.5);
         setTag("");

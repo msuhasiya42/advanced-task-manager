@@ -52,7 +52,7 @@ const UserProfile = () => {
               setUserPhoto(photoData);
 
               // Assuming you have userId available in this scope or as a prop
-              await userAPI.updateUser(user?.userId, "", "", photoData);
+              await userAPI.updateUserPhoto(user?.userId, photoData);
               updateUser({ picture: photoData });
             } else {
               console.error("Failed to compress the image under 500KB");

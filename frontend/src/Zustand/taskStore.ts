@@ -40,14 +40,16 @@ export type TaskStoreState = {
 
   // filter data
   filter: FilterType;
-  applyFilter: (filter: FilterType) => void;
+  updateFilter: (filter: FilterType) => void;
   clearFilter: () => void;
 };
 
 const useTaskStore = create<TaskStoreState>((set) => {
     
   const persistedTags = localStorage.getItem("tags");
+  const persistedFilter = localStorage.getItem("filter");
   const initialTags: string[] = persistedTags ? JSON.parse(persistedTags) : [];
+  const initialFilter: string = persistedFilter ? JSON.parse(persistedFilter) : "";
 
   return {
   allTasks: [],
@@ -69,6 +71,8 @@ const useTaskStore = create<TaskStoreState>((set) => {
   // tags
   tags: initialTags,
 
+  // filter
+  filter: initialFilter,
 
   setAllTasks: (tasks: TaskType[]) => set({ allTasks: tasks }),
 
@@ -260,7 +264,7 @@ const useTaskStore = create<TaskStoreState>((set) => {
     }),
 
     // Apply filter
-  applyFilter: (filter: FilterType) => {
+  updateFilter: (filter: FilterType) => {
     set((state: TaskStoreState) => {
       let filteredTasks: Record<TaskCategory, TaskType[]> = {
         todo: [...state.tasksDataByCategory.todo],
@@ -356,7 +360,8 @@ const useTaskStore = create<TaskStoreState>((set) => {
       });
     }
 
-      return { filteredTasks };
+      localStorage.setItem("filter", JSON.stringify(filter));
+      return { filteredTasks, filter: filter };
     });
   },
 

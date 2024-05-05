@@ -35,8 +35,9 @@ const SideBar = () => {
   const userId = useAuthStore((state) => state?.user?.userId);
 
   const handleDeleteTag = (tag: string) => {
+    const updatedTags = tags.filter((t: string) => t !== tag);
     userAPI
-      .updateUser(userId, "delete", tag)
+      .updateUserTag(userId, updatedTags)
       .then(() => {
         void message.success("Tag Deleted", 1.5);
         deleteTag(tag);

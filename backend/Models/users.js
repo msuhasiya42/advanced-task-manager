@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+// where is simple id
 const userSchema = new mongoose.Schema({
   googleId: {
     type: String,
@@ -30,6 +31,10 @@ const userSchema = new mongoose.Schema({
       type: String,
     },
   ],
+
+  filter: {
+    type: String
+  }
 });
 
 const User = mongoose.model("User", userSchema);

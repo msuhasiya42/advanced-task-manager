@@ -23,6 +23,8 @@ import {
 } from "@ant-design/icons";
 import { CheckboxValueType } from "antd/es/checkbox/Group";
 import dayjs from "dayjs";
+import { userAPI } from "../../ApiCalls";
+import useAuthStore from "../../Zustand/authStore";
 
 interface FilterProps {
   setShowFilter: React.Dispatch<React.SetStateAction<boolean>>;
@@ -39,14 +41,16 @@ const Filter: React.FC<FilterProps> = ({ setShowFilter }) => {
     status: "",
   };
 
-  const { applyFilter, clearFilter } = useTaskStore();
+  const { updateFilter, filter } = useTaskStore();
+  const userId = useAuthStore((state) => state?.user?.userId);
 
   // here first check value from store backend if be null/store null then take initial value
-  const [filterValues, setFilterValues] =
-    React.useState<FilterType>(initialFilterValue);
+  const [filterValues, setFilterValues] = React.useState<FilterType>(
+    filter ?? initialFilterValue
+  );
 
   useEffect(() => {
-    applyFilter(filterValues);
+    updateFilter(filterValues);
   }, [filterValues]);
 
   const tagOptions: SelectProps["options"] = tags
@@ -89,8 +93,6 @@ const Filter: React.FC<FilterProps> = ({ setShowFilter }) => {
         member: value as string[],
       }));
     }
-
-    console.log("filterChange", type, value, filterValues);
   };
 
   const onChange = (checkedValues: CheckboxValueType[]) => {
@@ -100,11 +102,18 @@ const Filter: React.FC<FilterProps> = ({ setShowFilter }) => {
     }));
   };
 
-  const saveFilter = () => {
-    setShowFilter(false);
-
-    void message.success("Filter saved");
-    console.log("saveFilterValues", filterValues);
+  const saveFilter = async () => {
+    try {
+      // Make API call to save filter
+      await userAPI.updateUserFilter(userId, JSON.stringify(filterValues));
+      // Show success message
+      message.success("Filter saved");
+    } catch (error) {
+      // Handle error
+      message.error("Failed to save filter. Please try again.");
+    } finally {
+      setShowFilter(false);
+    }
   };
 
   const resetFilter = () => {

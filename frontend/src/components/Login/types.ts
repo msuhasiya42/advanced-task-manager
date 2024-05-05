@@ -10,6 +10,7 @@ export type User = {
     locale?: string;
     picture: string;
     tags?:string[]
+    filter?:string
     // ... any other properties from your user object ...
   };
 

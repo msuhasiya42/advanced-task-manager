@@ -43,18 +43,21 @@ export const userAPI = {
 
   getUserData: (userId: string) => getFromAPI(`/users/getUserById/${userId}`),
 
-  updateUser: (
-    userId: string | undefined,
-    type: string,
-    tag: string,
-    photo?: string
-  ) => {
-    const body = photo ? { photo } : { tag, type };
+  updateUserTag: (userId: string, tags: string[]) => {
+    return putToAPI(`/users/updateUser/${userId}`, { tags, type: "tag" });
+  },
+
+  updateUserPhoto: (userId: string, photo: string) => {
+    const body = { photo, type: "photo" };
     return putToAPI(`/users/updateUser/${userId}`, body, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
+  },
+
+  updateUserFilter: (userId: string, filter: string) => {
+    return putToAPI(`/users/updateUser/${userId}`, { filter, type: "filter" });
   },
 
   deleteUser: (id: string) => deleteFromAPI(`/users/deleteUser/${id}`),

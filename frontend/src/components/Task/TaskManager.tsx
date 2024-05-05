@@ -15,8 +15,14 @@ const TaskManager = () => {
   const [loading, setLoading] = useState(false);
   const { user } = useAuthStore();
 
-  const { setAllTasks, setTasksDataByCategory, copyTasks, filteredTasks } =
-    useTaskStore();
+  const {
+    setAllTasks,
+    setTasksDataByCategory,
+    copyTasks,
+    filteredTasks,
+    filter,
+    updateFilter,
+  } = useTaskStore();
 
   const fetchAndProcessTasks = async (userId: string) => {
     try {
@@ -44,6 +50,7 @@ const TaskManager = () => {
       setTasksDataByCategory("completed", completed);
 
       copyTasks();
+      updateFilter(filter);
     } catch (err) {
       console.log(err);
     } finally {

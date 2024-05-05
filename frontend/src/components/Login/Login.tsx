@@ -16,20 +16,21 @@ const Login = () => {
 
   const navigate = useNavigate();
   const { login, addListOfUser } = useAuthStore();
-  const { setTags } = useTaskStore();
+  const { setTags, updateFilter } = useTaskStore();
 
   const handleShowPasswordToggle = () => {
     setShowPassword(!showPassword);
   };
 
   const processLogin = (data: User) => {
-    const { userId, name, token, picture, tags, email } = data;
+    const { userId, name, token, picture, tags, filter, email } = data;
     const userData = {
       userId,
       name,
       token,
       email,
       picture,
+      filter,
     };
 
     login(userData);
@@ -37,6 +38,7 @@ const Login = () => {
       addListOfUser(response.data);
     });
     if (tags) setTags(tags);
+    if (filter) updateFilter(JSON.parse(filter));
     navigate("/user-dashboard");
   };
 

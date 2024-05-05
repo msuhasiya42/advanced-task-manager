@@ -50,9 +50,9 @@ const login = async (req, res) => {
           expiresIn: "1h",
         });
 
-        const { _id, name, tags, picture, email } = user;
+        const { _id, name, tags, picture, email,filter } = user;
 
-        res.json({ token, userId: _id, name, tags, picture, email });
+        res.json({ token, userId: _id, name, tags, picture, email, filter });
       } else {
         res.status(401).json({ error: "Invalid credentials" });
       }
@@ -87,10 +87,8 @@ const getUserById = async (req, res) => {
 
 // update the user
 const updateUser = async (req, res) => {
-  const userId = req.params.id;
-  const tag = req.body.tag;
   const type = req.body.type;
-  const photo = req.body.photo;
+  const userId = req.params.id;
 
   try {
     const user = await User.findById(userId);
@@ -99,48 +97,48 @@ const updateUser = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    // If photo data is provided, update photo and return
-    if (photo) {
-      user.picture = photo;
-      await user.save();
-      return res.json({ user, message: "Photo updated successfully" });
+    if (!type) {
+      return res.status(400).json({ error: "Type field is required" });
     }
 
-    // If tag data is provided, handle tag addition or deletion
-    if (tag && type) {
-      if (type == "add") {
-        user.tags.push(tag);
-      } else if (type == "delete") {
-        const index = user.tags.indexOf(tag);
-        if (index > -1) {
-          user.tags.splice(index, 1);
-          // Update tasks where user == userId and tag == tag
-          try {
-            const result = await Task.updateMany(
-              // Find tasks where user is userId and tag array contains the specified tag
-              { user: userId, tags: { $in: [tag] } },
-              // Update those tasks
-              { $pull: { tags: tag } }
-            );
-            console.log(result);
-            console.log(`Tags updated for tasks linked to user ${userId}`);
-          } catch (error) {
-            console.error("Error updating tags:", error);
-          }
-        } else {
-          return res.status(404).json({ error: "Tag not found" });
+    switch (type) {
+      case "photo":
+        const photo = req.body.photo;
+        if (!photo) {
+          return res.status(400).json({ error: "Photo data is required" });
         }
-      }
-    }
+        user.picture = photo;
+        await user.save();
+        return res.json({ message: "Photo updated successfully" });
 
-    await user.save();
-    return res.json({ user });
+      case "filter":
+        const filter = req.body.filter;
+        if (!filter) {
+          return res.status(400).json({ error: "Filter data is required" });
+        }
+        user.filter = filter;
+        await user.save();
+        return res.json({ message: "Filter updated successfully" });
+
+      case "tag":
+        const tags = req.body.tags;
+        if (!tags) {
+          return res.status(400).json({ error: "Tags data is required" });
+        }
+        user.tags = tags;
+        await user.save();
+        return res.json({ message: "Tags updated successfully" });
+
+      default:
+        return res.status(400).json({ error: "Invalid type" });
+    }
 
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "Failed to update user" });
   }
 };
+
 
 // delete user
 const deleteUser = async (req, res) => {
