@@ -30,16 +30,16 @@ interface FilterProps {
   setShowFilter: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+export const initialFilterValue: FilterType = {
+  dueDateShortCuts: [],
+  dueDate: "",
+  tags: [],
+  priority: "",
+  status: "",
+};
+
 const Filter: React.FC<FilterProps> = ({ setShowFilter }) => {
   const tags = useTaskStore((state) => state.tags);
-
-  const initialFilterValue: FilterType = {
-    dueDateShortCuts: [],
-    dueDate: "",
-    tags: [],
-    priority: "",
-    status: "",
-  };
 
   const { updateFilter, filter } = useTaskStore();
   const userId = useAuthStore((state) => state?.user?.userId);
