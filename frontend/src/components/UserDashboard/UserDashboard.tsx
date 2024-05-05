@@ -21,6 +21,8 @@ const UserDashboard = () => {
   const [showSidebar, setShowSidebar] = useState(true); // Set to true by default
   const [showAddTaskModal, setShowAddTaskModal] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
+  const [isChildPopupActive, setIsChildPopupActive] = useState(false);
+  const sideBarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Check screen size on component mount
@@ -37,6 +39,33 @@ const UserDashboard = () => {
     // Cleanup on component unmount
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  useEffect(() => {
+    // Function to handle clicks outside of sidebar
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        sideBarRef.current &&
+        !sideBarRef.current.contains(event.target as Node) &&
+        !isChildPopupActive
+      ) {
+        // Clicked outside of sidebar and no child popup is active, so hide the sidebar
+        setShowSidebar(false);
+      }
+    };
+
+    // Add event listener when sidebar is shown
+    if (showSidebar) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      // Remove event listener when sidebar is hidden
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    // Clean up by removing event listener when component unmounts
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showSidebar, isChildPopupActive]);
 
   const toggleSidebar = () => {
     setShowSidebar(!showSidebar);
@@ -111,6 +140,11 @@ const UserDashboard = () => {
     }
   }, [showAddTaskModal]);
 
+  const handleChildPopupInteraction = (active: boolean) => {
+    // Update state to indicate whether a child popup is active
+    setIsChildPopupActive(active);
+  };
+
   return (
     <div className="App flex flex-col h-screen">
       <div className="Header-container fixed top-0 w-full z-40">
@@ -118,7 +152,11 @@ const UserDashboard = () => {
       </div>
       <div className="App-body flex flex-1 mt-12 sm:mt-14">
         {/* Render Sidebar based on showSidebar state */}
-        {showSidebar && <SideBar />}
+        {showSidebar && (
+          <div ref={sideBarRef}>
+            <SideBar onChildPopupInteraction={handleChildPopupInteraction} />
+          </div>
+        )}
         <TaskManager />
       </div>
       {/* Conditionally render button only on small screens */}

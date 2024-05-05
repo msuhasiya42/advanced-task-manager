@@ -16,7 +16,10 @@ import {
 import { deleteTagStr, deleteTagTitle } from "../../utils/strings";
 import ProfileButton from "../SmallComp/ProfileButton/ProfileButton";
 import LogoutButton from "../SmallComp/Logout/LogoutButton";
-const SideBar = () => {
+interface Props {
+  onChildPopupInteraction: (active: boolean) => void;
+}
+const SideBar = ({ onChildPopupInteraction }: Props) => {
   const [activeTab, setActiveTab] = useState("all");
 
   const { tags, deleteTag } = useTaskStore();
@@ -165,9 +168,11 @@ const SideBar = () => {
                   }
                   onConfirm={(e) => {
                     e?.stopPropagation();
+                    onChildPopupInteraction(false);
                     handleDeleteTag(tag);
                   }}
                   onCancel={(e) => {
+                    onChildPopupInteraction(false);
                     e?.stopPropagation();
                   }}
                   cancelText="No"
@@ -175,7 +180,10 @@ const SideBar = () => {
                 >
                   <DeleteOutlined
                     className="text-white hover:text-red-400 cursor-pointer"
-                    onClick={(e) => e.stopPropagation()}
+                    onClick={(e) => {
+                      onChildPopupInteraction(true);
+                      e.stopPropagation();
+                    }}
                   />
                 </Popconfirm>
               </div>
