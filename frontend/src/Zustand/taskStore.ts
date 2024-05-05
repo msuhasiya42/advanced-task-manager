@@ -2,6 +2,7 @@
 import { create } from "zustand";
 import { FilterType, TaskCategory } from "../components/Task/Types/types";
 import { TaskType } from "../components/Task/Types/types";
+import dayjs from "dayjs";
 
 export type TaskStoreState = {
   allTasks: TaskType[];
@@ -337,11 +338,14 @@ const useTaskStore = create<TaskStoreState>((set) => {
           case "tomorrow":
             filteredTasks = filterTasksByShortcut(filteredTasks, "tomorrow");
             break;
+          case "currentWeek":
+            filteredTasks = filterTasksByShortcut(filteredTasks, "currentWeek");
+            break;
           case "nextWeek":
             filteredTasks = filterTasksByShortcut(filteredTasks, "nextWeek");
             break;
-          case "pastWeek":
-            filteredTasks = filterTasksByShortcut(filteredTasks, "pastWeek");
+          case "lastWeek":
+            filteredTasks = filterTasksByShortcut(filteredTasks, "lastWeek");
             break;
           case "overdue":
             filteredTasks = filterTasksByShortcut(filteredTasks, "overdue");
@@ -377,6 +381,15 @@ const isDueOnDate = (dueDateString: string, targetDate: Date): boolean => {
     dueDate.getFullYear() === targetDate.getFullYear()
   );
 };
+const getWeekRange = (targetDate: dayjs.Dayjs) => {
+  const startOfWeek = targetDate.startOf('week').toDate(); // Start of the current week (Monday)
+  const endOfWeek = targetDate.endOf('week').toDate(); // End of the current week (Sunday)
+  const startOfPastWeek = targetDate.subtract(1, 'week').startOf('week').toDate(); // Start of the past week (Monday)
+  const endOfPastWeek = targetDate.subtract(1, 'week').endOf('week').toDate(); // End of the past week (Sunday)
+  const startOfNextWeek = targetDate.add(1, 'week').startOf('week').toDate(); // Start of the next week (Monday)
+  const endOfNextWeek = targetDate.add(1, 'week').endOf('week').toDate(); // End of the next week (Sunday)
+  return { startOfWeek, endOfWeek, startOfPastWeek, endOfPastWeek, startOfNextWeek, endOfNextWeek };
+};
 
 const filterTasksByShortcut = (
   tasks: Record<TaskCategory, TaskType[]>,
@@ -386,11 +399,9 @@ const filterTasksByShortcut = (
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate() + 1);
 
-  const nextWeek = new Date(today);
-  nextWeek.setDate(nextWeek.getDate() + 7);
-
-  const pastWeek = new Date(today);
-  pastWeek.setDate(pastWeek.getDate() - 7);
+  const { startOfWeek, endOfWeek, startOfPastWeek, endOfPastWeek, startOfNextWeek, endOfNextWeek } = getWeekRange(
+    dayjs(today)
+  );
 
   let filteredTasks: Record<TaskCategory, TaskType[]> = {
     todo: [...tasks.todo],
@@ -413,35 +424,51 @@ const filterTasksByShortcut = (
         completed: tasks.completed.filter((task) => isDueOnDate(task.dueDate, tomorrow)),
       };
       break;
+    case "currentWeek":
+      filteredTasks = {
+        todo: tasks.todo.filter((task) => {
+          const dueDate = new Date(task.dueDate);
+          return dueDate <= endOfWeek && dueDate >= startOfWeek;
+        }),
+        inProgress: tasks.inProgress.filter((task) => {
+          const dueDate = new Date(task.dueDate);
+          return dueDate <= endOfWeek && dueDate >= startOfWeek;
+        }),
+        completed: tasks.completed.filter((task) => {
+          const dueDate = new Date(task.dueDate);
+          return dueDate <= endOfWeek && dueDate >= startOfWeek;
+        }),
+      };
+      break;
     case "nextWeek":
       filteredTasks = {
         todo: tasks.todo.filter((task) => {
           const dueDate = new Date(task.dueDate);
-          return dueDate > tomorrow && dueDate <= nextWeek;
+          return dueDate <= endOfNextWeek && dueDate >= startOfNextWeek;
         }),
         inProgress: tasks.inProgress.filter((task) => {
           const dueDate = new Date(task.dueDate);
-          return dueDate > tomorrow && dueDate <= nextWeek;
+          return dueDate <= endOfNextWeek && dueDate >= startOfNextWeek;
         }),
         completed: tasks.completed.filter((task) => {
           const dueDate = new Date(task.dueDate);
-          return dueDate > tomorrow && dueDate <= nextWeek;
+          return dueDate <= endOfNextWeek && dueDate >= startOfNextWeek;
         }),
       };
       break;
-    case "pastWeek":
+    case "lastWeek":
       filteredTasks = {
         todo: tasks.todo.filter((task) => {
           const dueDate = new Date(task.dueDate);
-          return dueDate < today && dueDate >= pastWeek;
+          return dueDate <= endOfPastWeek && dueDate >= startOfPastWeek;
         }),
         inProgress: tasks.inProgress.filter((task) => {
           const dueDate = new Date(task.dueDate);
-          return dueDate < today && dueDate >= pastWeek;
+          return dueDate <= endOfPastWeek && dueDate >= startOfPastWeek;
         }),
         completed: tasks.completed.filter((task) => {
           const dueDate = new Date(task.dueDate);
-          return dueDate < today && dueDate >= pastWeek;
+          return dueDate <= endOfPastWeek && dueDate >= startOfPastWeek;
         }),
       };
       break;
@@ -449,15 +476,15 @@ const filterTasksByShortcut = (
       filteredTasks = {
         todo: tasks.todo.filter((task) => {
           const dueDate = new Date(task.dueDate);
-          return dueDate < today;
+          return dueDate < today 
         }),
         inProgress: tasks.inProgress.filter((task) => {
           const dueDate = new Date(task.dueDate);
-          return dueDate < today;
+          return dueDate < today 
         }),
         completed: tasks.completed.filter((task) => {
           const dueDate = new Date(task.dueDate);
-          return dueDate < today;
+          return dueDate < today
         }),
       };
       break;

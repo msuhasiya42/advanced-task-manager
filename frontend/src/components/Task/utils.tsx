@@ -81,22 +81,23 @@ export const getPriorityIcon = (priority: string): React.JSX.Element => {
 export const dateOptions = [
   { label: "Today", value: "today" },
   { label: "Tomorrow", value: "tomorrow" },
+  { label: "Current Week", value: "currentWeek" },
   { label: "Last Week", value: "lastWeek" },
   { label: "Next Week", value: "nextWeek" },
   { label: "Overdue", value: "overdue" },
 ];
 
 export const statusOptions = [
+  { label: "None", value: "" },
   { label: "Todo", value: "todo" },
   { label: "In Progress", value: "inProgress" },
   { label: "Completed", value: "completed" },
 ];
 
-export const priorityOptions: SelectProps["options"] = taskPriorities.map(
-  (priority) => {
-    return {
-      label: priority,
-      value: priority,
-    };
-  }
-);
+export const priorityOptions: SelectProps["options"] = [
+  { label: "None", value: "" },
+  ...taskPriorities.map((priority) => ({
+    label: priority,
+    value: priority,
+  })),
+];

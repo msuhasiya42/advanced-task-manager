@@ -82,20 +82,20 @@ const TasksList = ({ todo, inProgress, completed }: TaskCollection) => {
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="flex flex-col sm:flex-row gap-8 p-8">
           {/* todo list */}
-          <div className="inline-block sm:min-w-[300px]">
-            <div className="max-h-[550px] overflow-y-auto w-full p-3 bg-black rounded-2xl">
-              <div>
-                <p className="mb-2 text-center text-lg  text-white ">Todo</p>
-              </div>
-              <Droppable droppableId="todo">
-                {(provided) => (
-                  <div
-                    className="column"
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                  >
-                    {todo.length !== 0 ? (
-                      todo.map((task, index) => {
+          {todo.length !== 0 && (
+            <div className="inline-block sm:min-w-[300px]">
+              <div className="max-h-[550px] overflow-y-auto w-full p-3 bg-black rounded-2xl">
+                <div>
+                  <p className="mb-2 text-center text-lg  text-white ">Todo</p>
+                </div>
+                <Droppable droppableId="todo">
+                  {(provided) => (
+                    <div
+                      className="column"
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                    >
+                      {todo.map((task, index) => {
                         return (
                           <Draggable
                             key={task._id}
@@ -117,34 +117,32 @@ const TasksList = ({ todo, inProgress, completed }: TaskCollection) => {
                             )}
                           </Draggable>
                         );
-                      })
-                    ) : (
-                      <NoData name="Tasks" />
-                    )}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-              <div>
-                <AddNewTask status="todo" />
+                      })}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+                <div>
+                  <AddNewTask status="todo" />
+                </div>
               </div>
             </div>
-          </div>
+          )}
           {/* in progress list */}
-          <div className="inline-block sm:min-w-[300px]">
-            <div className="max-h-[550px] overflow-y-auto w-full p-3 bg-black rounded-2xl">
-              <Droppable droppableId="inProgress">
-                {(provided) => (
-                  <div
-                    className="column"
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                  >
-                    <p className="mb-2 text-center text-lg   text-white ">
-                      In Progress
-                    </p>
-                    {inProgress.length !== 0 ? (
-                      inProgress.map((task, index) => {
+          {inProgress.length !== 0 && (
+            <div className="inline-block sm:min-w-[300px]">
+              <div className="max-h-[550px] overflow-y-auto w-full p-3 bg-black rounded-2xl">
+                <Droppable droppableId="inProgress">
+                  {(provided) => (
+                    <div
+                      className="column"
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                    >
+                      <p className="mb-2 text-center text-lg   text-white ">
+                        In Progress
+                      </p>
+                      {inProgress.map((task, index) => {
                         return (
                           <Draggable
                             key={task._id}
@@ -166,35 +164,33 @@ const TasksList = ({ todo, inProgress, completed }: TaskCollection) => {
                             )}
                           </Draggable>
                         );
-                      })
-                    ) : (
-                      <NoData name="Tasks" />
-                    )}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-              <div>
-                <AddNewTask status="inProgress" />
+                      })}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+                <div>
+                  <AddNewTask status="inProgress" />
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* completed list */}
-          <div className="inline-block sm:min-w-[300px]">
-            <div className="max-h-[550px] overflow-y-auto w-full p-3 bg-black rounded-2xl">
-              <Droppable droppableId="completed">
-                {(provided) => (
-                  <div
-                    className="column"
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                  >
-                    <p className="mb-2 text-center text-lg bg-black text-white ">
-                      Completed
-                    </p>
-                    {completed.length !== 0 ? (
-                      completed.map((task, index) => {
+          {completed.length !== 0 && (
+            <div className="inline-block sm:min-w-[300px]">
+              <div className="max-h-[550px] overflow-y-auto w-full p-3 bg-black rounded-2xl">
+                <Droppable droppableId="completed">
+                  {(provided) => (
+                    <div
+                      className="column"
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                    >
+                      <p className="mb-2 text-center text-lg bg-black text-white ">
+                        Completed
+                      </p>
+                      {completed.map((task, index) => {
                         return (
                           <Draggable
                             key={task._id}
@@ -216,19 +212,17 @@ const TasksList = ({ todo, inProgress, completed }: TaskCollection) => {
                             )}
                           </Draggable>
                         );
-                      })
-                    ) : (
-                      <NoData name="Tasks" />
-                    )}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-              <div>
-                <AddNewTask status="completed" />
+                      })}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+                <div>
+                  <AddNewTask status="completed" />
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </DragDropContext>
     </div>

@@ -130,13 +130,14 @@ const Filter: React.FC<FilterProps> = ({ setShowFilter }) => {
           <DatePicker
             className="mt-2"
             value={
-              filterValues.dueDate === ""
+              filterValues.dueDate === "" || filterValues.dueDate === undefined
                 ? undefined
                 : dayjs(filterValues.dueDate)
             }
             onChange={(value) =>
-              handleFilterChange("dueDate", value?.toString())
+              handleFilterChange("dueDate", value ? value.toString() : "")
             }
+            allowClear
           />
         </div>
         <div>
@@ -147,9 +148,7 @@ const Filter: React.FC<FilterProps> = ({ setShowFilter }) => {
             <Select
               style={{ width: 110 }}
               placeholder="Priority"
-              value={
-                filterValues.priority === "" ? undefined : filterValues.priority
-              }
+              value={filterValues.priority}
               onChange={(value: string) =>
                 handleFilterChange("priority", value)
               }
@@ -166,9 +165,7 @@ const Filter: React.FC<FilterProps> = ({ setShowFilter }) => {
             <Select
               style={{ width: 110 }}
               placeholder="status"
-              value={
-                filterValues.status === "" ? undefined : filterValues.status
-              }
+              value={filterValues.status}
               onChange={(value: string) => handleFilterChange("status", value)}
               optionLabelProp="label"
               options={statusOptions}
