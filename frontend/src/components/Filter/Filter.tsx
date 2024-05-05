@@ -39,13 +39,14 @@ const Filter: React.FC<FilterProps> = ({ setShowFilter }) => {
     status: "",
   };
 
+  const { applyFilter, clearFilter } = useTaskStore();
+
   // here first check value from store backend if be null/store null then take initial value
   const [filterValues, setFilterValues] =
     React.useState<FilterType>(initialFilterValue);
 
   useEffect(() => {
-    // do quick update of filter
-    console.log("filterUpdated", filterValues);
+    applyFilter(filterValues);
   }, [filterValues]);
 
   const tagOptions: SelectProps["options"] = tags
@@ -107,7 +108,10 @@ const Filter: React.FC<FilterProps> = ({ setShowFilter }) => {
   };
 
   const resetFilter = () => {
+    // clearFilter();
     setFilterValues(initialFilterValue);
+    message.success("Filter reset");
+    // setFilterValues(initialFilterValue);
   };
 
   return (

@@ -257,8 +257,216 @@ const useTaskStore = create<TaskStoreState>((set) => {
       localStorage.setItem("tags", JSON.stringify(updatedTags));
       return { tags: updatedTags };
     }),
+
+    // Apply filter
+  applyFilter: (filter: FilterType) => {
+    set((state: TaskStoreState) => {
+      let filteredTasks: Record<TaskCategory, TaskType[]> = {
+        todo: [...state.tasksDataByCategory.todo],
+        inProgress: [...state.tasksDataByCategory.inProgress],
+        completed: [...state.tasksDataByCategory.completed],
+      };
+
+      // Filter by due date
+      if (filter.dueDate !== "") {
+        const dueDate = new Date(filter.dueDate);
+        filteredTasks = {
+          todo: filteredTasks.todo.filter((task) => {
+            const taskDueDate = new Date(task.dueDate);
+            return (
+              taskDueDate.getDate() === dueDate.getDate() &&
+              taskDueDate.getMonth() === dueDate.getMonth() &&
+              taskDueDate.getFullYear() === dueDate.getFullYear()
+            );
+          }),
+          inProgress: filteredTasks.inProgress.filter((task) => {
+            const taskDueDate = new Date(task.dueDate);
+            return (
+              taskDueDate.getDate() === dueDate.getDate() &&
+              taskDueDate.getMonth() === dueDate.getMonth() &&
+              taskDueDate.getFullYear() === dueDate.getFullYear()
+            );
+          }),
+          completed: filteredTasks.completed.filter((task) => {
+            const taskDueDate = new Date(task.dueDate);
+            return (
+              taskDueDate.getDate() === dueDate.getDate() &&
+              taskDueDate.getMonth() === dueDate.getMonth() &&
+              taskDueDate.getFullYear() === dueDate.getFullYear()
+            );
+          }),
+        };
+      }
+
+      // Filter by priority
+      if (filter.priority !== "") {
+        filteredTasks = {
+          todo: filteredTasks.todo.filter((task) => task.priority === filter.priority),
+          inProgress: filteredTasks.inProgress.filter((task) => task.priority === filter.priority),
+          completed: filteredTasks.completed.filter((task) => task.priority === filter.priority),
+        };
+      }
+
+      // Filter by status
+      if (filter.status !== "") {
+        filteredTasks = {
+          todo: filteredTasks.todo.filter((task) => task.status === filter.status),
+          inProgress: filteredTasks.inProgress.filter((task) => task.status === filter.status),
+          completed: filteredTasks.completed.filter((task) => task.status === filter.status),
+        };
+      }
+
+      // Filter by tags
+      if (filter.tags.length > 0) {
+        filter.tags.forEach((tag) => {
+          filteredTasks = {
+            todo: filteredTasks.todo.filter((task) => task.tags.includes(tag)),
+            inProgress: filteredTasks.inProgress.filter((task) => task.tags.includes(tag)),
+            completed: filteredTasks.completed.filter((task) => task.tags.includes(tag)),
+          };
+        });
+      }
+
+      // Filter by due date shortcuts
+    if (filter.dueDateShortCuts.length > 0) {
+      filter.dueDateShortCuts.forEach((shortcut) => {
+        switch (shortcut) {
+          case "today":
+            filteredTasks = filterTasksByShortcut(filteredTasks, "today");
+            break;
+          case "tomorrow":
+            filteredTasks = filterTasksByShortcut(filteredTasks, "tomorrow");
+            break;
+          case "nextWeek":
+            filteredTasks = filterTasksByShortcut(filteredTasks, "nextWeek");
+            break;
+          case "pastWeek":
+            filteredTasks = filterTasksByShortcut(filteredTasks, "pastWeek");
+            break;
+          case "overdue":
+            filteredTasks = filterTasksByShortcut(filteredTasks, "overdue");
+            break;
+          default:
+            break;
+        }
+      });
+    }
+
+      return { filteredTasks };
+    });
+  },
+
+  // Clear filter function
+  clearFilter: () => {
+    set((state: TaskStoreState) => ({
+      filteredTasks: {
+        todo: [...state.tasksDataByCategory.todo],
+        inProgress: [...state.tasksDataByCategory.inProgress],
+        completed: [...state.tasksDataByCategory.completed],
+      },
+    }));
+  },
   }
 });
+
+const isDueOnDate = (dueDateString: string, targetDate: Date): boolean => {
+  const dueDate = new Date(dueDateString);
+  return (
+    dueDate.getDate() === targetDate.getDate() &&
+    dueDate.getMonth() === targetDate.getMonth() &&
+    dueDate.getFullYear() === targetDate.getFullYear()
+  );
+};
+
+const filterTasksByShortcut = (
+  tasks: Record<TaskCategory, TaskType[]>,
+  shortcut: string
+): Record<TaskCategory, TaskType[]> => {
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  const nextWeek = new Date(today);
+  nextWeek.setDate(nextWeek.getDate() + 7);
+
+  const pastWeek = new Date(today);
+  pastWeek.setDate(pastWeek.getDate() - 7);
+
+  let filteredTasks: Record<TaskCategory, TaskType[]> = {
+    todo: [...tasks.todo],
+    inProgress: [...tasks.inProgress],
+    completed: [...tasks.completed],
+  };
+
+  switch (shortcut) {
+    case "today":
+      filteredTasks = {
+        todo: tasks.todo.filter((task) => isDueOnDate(task.dueDate, today)),
+        inProgress: tasks.inProgress.filter((task) => isDueOnDate(task.dueDate, today)),
+        completed: tasks.completed.filter((task) => isDueOnDate(task.dueDate, today)),
+      };
+      break;
+    case "tomorrow":
+      filteredTasks = {
+        todo: tasks.todo.filter((task) => isDueOnDate(task.dueDate, tomorrow)),
+        inProgress: tasks.inProgress.filter((task) => isDueOnDate(task.dueDate, tomorrow)),
+        completed: tasks.completed.filter((task) => isDueOnDate(task.dueDate, tomorrow)),
+      };
+      break;
+    case "nextWeek":
+      filteredTasks = {
+        todo: tasks.todo.filter((task) => {
+          const dueDate = new Date(task.dueDate);
+          return dueDate > tomorrow && dueDate <= nextWeek;
+        }),
+        inProgress: tasks.inProgress.filter((task) => {
+          const dueDate = new Date(task.dueDate);
+          return dueDate > tomorrow && dueDate <= nextWeek;
+        }),
+        completed: tasks.completed.filter((task) => {
+          const dueDate = new Date(task.dueDate);
+          return dueDate > tomorrow && dueDate <= nextWeek;
+        }),
+      };
+      break;
+    case "pastWeek":
+      filteredTasks = {
+        todo: tasks.todo.filter((task) => {
+          const dueDate = new Date(task.dueDate);
+          return dueDate < today && dueDate >= pastWeek;
+        }),
+        inProgress: tasks.inProgress.filter((task) => {
+          const dueDate = new Date(task.dueDate);
+          return dueDate < today && dueDate >= pastWeek;
+        }),
+        completed: tasks.completed.filter((task) => {
+          const dueDate = new Date(task.dueDate);
+          return dueDate < today && dueDate >= pastWeek;
+        }),
+      };
+      break;
+    case "overdue":
+      filteredTasks = {
+        todo: tasks.todo.filter((task) => {
+          const dueDate = new Date(task.dueDate);
+          return dueDate < today;
+        }),
+        inProgress: tasks.inProgress.filter((task) => {
+          const dueDate = new Date(task.dueDate);
+          return dueDate < today;
+        }),
+        completed: tasks.completed.filter((task) => {
+          const dueDate = new Date(task.dueDate);
+          return dueDate < today;
+        }),
+      };
+      break;
+    default:
+      break;
+  }
+
+  return filteredTasks;
+};
 
 const removeTagFromTasksByCategory = (tasks: TaskType[], tagName: string) =>
   tasks.map((task) => {
