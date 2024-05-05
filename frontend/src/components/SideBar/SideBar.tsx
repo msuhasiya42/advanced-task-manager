@@ -177,6 +177,7 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
                   }}
                   cancelText="No"
                   style={{ height: "200px" }}
+                  overlayStyle={{ width: "250px" }}
                 >
                   <DeleteOutlined
                     className="text-white hover:text-red-400 cursor-pointer"
