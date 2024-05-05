@@ -157,10 +157,12 @@ const SideBar = () => {
               </div>
               <div>
                 <Popconfirm
-                  placement="bottomLeft"
+                  placement="top"
                   title={deleteTagTitle}
                   description={deleteTagStr}
-                  okText={<span className="bg-blue-500 rounded-sm">Yes</span>}
+                  okText={
+                    <span className="bg-blue-500 rounded-sm w-12">Yes</span>
+                  }
                   onConfirm={(e) => {
                     e?.stopPropagation();
                     handleDeleteTag(tag);
