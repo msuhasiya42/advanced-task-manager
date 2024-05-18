@@ -44,12 +44,12 @@ export const userAPI = {
   getUserData: (userId: string) => getFromAPI(`/users/getUserById/${userId}`),
 
   updateUserTag: (userId: string, tags: string[]) => {
-    return putToAPI(`/users/updateUser/${userId}`, { tags, type: "tag" });
+    return putToAPI(`/users/update/${userId}`, { tags, type: "tag" });
   },
 
   updateUserPhoto: (userId: string, photo: string) => {
     const body = { photo, type: "photo" };
-    return putToAPI(`/users/updateUser/${userId}`, body, {
+    return putToAPI(`/users/update/${userId}`, body, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -57,10 +57,10 @@ export const userAPI = {
   },
 
   updateUserFilter: (userId: string, filter: string) => {
-    return putToAPI(`/users/updateUser/${userId}`, { filter, type: "filter" });
+    return putToAPI(`/users/update/${userId}`, { filter, type: "filter" });
   },
 
-  deleteUser: (id: string) => deleteFromAPI(`/users/deleteUser/${id}`),
+  deleteUser: (id: string) => deleteFromAPI(`/users/delete/${id}`),
 
   getAllUsers: () => getFromAPI("users/getAllUsers"),
 };
@@ -68,13 +68,13 @@ export const userAPI = {
 // Task related APIs
 export const taskAPI = {
   createTask: (title: string, status: string, user: string) =>
-    postToAPI("tasks/createTask", { title, status, user }),
+    postToAPI("tasks/add", { title, status, user }),
 
   fetchTask: (userId: string) =>
-    getFromAPI(`/tasks/fetchTasksByUserId/${userId}`),
+    getFromAPI(`/tasks/getByUserId/${userId}`),
 
-  deleteTask: (id: string) => deleteFromAPI(`/tasks/deleteTask/${id}`),
+  deleteTask: (id: string) => deleteFromAPI(`/tasks/delete/${id}`),
 
   updateTask: (id: string, task: TaskType) =>
-    putToAPI(`tasks/updateTask/${id}`, { task }),
+    putToAPI(`tasks/update/${id}`, { task }),
 };

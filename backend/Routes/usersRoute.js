@@ -17,9 +17,9 @@ router.post("/signup", createUser);
 router.post("/login", login);
 router.post("/googleLoginApi", googleLogin);
 router.post("/verifyToken", verifyToken);
-router.put("/updateUser/:id", updateUser);
-router.delete("/deleteUser/:id", deleteUser);
-router.get("/getUserById/:id", getUserById);
+router.put("/update/:id", updateUser);
+router.delete("/delete/:id", deleteUser);
+router.get("/getById/:id", getUserById);
 router.get("/getAllUsers", getAllUserNamesAndIds)
 
 module.exports = router;
