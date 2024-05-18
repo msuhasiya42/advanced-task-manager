@@ -99,7 +99,7 @@ const UserDashboard = () => {
         </div>
       )}
 
-      <div className="border-gray-900 border-dashed rounded-lg w-full">
+      <div className="flex justify-center items-center border-gray-900 border-dashed rounded-lg w-full">
         <TaskManager />
       </div>
       {/* Conditionally render button only on small screens */}
@@ -110,9 +110,7 @@ const UserDashboard = () => {
         {showSidebar ? (
           <DoubleLeftOutlined />
         ) : (
-          <>
-            <AlignLeftOutlined />
-          </>
+          <AlignLeftOutlined />
         )}
       </button>
 

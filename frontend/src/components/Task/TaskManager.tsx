@@ -6,7 +6,7 @@ import useTaskStore from "../../Store/taskStore";
 import useAuthStore from "../../Store/authStore";
 import { taskSchema } from "../../zodSpecs/task";
 import { TaskCategory, TaskType } from "./Types/types";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { DragDropContext } from "react-beautiful-dnd";
 
 
 export const filterTasksByStatus = (tasks: TaskType[], status: string) => {
@@ -115,21 +115,19 @@ const TaskManager = () => {
       {loading ? (
         <LoadingPage />
       ) : (
-        <>
-          <div className="h-full bg-gray-900">
-            <DragDropContext onDragEnd={handleDragEnd}>
-              <div className="flex flex-col sm:flex-row gap-8 p-8">
-                {Object.entries(filteredTasks).map(([taskType, tasks]) => (
-                  <TasksList
-                    key={taskType}
-                    tasks={tasks}
-                    taskType={taskType as TaskCategory}
-                  />
-                ))}
-              </div>
-            </DragDropContext>
-          </div>
-        </>
+        <div className="h-full w-full bg-gray-900">
+          <DragDropContext onDragEnd={handleDragEnd}>
+            <div className="flex flex-col sm:flex-row gap-8 p-8">
+              {Object.entries(filteredTasks).map(([taskType, tasks]) => (
+                <TasksList
+                  key={taskType}
+                  tasks={tasks}
+                  taskType={taskType as TaskCategory}
+                />
+              ))}
+            </div>
+          </DragDropContext>
+        </div>
       )}
     </ >
   );
