@@ -1,6 +1,5 @@
 import "../../App.css";
 import React, { useState, useEffect, useRef } from "react";
-import Header from "../Header/Header";
 import TaskManager from "../Task/TaskManager";
 import SideBar from "../SideBar/SideBar";
 import {
@@ -10,12 +9,10 @@ import {
   FilterOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import { Badge, Button, Input, InputRef, Modal, Popover, message } from "antd";
-import { taskAPI } from "../../Api";
-import useAuthStore from "../../Store/authStore";
+import { Badge, Button, Popover } from "antd";
 import useTaskStore from "../../Store/taskStore";
 import Filter, { initialFilterValue } from "../Filter/Filter";
-import { TaskCategory } from "../Task/Types/types";
+import AddTaskModal from "../AddTaskModal/AddTaskModal";
 
 const UserDashboard = () => {
   const [showSidebar, setShowSidebar] = useState(true); // Set to true by default
@@ -49,7 +46,7 @@ const UserDashboard = () => {
         !isChildPopupActive
       ) {
         // Clicked outside of sidebar and no child popup is active, so hide the sidebar
-        setShowSidebar(false);
+        window.innerWidth < 640 && setShowSidebar(false);
       }
     };
 
@@ -83,62 +80,10 @@ const UserDashboard = () => {
     return <Filter setShowFilter={setShowFilter} />;
   };
 
-  const user = useAuthStore((state) => state.user?.userId);
-  const { addTaskDataStore, addTaskFilteredTasksStore, filter } =
-    useTaskStore();
-  const inputRef = useRef<InputRef>(null);
-
-  const [taskData, setTaskData] = useState<{
-    title: string;
-    status: TaskCategory;
-  }>({
-    title: "",
-    status: "todo",
-  });
+  const { filter } = useTaskStore();
 
   const filterNotEmpty =
     JSON.stringify(filter) !== JSON.stringify(initialFilterValue);
-
-  const handleInputChange = (e: { target: { name: string; value: any } }) => {
-    const { name, value } = e.target;
-    setTaskData({ ...taskData, [name]: value });
-  };
-
-  const onSaveTask = (event: React.FormEvent) => {
-    const { title, status } = taskData;
-    event.preventDefault();
-
-    if (user) {
-      if (title.trim() === "") {
-        setShowAddTaskModal(false);
-        return;
-      }
-      taskAPI
-        .createTask(title, status, user)
-        .then((response) => {
-          console.log("Response", response.data.task);
-          const newTask = response.data.task;
-          addTaskDataStore(status, newTask);
-          addTaskFilteredTasksStore(status, newTask);
-          void message.success("Task Added", 1.5);
-        })
-        .catch((error) => {
-          console.error(error);
-          void message.error("Error: Task Not added", 1.5);
-        });
-    }
-    setTaskData({
-      title: "",
-      status: "todo",
-    });
-    setShowAddTaskModal(false);
-  };
-
-  useEffect(() => {
-    if (showAddTaskModal && inputRef.current != null) {
-      inputRef.current.focus();
-    }
-  }, [showAddTaskModal]);
 
   const handleChildPopupInteraction = (active: boolean) => {
     // Update state to indicate whether a child popup is active
@@ -146,17 +91,15 @@ const UserDashboard = () => {
   };
 
   return (
-    <div className="App flex flex-col h-screen">
-      <div className="Header-container fixed top-0 w-full z-40">
-        <Header />
-      </div>
-      <div className="App-body flex flex-1 mt-12 sm:mt-14">
-        {/* Render Sidebar based on showSidebar state */}
-        {showSidebar && (
-          <div ref={sideBarRef}>
-            <SideBar onChildPopupInteraction={handleChildPopupInteraction} />
-          </div>
-        )}
+    <div className="flex h-full w-full border-gray-900">
+      {/* Render Sidebar based on showSidebar state */}
+      {showSidebar && (
+        <div ref={sideBarRef} className="h-full">
+          <SideBar onChildPopupInteraction={handleChildPopupInteraction} />
+        </div>
+      )}
+
+      <div className="border-gray-900 border-dashed rounded-lg w-full">
         <TaskManager />
       </div>
       {/* Conditionally render button only on small screens */}
@@ -172,63 +115,10 @@ const UserDashboard = () => {
           </>
         )}
       </button>
-      {/* separate out this add task modal */}
-      <Modal
-        open={showAddTaskModal}
-        onCancel={() => setShowAddTaskModal(false)}
-        closable
-        width={350}
-        centered
-        footer={
-          <>
-            <Button size="small" onClick={() => setShowAddTaskModal(false)}>
-              Cancel
-            </Button>
 
-            <Button
-              size="small"
-              type="primary"
-              className="text-white bg-blue-500"
-              onClick={(e) => onSaveTask(e)}
-            >
-              Save
-            </Button>
-          </>
-        }
-      >
-        <div className="flex flex-col">
-          <p className="text-center text-lg font-bold bg-gradient-to-r from-blue-400 to-purple-600 text-transparent bg-clip-text">
-            Add Task
-          </p>
+      <AddTaskModal showAddTaskModal={showAddTaskModal} setShowAddTaskModal={setShowAddTaskModal} />
 
-          <div className="w-[full] mt-2">
-            {/* <label className="block mb-3 font-medium text-gray-700">Status</label> */}
-            <Input
-              ref={inputRef}
-              required
-              name="title"
-              defaultValue={taskData.title}
-              value={taskData.title}
-              onChange={handleInputChange}
-              placeholder=" Task Title"
-              className="w-full mb-2"
-            />
-            <select
-              id="status"
-              name="status"
-              className="block w-full xt-select rounded-md py-1 px-2 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
-              aria-label="Select"
-              value={taskData.status}
-              onChange={handleInputChange}
-            >
-              <option value="todo">Todo</option>
-              <option value="inProgress">In Progress</option>
-              <option value="completed">Completed</option>
-            </select>
-          </div>
-        </div>
-      </Modal>
-
+      {/* bottom buttons */}
       <Badge className="fixed bottom-20 right-4" dot={filterNotEmpty}>
         <Popover
           content={filterContent}

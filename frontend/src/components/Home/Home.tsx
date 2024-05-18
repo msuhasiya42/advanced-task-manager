@@ -1,5 +1,4 @@
 import React from "react";
-import NavBar from "../NavBar/NavBarHomePage";
 import { Navigate, Link } from "react-router-dom";
 import useAuthStore from "../../Store/authStore";
 
@@ -39,7 +38,6 @@ const Home = () => {
 
   return (
     <div>
-      <NavBar />
       <div className="text-center p-5">
         <h1 className="text-4xl font-bold mb-4">
           Welcome to Your Todo Manager

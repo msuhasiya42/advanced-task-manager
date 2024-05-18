@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import NavBar from "../NavBar/NavBarHomePage";
 import { userAPI } from "../../Api";
 import { getAvatar } from "../UserProfile/avatarCategories";
 import { lorelei } from "@dicebear/collection";
@@ -101,7 +100,6 @@ const SignUp = () => {
 
   return (
     <div className="bg-gray-900 flex h-screen flex-col overflow-y-hidden overflow-x-hidden">
-      <NavBar />
       <section>
         {/* <form onSubmit={handleSubmit}> */}
         <div className="flex flex-col items-center mt-20 mx-auto  lg:py-0">

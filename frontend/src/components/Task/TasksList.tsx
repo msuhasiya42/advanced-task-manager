@@ -3,17 +3,21 @@ import TaskCard from "./TaskCard";
 import { taskAPI } from "../../Api";
 import useTaskStore from "../../Store/taskStore";
 import { TaskCategory, TaskCollection, TaskType } from "./Types/types";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import "react-datepicker/dist/react-datepicker.css";
 import { message } from "antd";
 import NoData from "./NoData";
 import AddNewTask from "./AddNewTask";
+import { Draggable, Droppable } from "react-beautiful-dnd";
+import { taskNameMap } from "./utils";
 
-const TasksList = ({ todo, inProgress, completed }: TaskCollection) => {
+interface taskListProps {
+  tasks: TaskType[];
+  taskType: TaskCategory;
+}
+
+const TasksList = ({ tasks, taskType }: taskListProps) => {
   // store
   const {
-    setTasksDataByCategory,
-    copyTasks,
     deleteTaskFromDataStore,
     deleteTaskFilteredTasksStore,
   } = useTaskStore();
@@ -32,200 +36,58 @@ const TasksList = ({ todo, inProgress, completed }: TaskCollection) => {
       });
   };
 
-  // drag and drop
-  const handleDragEnd = (result: any) => {
-    const { destination, source } = result;
-
-    // Item dropped outside of a droppable area : no destination
-    if (!destination) {
-      return;
-    }
-
-    // Item dropped in the same position
-    if (
-      destination.droppableId === source.droppableId &&
-      destination.index === source.index
-    ) {
-      return;
-    }
-
-    const tasksMap: Record<TaskCategory, TaskType[]> = {
-      todo: todo,
-      inProgress: inProgress,
-      completed: completed,
-    };
-
-    // Update tasks function
-    const updateTasks = (from: TaskCategory, to: TaskCategory) => {
-      const sourceTasks = Array.from(tasksMap[from]);
-      const [removed] = sourceTasks.splice(source.index, 1);
-
-      if (from !== to) {
-        removed.status = to;
-        // api call to change status of task when drag and drop
-        taskAPI.updateTask(removed._id, removed);
-        setTasksDataByCategory(from, sourceTasks);
-      }
-
-      const destinationTasks =
-        from !== to ? Array.from(tasksMap[to]) : sourceTasks;
-      destinationTasks.splice(destination.index, 0, removed);
-      setTasksDataByCategory(to, destinationTasks);
-    };
-
-    updateTasks(source.droppableId, destination.droppableId);
-    copyTasks();
-  };
-
   return (
-    <div className="h-full bg-gray-900">
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <div className="flex flex-col sm:flex-row gap-8 p-8">
-          {/* todo list */}
-          {todo.length !== 0 && (
-            <div className="inline-block sm:min-w-[300px]">
-              <div className="max-h-[550px] overflow-y-auto w-full p-3 bg-black rounded-2xl">
-                <div>
-                  <p className="mb-2 text-center text-lg  text-white ">Todo</p>
-                </div>
-                <Droppable droppableId="todo">
-                  {(provided) => (
-                    <div
-                      className="column"
-                      ref={provided.innerRef}
-                      {...provided.droppableProps}
-                    >
-                      {todo.map((task, index) => {
-                        return (
-                          <Draggable
-                            key={task._id}
-                            draggableId={task._id}
-                            index={index}
-                          >
-                            {(provided) => (
-                              <div
-                                className="task"
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                              >
-                                <TaskCard
-                                  task={task}
-                                  handleDelete={handleDelete}
-                                />
-                              </div>
-                            )}
-                          </Draggable>
-                        );
-                      })}
-                      {provided.placeholder}
-                    </div>
-                  )}
-                </Droppable>
-                <div>
-                  <AddNewTask status="todo" />
-                </div>
+    <>
+      {
+        tasks.length !== 0 && (
+          <div className="inline-block w-[350px]">
+            <div className="max-h-[500px] sm:max-h-[800px] overflow-y-auto w-full p-3 bg-black rounded-2xl">
+              <div>
+                <p className="mb-2 text-center text-lg  text-white ">{taskNameMap[taskType]}</p>
+              </div>
+              <Droppable droppableId={taskType}>
+                {(provided) => (
+                  <div
+                    className="column"
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                  >
+                    {tasks.map((task, index) => {
+                      return (
+                        <Draggable
+                          key={task._id}
+                          draggableId={task._id}
+                          index={index}
+                        >
+                          {(provided) => (
+                            <div
+                              className="task"
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                            >
+                              <TaskCard
+                                task={task}
+                                handleDelete={handleDelete}
+                              />
+                            </div>
+                          )}
+                        </Draggable>
+                      );
+                    })}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+              <div>
+                <AddNewTask status={taskType} />
               </div>
             </div>
-          )}
-          {/* in progress list */}
-          {inProgress.length !== 0 && (
-            <div className="inline-block sm:min-w-[300px]">
-              <div className="max-h-[550px] overflow-y-auto w-full p-3 bg-black rounded-2xl">
-                <Droppable droppableId="inProgress">
-                  {(provided) => (
-                    <div
-                      className="column"
-                      ref={provided.innerRef}
-                      {...provided.droppableProps}
-                    >
-                      <p className="mb-2 text-center text-lg   text-white ">
-                        In Progress
-                      </p>
-                      {inProgress.map((task, index) => {
-                        return (
-                          <Draggable
-                            key={task._id}
-                            draggableId={task._id}
-                            index={index}
-                          >
-                            {(provided) => (
-                              <div
-                                className="task"
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                              >
-                                <TaskCard
-                                  task={task}
-                                  handleDelete={handleDelete}
-                                />
-                              </div>
-                            )}
-                          </Draggable>
-                        );
-                      })}
-                      {provided.placeholder}
-                    </div>
-                  )}
-                </Droppable>
-                <div>
-                  <AddNewTask status="inProgress" />
-                </div>
-              </div>
-            </div>
-          )}
+          </div>
+        )
+      }
+    </>
 
-          {/* completed list */}
-          {completed.length !== 0 && (
-            <div className="inline-block sm:min-w-[300px]">
-              <div className="max-h-[550px] overflow-y-auto w-full p-3 bg-black rounded-2xl">
-                <Droppable droppableId="completed">
-                  {(provided) => (
-                    <div
-                      className="column"
-                      ref={provided.innerRef}
-                      {...provided.droppableProps}
-                    >
-                      <p className="mb-2 text-center text-lg bg-black text-white ">
-                        Completed
-                      </p>
-                      {completed.map((task, index) => {
-                        return (
-                          <Draggable
-                            key={task._id}
-                            draggableId={task._id}
-                            index={index}
-                          >
-                            {(provided) => (
-                              <div
-                                className="task"
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                              >
-                                <TaskCard
-                                  task={task}
-                                  handleDelete={handleDelete}
-                                />
-                              </div>
-                            )}
-                          </Draggable>
-                        );
-                      })}
-                      {provided.placeholder}
-                    </div>
-                  )}
-                </Droppable>
-                <div>
-                  <AddNewTask status="completed" />
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </DragDropContext>
-    </div>
   );
 };
 

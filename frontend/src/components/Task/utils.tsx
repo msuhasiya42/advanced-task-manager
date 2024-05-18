@@ -43,15 +43,15 @@ export const convertToIndianTime = (date: string) => {
     const formattedDate =
       inputDate.getFullYear() == currentDate.getFullYear()
         ? inputDate.toLocaleDateString("en-IN", {
-            // year: "numeric",
-            month: "long",
-            day: "numeric",
-          })
+          // year: "numeric",
+          month: "long",
+          day: "numeric",
+        })
         : inputDate.toLocaleDateString("en-IN", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          });
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
     return formattedDate;
   }
 };
@@ -101,3 +101,10 @@ export const priorityOptions: SelectProps["options"] = [
     value: priority,
   })),
 ];
+
+export const taskNameMap = {
+  todo: "Todo",
+  inProgress: "In Progress",
+  completed: "Completed",
+};
+

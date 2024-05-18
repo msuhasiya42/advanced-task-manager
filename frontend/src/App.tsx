@@ -10,16 +10,16 @@ import ProtectedRoute from "./components/Protected/Protected";
 import Home from "./components/Home/Home";
 import UserProfile from "./components/UserProfile/UserProfile";
 import React from "react";
+import HeaderPage from "./components/HeaderPage/HeaderPage";
 
 function App() {
   return (
     <Router>
+      <HeaderPage />
       <Routes>
-        {/* <Route path="/" element={<Auth />}> */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/" element={<Home />} />
-        {/* </Route> */}
         <Route
           path="/user-dashboard"
           element={
@@ -39,7 +39,7 @@ function App() {
         />
 
         <Route
-          path="/aboutus"
+          path="/about-us"
           element={
             <ProtectedRoute>
               <AboutUs />
@@ -47,7 +47,7 @@ function App() {
           }
         />
         <Route
-          path="/contactus"
+          path="/contact-us"
           element={
             <ProtectedRoute>
               <ContactUs />
@@ -55,7 +55,7 @@ function App() {
           }
         />
 
-        <Route path="/forgotpassword" element={<ForgotPassword />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>

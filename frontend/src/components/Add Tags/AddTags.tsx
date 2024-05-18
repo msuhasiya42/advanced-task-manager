@@ -51,7 +51,7 @@ const AddTags = () => {
           setShowTextArea(false);
           return;
         }
-        const updatedTags = tags.filter((t: string) => t !== tag);
+        const updatedTags = [...tags, tag];
         await userAPI.updateUserTag(userId ?? "", updatedTags);
         addTag(tag);
         void message.success("Tag Added.", 1.5);

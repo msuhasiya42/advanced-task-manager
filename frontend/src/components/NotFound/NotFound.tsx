@@ -1,11 +1,9 @@
 import React from "react";
-import NavBar from "../NavBar/NavBarHomePage";
 
 const NotFound = () => {
   return (
     <>
       <div>
-        <NavBar />
         <section className="bg-white min-h-screen dark:bg-gray-900">
           <div className=" py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
             <div className=" mt-28 mx-auto max-w-screen-sm text-center">

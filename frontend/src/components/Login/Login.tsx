@@ -1,6 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
 import React, { useState } from "react";
-import NavBar from "../NavBar/NavBarHomePage";
 import { userAPI } from "../../Api";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../Store/authStore";
@@ -76,7 +75,6 @@ const Login = () => {
 
   return (
     <div className="h-screen bg-gray-900 flex flex-col">
-      <NavBar />
       <div className="h-screen flex justify-center items-center bg-gray-900 ">
         <div className="w-full max-w-xs">
           <a

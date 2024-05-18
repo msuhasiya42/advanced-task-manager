@@ -6,7 +6,6 @@ const ProfileButton = () => {
   if (!user) {
     // Handle the case where the user is null
     // Maybe set default values or throw an error, etc.
-    alert("User null");
     return; // or handle it accordingly
   }
 

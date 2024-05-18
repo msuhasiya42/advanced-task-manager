@@ -40,7 +40,7 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
   const handleDeleteTag = (tag: string) => {
     const updatedTags = tags.filter((t: string) => t !== tag);
     userAPI
-      .updateUserTag(userId, updatedTags)
+      .updateUserTag(userId as string, updatedTags)
       .then(() => {
         void message.success("Tag Deleted", 1.5);
         deleteTag(tag);
@@ -67,7 +67,7 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
     setActiveTab("reminders");
   };
   return (
-    <div className="fixed h-screen pt-4 sm:static text-gray-400 flex-col w-72 px-5 bg-white border-r dark:bg-gray-900 dark:border-gray-700">
+    <div className="fixed h-full pt-4 sm:static text-gray-400 flex-col w-72 px-5 bg-white border-r dark:bg-gray-900 dark:border-gray-700">
       <div className="flex flex-row ml-[-4px] sm:hidden ">
         <ProfileButton />
         <div className="ml-24">

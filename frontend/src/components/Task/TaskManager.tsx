@@ -5,7 +5,9 @@ import LoadingPage from "../Loading/LoadingPage";
 import useTaskStore from "../../Store/taskStore";
 import useAuthStore from "../../Store/authStore";
 import { taskSchema } from "../../zodSpecs/task";
-import { TaskType } from "./Types/types";
+import { TaskCategory, TaskType } from "./Types/types";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+
 
 export const filterTasksByStatus = (tasks: TaskType[], status: string) => {
   return tasks.filter((task) => task.status === status);
@@ -64,18 +66,72 @@ const TaskManager = () => {
     }
   }, [user]);
 
+  const handleDragEnd = (result: any) => {
+    const { destination, source } = result;
+
+    // Item dropped outside of a droppable area : no destination
+    if (!destination) {
+      return;
+    }
+
+    // Item dropped in the same position
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
+
+    const tasksMap: Record<TaskCategory, TaskType[]> = {
+      todo: filteredTasks.todo,
+      inProgress: filteredTasks.inProgress,
+      completed: filteredTasks.completed
+    };
+
+    // Update tasks function
+    const updateTasks = (from: TaskCategory, to: TaskCategory) => {
+      const sourceTasks = Array.from(tasksMap[from]);
+      const [removed] = sourceTasks.splice(source.index, 1);
+
+      if (from !== to) {
+        removed.status = to;
+        // api call to change status of task when drag and drop
+        taskAPI.updateTask(removed._id, removed);
+        setTasksDataByCategory(from, sourceTasks);
+      }
+
+      const destinationTasks =
+        from !== to ? Array.from(tasksMap[to]) : sourceTasks;
+      destinationTasks.splice(destination.index, 0, removed);
+      setTasksDataByCategory(to, destinationTasks);
+    };
+
+    updateTasks(source.droppableId, destination.droppableId);
+    copyTasks();
+  };
+
   return (
-    <div className="border-gray-900 border-dashed rounded-lg w-full">
+    <>
       {loading ? (
         <LoadingPage />
       ) : (
-        <TasksList
-          todo={filteredTasks.todo}
-          inProgress={filteredTasks.inProgress}
-          completed={filteredTasks.completed}
-        />
+        <>
+          <div className="h-full bg-gray-900">
+            <DragDropContext onDragEnd={handleDragEnd}>
+              <div className="flex flex-col sm:flex-row gap-8 p-8">
+                {Object.entries(filteredTasks).map(([taskType, tasks]) => (
+                  <TasksList
+                    key={taskType}
+                    tasks={tasks}
+                    taskType={taskType as TaskCategory}
+                  />
+                ))}
+              </div>
+            </DragDropContext>
+          </div>
+        </>
       )}
-    </div>
+    </ >
   );
 };
 
