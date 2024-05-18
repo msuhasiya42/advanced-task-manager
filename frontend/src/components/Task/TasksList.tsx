@@ -41,7 +41,7 @@ const TasksList = ({ tasks, taskType }: taskListProps) => {
       {
         tasks.length !== 0 && (
           <div className="inline-block w-[350px]">
-            <div className="max-h-[500px] sm:max-h-[800px] overflow-y-auto w-full p-3 bg-black rounded-2xl">
+            <div className="max-h-[500px] sm:max-h-[650px] overflow-y-auto w-full p-3 bg-black rounded-2xl">
               <div>
                 <p className="mb-2 text-center text-lg  text-white ">{taskNameMap[taskType]}</p>
               </div>
