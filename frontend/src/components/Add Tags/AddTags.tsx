@@ -52,7 +52,7 @@ const AddTags = () => {
           return;
         }
         const updatedTags = tags.filter((t: string) => t !== tag);
-        await userAPI.updateUserTag(userId, updatedTags);
+        await userAPI.updateUserTag(userId ?? "", updatedTags);
         addTag(tag);
         void message.success("Tag Added.", 1.5);
         setTag("");
