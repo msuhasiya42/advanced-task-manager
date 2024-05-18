@@ -91,7 +91,7 @@ const UserDashboard = () => {
   };
 
   return (
-    <div className="flex h-full w-full border-gray-900">
+    <div className="flex h-full w-full">
       {/* Render Sidebar based on showSidebar state */}
       {showSidebar && (
         <div ref={sideBarRef} className="h-full">
@@ -99,7 +99,7 @@ const UserDashboard = () => {
         </div>
       )}
 
-      <div className="flex justify-center items-center border-gray-900 border-dashed rounded-lg w-full">
+      <div className="flex border-gray-900 border-dashed rounded-lg w-full">
         <TaskManager />
       </div>
       {/* Conditionally render button only on small screens */}

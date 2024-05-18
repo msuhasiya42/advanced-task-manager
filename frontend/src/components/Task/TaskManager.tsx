@@ -115,9 +115,9 @@ const TaskManager = () => {
       {loading ? (
         <LoadingPage />
       ) : (
-        <div className="flex h-full w-full bg-gray-900 justify-center">
+        <div className="flex pt-8 h-screen w-full bg-gray-900 justify-center sm:justify-start sm:pl-12">
           <DragDropContext onDragEnd={handleDragEnd}>
-            <div className="flex flex-col sm:flex-row gap-8 p-8">
+            <div className="flex flex-col sm:flex-row gap-8">
               {Object.entries(filteredTasks).map(([taskType, tasks]) => (
                 <TasksList
                   key={taskType}
