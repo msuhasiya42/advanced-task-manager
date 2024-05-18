@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-// import { members } from "../../utils/data/static";
 import useTaskStore from "../../Store/taskStore";
 import {
   Button,
@@ -117,10 +116,9 @@ const Filter: React.FC<FilterProps> = ({ setShowFilter }) => {
   };
 
   const resetFilter = () => {
-    // clearFilter();
     setFilterValues(initialFilterValue);
     message.success("Filter reset");
-    // setFilterValues(initialFilterValue);
+
   };
 
   return (

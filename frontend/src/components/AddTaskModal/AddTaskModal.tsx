@@ -6,12 +6,12 @@ import useAuthStore from '../../Store/authStore';
 import { TaskCategory } from '../Task/Types/types';
 
 
-interface addTaskModalProps {
+interface AddTaskModalProps {
     showAddTaskModal: boolean
     setShowAddTaskModal: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const AddTaskModal = ({ showAddTaskModal, setShowAddTaskModal }: addTaskModalProps) => {
+const AddTaskModal = ({ showAddTaskModal, setShowAddTaskModal }: AddTaskModalProps) => {
 
     const [task, setTask] = useState<{
         title: string;
@@ -23,7 +23,7 @@ const AddTaskModal = ({ showAddTaskModal, setShowAddTaskModal }: addTaskModalPro
 
     const inputRef = useRef<InputRef>(null);
     const user = useAuthStore((state) => state.user?.userId);
-    const { addTaskDataStore, addTaskFilteredTasksStore, filter } =
+    const { addTaskDataStore, addTaskFilteredTasksStore } =
         useTaskStore();
 
     const handleInputChange = (e: { target: { name: string; value: any } }) => {
