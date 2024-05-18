@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import NavBar from "../NavBar/NavBarHomePage";
-import { userAPI } from "../../ApiCalls";
+import { userAPI } from "../../Api";
 import { getAvatar } from "../UserProfile/avatarCategories";
 import { lorelei } from "@dicebear/collection";
 import { message } from "antd";

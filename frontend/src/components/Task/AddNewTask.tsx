@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { taskAPI } from "../../ApiCalls";
-import useTaskStore from "../../Zustand/taskStore";
-import useAuthStore from "../../Zustand/authStore";
+import { taskAPI } from "../../Api";
+import useTaskStore from "../../Store/taskStore";
+import useAuthStore from "../../Store/authStore";
 import { TaskCategory } from "./Types/types";
 import { Input, InputRef, message } from "antd";
 import { CloseOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";

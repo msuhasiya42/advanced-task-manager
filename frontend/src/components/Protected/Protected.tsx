@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import useAuthStore from "../../Zustand/authStore";
+import useAuthStore from "../../Store/authStore";
 import { Navigate } from "react-router-dom";
 interface ChildrenProp {
   children?: ReactNode;

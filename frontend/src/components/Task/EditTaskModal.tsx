@@ -1,20 +1,20 @@
 import React, { useState } from "react";
 import { TaskType } from "./Types/types";
 import { Input, Modal, Select, SelectProps, Space, message } from "antd";
-import { taskAPI } from "../../ApiCalls";
-import useTaskStore from "../../Zustand/taskStore";
+import { taskAPI } from "../../Api";
+import useTaskStore from "../../Store/taskStore";
 import DatePicker from "react-datepicker";
 import { taskPriorities } from "./utils";
 import Editor from "./Editor";
 import DOMPurify from "dompurify";
 
-interface TaskEditDataModalProps {
+interface EditTaskModalProps {
   task: TaskType;
   showModal: boolean;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const TaskEditDataModal = (props: TaskEditDataModalProps) => {
+const EditTaskModal = (props: EditTaskModalProps) => {
   const { task, setShowModal, showModal } = props;
 
   const sanitizedTask = {
@@ -244,4 +244,4 @@ const TaskEditDataModal = (props: TaskEditDataModalProps) => {
   );
 };
 
-export default TaskEditDataModal;
+export default EditTaskModal;

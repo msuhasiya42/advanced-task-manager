@@ -11,9 +11,9 @@ import {
   PlusOutlined,
 } from "@ant-design/icons";
 import { Badge, Button, Input, InputRef, Modal, Popover, message } from "antd";
-import { taskAPI } from "../../ApiCalls";
-import useAuthStore from "../../Zustand/authStore";
-import useTaskStore from "../../Zustand/taskStore";
+import { taskAPI } from "../../Api";
+import useAuthStore from "../../Store/authStore";
+import useTaskStore from "../../Store/taskStore";
 import Filter, { initialFilterValue } from "../Filter/Filter";
 import { TaskCategory } from "../Task/Types/types";
 

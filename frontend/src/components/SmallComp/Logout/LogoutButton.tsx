@@ -1,5 +1,5 @@
 import React from "react";
-import useAuthStore from "../../../Zustand/authStore";
+import useAuthStore from "../../../Store/authStore";
 import { LogoutOutlined } from "@ant-design/icons";
 const LogoutButton = () => {
   const { logout } = useAuthStore();

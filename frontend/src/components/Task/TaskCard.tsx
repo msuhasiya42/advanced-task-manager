@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { TaskType, TasksProps } from "./Types/types";
-import { taskAPI } from "../../ApiCalls";
-import useTaskStore from "../../Zustand/taskStore";
+import { taskAPI } from "../../Api";
+import useTaskStore from "../../Store/taskStore";
 import {
   Button,
   Card,
@@ -11,7 +11,7 @@ import {
   Popover,
   message,
 } from "antd";
-import TaskEditDataModal from "./EditTaskDataModal";
+import EditTaskModal from "./EditTaskModal";
 import {
   AlignLeftOutlined,
   CheckCircleOutlined,
@@ -22,7 +22,7 @@ import {
 import { convertToIndianTime, getPriorityIcon, taskPriorities } from "./utils";
 import { deleteDesc, deleteText } from "../../utils/strings";
 
-const TaskDetails = ({ task, handleDelete }: TasksProps) => {
+const TaskCard = ({ task, handleDelete }: TasksProps) => {
   const {
     title,
     description,
@@ -187,7 +187,7 @@ const TaskDetails = ({ task, handleDelete }: TasksProps) => {
                   <LinkOutlined />
                   <span
                     className=" mr-3 ml-2 text-left whitespace-nowrap"
-                    // sidebar-toggle-item
+                  // sidebar-toggle-item
                   >
                     {attatchments.length}
                   </span>
@@ -217,7 +217,7 @@ const TaskDetails = ({ task, handleDelete }: TasksProps) => {
           </div>
         </div>
       </div>
-      <TaskEditDataModal
+      <EditTaskModal
         task={task}
         showModal={showModal}
         setShowModal={setShowModal}
@@ -226,4 +226,4 @@ const TaskDetails = ({ task, handleDelete }: TasksProps) => {
   );
 };
 
-export default TaskDetails;
+export default TaskCard;

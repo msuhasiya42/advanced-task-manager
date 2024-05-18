@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 // import { members } from "../../utils/data/static";
-import useTaskStore from "../../Zustand/taskStore";
+import useTaskStore from "../../Store/taskStore";
 import {
   Button,
   Checkbox,
@@ -23,8 +23,8 @@ import {
 } from "@ant-design/icons";
 import { CheckboxValueType } from "antd/es/checkbox/Group";
 import dayjs from "dayjs";
-import { userAPI } from "../../ApiCalls";
-import useAuthStore from "../../Zustand/authStore";
+import { userAPI } from "../../Api";
+import useAuthStore from "../../Store/authStore";
 
 interface FilterProps {
   setShowFilter: React.Dispatch<React.SetStateAction<boolean>>;
@@ -105,7 +105,7 @@ const Filter: React.FC<FilterProps> = ({ setShowFilter }) => {
   const saveFilter = async () => {
     try {
       // Make API call to save filter
-      await userAPI.updateUserFilter(userId, JSON.stringify(filterValues));
+      await userAPI.updateUserFilter(userId ?? "", JSON.stringify(filterValues));
       // Show success message
       message.success("Filter saved");
     } catch (error) {

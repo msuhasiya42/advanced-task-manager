@@ -1,7 +1,7 @@
 import React from "react";
 import NavBar from "../NavBar/NavBarHomePage";
 import { Navigate, Link } from "react-router-dom";
-import useAuthStore from "../../Zustand/authStore";
+import useAuthStore from "../../Store/authStore";
 
 const Home = () => {
   const { user } = useAuthStore();

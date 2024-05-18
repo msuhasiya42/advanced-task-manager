@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import useTaskStore from "../../Zustand/taskStore";
-import useAuthStore from "../../Zustand/authStore";
-import { userAPI } from "../../ApiCalls";
+import useTaskStore from "../../Store/taskStore";
+import useAuthStore from "../../Store/authStore";
+import { userAPI } from "../../Api";
 import AddTags from "../Add Tags/AddTags";
 import { TaskCategory } from "../Task/Types/types";
 import { Popconfirm, message } from "antd";
@@ -81,9 +81,8 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
           <li>
             <button
               onClick={handleAllTasks}
-              className={`bold flex items-center w-full p-2 ${
-                activeTab === "all" ? "bg-gray-700" : ""
-              } text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white`}
+              className={`bold flex items-center w-full p-2 ${activeTab === "all" ? "bg-gray-700" : ""
+                } text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white`}
             >
               <HomeOutlined className="text-lg" />
               <span className="ml-3">All Tasks</span>
@@ -96,9 +95,8 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
                 handleFilter(setTodaysTasks);
                 setActiveTab("todays");
               }}
-              className={`bold flex items-center w-full p-2 ${
-                activeTab === "todays" ? "bg-gray-700" : ""
-              } text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white`}
+              className={`bold flex items-center w-full p-2 ${activeTab === "todays" ? "bg-gray-700" : ""
+                } text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white`}
             >
               <SnippetsOutlined className="text-lg" />
               <span className="flex-1 ml-3 whitespace-nowrap">
@@ -114,9 +112,8 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
                 handleFilter(setUpcomingTasks);
                 setActiveTab("upcomingTasks");
               }}
-              className={`bold flex items-center w-full p-2 ${
-                activeTab === "upcomingTasks" ? "bg-gray-700" : ""
-              } text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white`}
+              className={`bold flex items-center w-full p-2 ${activeTab === "upcomingTasks" ? "bg-gray-700" : ""
+                } text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white`}
             >
               <CalendarOutlined className="text-lg" />
               <span className="flex-1 ml-3 whitespace-nowrap">
@@ -129,9 +126,8 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
           <li>
             <button
               onClick={handleTemp}
-              className={`bold flex items-center w-full p-2 ${
-                activeTab === "reminders" ? "bg-gray-700" : ""
-              } text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white`}
+              className={`bold flex items-center w-full p-2 ${activeTab === "reminders" ? "bg-gray-700" : ""
+                } text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white`}
             >
               <BellOutlined className="text-lg" />
               <span className="flex-1 ml-3 whitespace-nowrap">Reminders</span>
@@ -149,11 +145,10 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
                   filterTaskByTagName(tag);
                   setActiveTab(`${index}-${tag}`);
                 }}
-                className={`flex items-center h-10 cursor-pointer ${
-                  activeTab === `${index}-${tag}`
-                    ? "text-cyan-500"
-                    : "text-gray-300"
-                } transition duration-75 rounded-lg group  dark:hover:text-white`}
+                className={`flex items-center h-10 cursor-pointer ${activeTab === `${index}-${tag}`
+                  ? "text-cyan-500"
+                  : "text-gray-300"
+                  } transition duration-75 rounded-lg group  dark:hover:text-white`}
               >
                 <TagOutlined style={{ marginRight: "5px" }} />
                 {tag}

@@ -1,10 +1,10 @@
 /* eslint-disable react/no-unescaped-entities */
 import React, { useState } from "react";
 import NavBar from "../NavBar/NavBarHomePage";
-import { userAPI } from "../../ApiCalls";
+import { userAPI } from "../../Api";
 import { useNavigate } from "react-router-dom";
-import useAuthStore from "../../Zustand/authStore";
-import useTaskStore from "../../Zustand/taskStore";
+import useAuthStore from "../../Store/authStore";
+import useTaskStore from "../../Store/taskStore";
 import { GoogleLogin } from "@react-oauth/google";
 import { ErrorResponse, User } from "./types";
 const Login = () => {

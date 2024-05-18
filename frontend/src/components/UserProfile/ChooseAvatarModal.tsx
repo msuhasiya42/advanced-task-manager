@@ -1,8 +1,8 @@
 import { Avatar, Modal, Tabs } from "antd";
 import React, { useEffect, useState } from "react";
 import { avatarStyles, getAvatar, getCategory } from "./avatarCategories";
-import { userAPI } from "../../ApiCalls";
-import useAuthStore from "../../Zustand/authStore";
+import { userAPI } from "../../Api";
+import useAuthStore from "../../Store/authStore";
 
 interface AvatarModalProps {
   isModalOpen: boolean;
@@ -34,7 +34,7 @@ const ChooseAvatarModal = ({
     setUserPhoto(selectedAvatar);
 
     // Assuming you have userId available in this scope or as a prop
-    userAPI.updateUserPhoto(user?.userId, selectedAvatar);
+    userAPI.updateUserPhoto(user?.userId ?? "", selectedAvatar);
     updateUser({ picture: selectedAvatar });
 
     // Close the modal after selecting an avatar

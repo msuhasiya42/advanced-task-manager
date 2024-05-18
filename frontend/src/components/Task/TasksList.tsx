@@ -1,7 +1,7 @@
 import React from "react";
-import TaskDetails from "./TaskDetails";
-import { taskAPI } from "../../ApiCalls";
-import useTaskStore from "../../Zustand/taskStore";
+import TaskCard from "./TaskCard";
+import { taskAPI } from "../../Api";
+import useTaskStore from "../../Store/taskStore";
 import { TaskCategory, TaskCollection, TaskType } from "./Types/types";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import "react-datepicker/dist/react-datepicker.css";
@@ -109,7 +109,7 @@ const TasksList = ({ todo, inProgress, completed }: TaskCollection) => {
                                 {...provided.draggableProps}
                                 {...provided.dragHandleProps}
                               >
-                                <TaskDetails
+                                <TaskCard
                                   task={task}
                                   handleDelete={handleDelete}
                                 />
@@ -156,7 +156,7 @@ const TasksList = ({ todo, inProgress, completed }: TaskCollection) => {
                                 {...provided.draggableProps}
                                 {...provided.dragHandleProps}
                               >
-                                <TaskDetails
+                                <TaskCard
                                   task={task}
                                   handleDelete={handleDelete}
                                 />
@@ -204,7 +204,7 @@ const TasksList = ({ todo, inProgress, completed }: TaskCollection) => {
                                 {...provided.draggableProps}
                                 {...provided.dragHandleProps}
                               >
-                                <TaskDetails
+                                <TaskCard
                                   task={task}
                                   handleDelete={handleDelete}
                                 />

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import TasksList from "./TasksList";
-import { taskAPI } from "../../ApiCalls";
+import { taskAPI } from "../../Api";
 import LoadingPage from "../Loading/LoadingPage";
-import useTaskStore from "../../Zustand/taskStore";
-import useAuthStore from "../../Zustand/authStore";
+import useTaskStore from "../../Store/taskStore";
+import useAuthStore from "../../Store/authStore";
 import { taskSchema } from "../../zodSpecs/task";
 import { TaskType } from "./Types/types";
 

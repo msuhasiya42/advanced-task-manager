@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { userAPI } from "../../ApiCalls";
-import useAuthStore from "../../Zustand/authStore";
+import { userAPI } from "../../Api";
+import useAuthStore from "../../Store/authStore";
 import { Input, InputRef, message } from "antd";
-import useTaskStore from "../../Zustand/taskStore";
+import useTaskStore from "../../Store/taskStore";
 
 const AddTags = () => {
   const [showTextArea, setShowTextArea] = useState(false);

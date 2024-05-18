@@ -1,6 +1,6 @@
 import { List } from "antd";
 import React, { useEffect, useRef } from "react";
-import useTaskStore from "../../../Zustand/taskStore";
+import useTaskStore from "../../../Store/taskStore";
 import { TaskType } from "../../Task/Types/types";
 import { CheckCircleTwoTone, ClockCircleTwoTone } from "@ant-design/icons";
 // import TaskEditDataModal from "../../Task/TaskEditDataModal";
