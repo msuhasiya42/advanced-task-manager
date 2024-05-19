@@ -1,5 +1,6 @@
 import axios from "redaxios";
 import { TaskType } from "../components/Task/Types/types";
+import { Tag } from "../Store/taskStore";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
@@ -43,7 +44,7 @@ export const userAPI = {
 
   getUserData: (userId: string) => getFromAPI(`/users/getUserById/${userId}`),
 
-  updateUserTag: (userId: string, tags: string[]) => {
+  updateUserTag: (userId: string, tags: Tag[]) => {
     return putToAPI(`/users/update/${userId}`, { tags, type: "tag" });
   },
 

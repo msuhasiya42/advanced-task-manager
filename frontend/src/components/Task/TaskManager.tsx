@@ -4,7 +4,6 @@ import { taskAPI } from "../../Api";
 import LoadingPage from "../Loading/LoadingPage";
 import useTaskStore from "../../Store/taskStore";
 import useAuthStore from "../../Store/authStore";
-import { taskSchema } from "../../zodSpecs/task";
 import { TaskCategory, TaskType } from "./Types/types";
 import { DragDropContext } from "react-beautiful-dnd";
 
@@ -32,20 +31,11 @@ const TaskManager = () => {
       const response = await taskAPI.fetchTask(userId);
       const fetchedTasks = response.data.tasks;
 
-      const validatedTasks = fetchedTasks.map((task: TaskType) => {
-        try {
-          return taskSchema.parse(task);
-        } catch (error: any) {
-          console.error(`Invalid task: ${error.message}`);
-          return null;
-        }
-      });
+      setAllTasks(fetchedTasks);
 
-      setAllTasks(validatedTasks);
-
-      const todos = filterTasksByStatus(validatedTasks, "todo");
-      const inprogress = filterTasksByStatus(validatedTasks, "inProgress");
-      const completed = filterTasksByStatus(validatedTasks, "completed");
+      const todos = filterTasksByStatus(fetchedTasks, "todo");
+      const inprogress = filterTasksByStatus(fetchedTasks, "inProgress");
+      const completed = filterTasksByStatus(fetchedTasks, "completed");
 
       setTasksDataByCategory("todo", todos);
       setTasksDataByCategory("inProgress", inprogress);

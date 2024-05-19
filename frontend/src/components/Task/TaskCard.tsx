@@ -134,14 +134,15 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
                     tags.length !== 0 &&
                     tags.map((tag) => (
                       <span
-                        key={tag}
-                        className="text-xxs text-center px-2 py-1 my-1 mr-1 bg-blue-500 rounded-xl dark:bg-blue-600 dark:text-white"
+                        key={tag.name}
+                        className="text-xxs font-thin text-center px-2 py-1 mt-2 mr-1 rounded-xl dark:text-white"
+                        style={{ backgroundColor: tag.color }}
                       >
-                        {tag}
+                        {tag.name}
                       </span>
                     ))}
                 </div>
-                <h1 className="text-sm font-extralight text-gray-400   dark:text-gray-300">
+                <h1 className="text-sm font-extralight text-gray-400 dark:text-gray-300">
                   {title}
                 </h1>
               </div>

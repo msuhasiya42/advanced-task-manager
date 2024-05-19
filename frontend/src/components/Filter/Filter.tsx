@@ -53,13 +53,24 @@ const Filter: React.FC<FilterProps> = ({ setShowFilter }) => {
   }, [filterValues]);
 
   const tagOptions: SelectProps["options"] = tags
-    .map((tag) => {
-      return {
-        label: tag,
-        value: tag,
-      };
-    })
-    .sort((a, b) => a.label.localeCompare(b.label));
+    .map((tag) => ({
+      label: (
+        <span>
+          <span
+            style={{
+              display: "inline-block",
+              width: "12px",
+              height: "12px",
+              backgroundColor: tag.color,
+              marginRight: "8px",
+            }}
+          />
+          {tag.name}
+        </span>
+      ),
+      value: tag.name,
+    }))
+    .sort((a, b) => a.label.props.children[1].localeCompare(b.label.props.children[1]));
 
   const handleFilterChange = (
     type: string,

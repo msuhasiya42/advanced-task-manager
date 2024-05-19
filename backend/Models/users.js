@@ -1,6 +1,17 @@
 const mongoose = require("mongoose");
 
-// where is simple id
+const tagSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  color: {
+    type: String,
+    required: true,
+    default: "#2196F3",
+  },
+});
+
 const userSchema = new mongoose.Schema({
   googleId: {
     type: String,
@@ -26,15 +37,11 @@ const userSchema = new mongoose.Schema({
     // required: true,
   },
 
-  tags: [
-    {
-      type: String,
-    },
-  ],
+  tags: [tagSchema], // Use the Tag schema here
 
   filter: {
-    type: String
-  }
+    type: String,
+  },
 });
 
 const User = mongoose.model("User", userSchema);

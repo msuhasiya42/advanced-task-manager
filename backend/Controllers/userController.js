@@ -122,9 +122,17 @@ const updateUser = async (req, res) => {
 
       case "tag":
         const tags = req.body.tags;
-        if (!tags) {
-          return res.status(400).json({ error: "Tags data is required" });
+        if (!tags || !Array.isArray(tags)) {
+          return res.status(400).json({ error: "Tags data is required and should be an array" });
         }
+
+        // Validate each tag object
+        for (const tag of tags) {
+          if (!tag.name || !tag.color) {
+            return res.status(400).json({ error: "Each tag must have a name and a color" });
+          }
+        }
+
         user.tags = tags;
         await user.save();
         return res.json({ message: "Tags updated successfully" });

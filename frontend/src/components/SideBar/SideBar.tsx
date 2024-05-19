@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import useTaskStore from "../../Store/taskStore";
+import useTaskStore, { Tag } from "../../Store/taskStore";
 import useAuthStore from "../../Store/authStore";
 import { userAPI } from "../../Api";
 import AddTags from "../Add Tags/AddTags";
@@ -38,7 +38,7 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
   const userId = useAuthStore((state) => state?.user?.userId);
 
   const handleDeleteTag = (tag: string) => {
-    const updatedTags = tags.filter((t: string) => t !== tag);
+    const updatedTags = tags.filter((t: Tag) => t.name !== tag);
     userAPI
       .updateUserTag(userId as string, updatedTags)
       .then(() => {
@@ -142,7 +142,7 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
             >
               <div
                 onClick={() => {
-                  filterTaskByTagName(tag);
+                  filterTaskByTagName(tag.name);
                   setActiveTab(`${index}-${tag}`);
                 }}
                 className={`flex items-center h-10 cursor-pointer ${activeTab === `${index}-${tag}`
@@ -151,7 +151,7 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
                   } transition duration-75 rounded-lg group  dark:hover:text-white`}
               >
                 <TagOutlined style={{ marginRight: "5px" }} />
-                {tag}
+                {tag.name}
               </div>
               <div>
                 <Popconfirm
@@ -164,7 +164,7 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
                   onConfirm={(e) => {
                     e?.stopPropagation();
                     onChildPopupInteraction(false);
-                    handleDeleteTag(tag);
+                    handleDeleteTag(tag.name);
                   }}
                   onCancel={(e) => {
                     onChildPopupInteraction(false);
@@ -188,7 +188,7 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
         </div>
         {/* Add tag button */}
         <div className="tags-container">
-          <AddTags />
+          <AddTags onChildPopupInteraction={onChildPopupInteraction} />
         </div>
       </nav>
     </div>

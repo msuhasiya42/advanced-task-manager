@@ -1,4 +1,5 @@
 import { CheckboxValueType } from "antd/es/checkbox/Group";
+import { Tag } from "../../../Store/taskStore";
 
 export type TaskCategory = "todo" | "inProgress" | "completed";
 
@@ -9,7 +10,7 @@ export interface TaskType {
   startDate: string;
   dueDate: string;
   attatchments: string[];
-  tags: string[];
+  tags: Tag[];
   priority: string;
   status: TaskCategory;
   done: boolean;

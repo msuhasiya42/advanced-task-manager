@@ -3,6 +3,10 @@ import { create } from "zustand";
 import { FilterType, TaskCategory } from "../components/Task/Types/types";
 import { TaskType } from "../components/Task/Types/types";
 import dayjs from "dayjs";
+export interface Tag {
+  name: string;
+  color: string;
+}
 
 export type TaskStoreState = {
   allTasks: TaskType[];
@@ -32,10 +36,10 @@ export type TaskStoreState = {
   removeTagFromAllTasks: (tagName: string) => void;
 
   // from tag store
-  tags: string[];
-  setTags: (newTags: string[]) => void;
+  tags: Tag[];
+  setTags: (newTags: Tag[]) => void;
   checkTagExists: (tag: string) => boolean;
-  addTag: (tag: string) => void;
+  addTag: (tag: Tag) => void;
   deleteTag: (tag: string) => void;
 
   // filter data
@@ -44,7 +48,7 @@ export type TaskStoreState = {
   clearFilter: () => void;
 };
 
-const useTaskStore = create<TaskStoreState>((set) => {
+const useTaskStore = create<TaskStoreState>((set, get) => {
     
   const persistedTags = localStorage.getItem("tags");
   const persistedFilter = localStorage.getItem("filter");
@@ -190,7 +194,7 @@ const useTaskStore = create<TaskStoreState>((set) => {
       filteredTasks: {
         ...state.filteredTasks,
         [category]: state.filteredTasks[category].filter(
-          (task: TaskType) => task.tags.includes(tag)
+          (task: TaskType) => task.tags.some((t) => String(t.name) === String(tag))
         ),
       },
     })),
@@ -235,33 +239,26 @@ const useTaskStore = create<TaskStoreState>((set) => {
 
   // for tags
   // setting tags when we fetch
-  setTags: (newTags: string[]) =>
-    set(() => {
-      localStorage.setItem("tags", JSON.stringify(newTags));
-      return { tags: newTags };
-    }),
-
-  // check tag is already there or not
-  checkTagExists: (tag: string) => {
-    const state: TaskStoreState = useTaskStore.getState();
-    return state.tags.includes(tag);
+  setTags: (newTags: Tag[]) => {
+    localStorage.setItem('tags', JSON.stringify(newTags));
+    set({ tags: newTags });
   },
-
-  // Add new tag
-  addTag: (tag: string) =>
-    set((state: TaskStoreState) => {
-      const updatedTags = [...state.tags, tag];
-      localStorage.setItem("tags", JSON.stringify(updatedTags));
-      return { tags: updatedTags };
-    }),
-
-  // Delete tag from store and local storage
-  deleteTag: (tag: string) =>
-    set((state: TaskStoreState) => {
-      const updatedTags = state.tags.filter((t: string) => t !== tag);
-      localStorage.setItem("tags", JSON.stringify(updatedTags));
-      return { tags: updatedTags };
-    }),
+  checkTagExists: (tagName: string) => {
+    const state = get();
+    return state.tags.some(tag => tag.name === tagName);
+  },
+  addTag: (tag: Tag) => {
+    const state = get();
+    const updatedTags = [...state.tags, tag];
+    localStorage.setItem('tags', JSON.stringify(updatedTags));
+    set({ tags: updatedTags });
+  },
+  deleteTag: (tagName: string) => {
+    const state = get();
+    const updatedTags = state.tags.filter(tag => tag.name !== tagName);
+    localStorage.setItem('tags', JSON.stringify(updatedTags));
+    set({ tags: updatedTags });
+  },
 
     // Apply filter
   updateFilter: (filter: FilterType) => {
@@ -323,14 +320,20 @@ const useTaskStore = create<TaskStoreState>((set) => {
 
       // Filter by tags
       if (filter.tags.length > 0) {
-        filter.tags.forEach((tag) => {
+        filter.tags.forEach((filterTag) => {
           filteredTasks = {
-            todo: filteredTasks.todo.filter((task) => task.tags.includes(tag)),
-            inProgress: filteredTasks.inProgress.filter((task) => task.tags.includes(tag)),
-            completed: filteredTasks.completed.filter((task) => task.tags.includes(tag)),
+            todo: filteredTasks.todo.filter((task) =>
+              task.tags.some((tag) => tag.name === filterTag)
+            ),
+            inProgress: filteredTasks.inProgress.filter((task) =>
+              task.tags.some((tag) => tag.name === filterTag)
+            ),
+            completed: filteredTasks.completed.filter((task) =>
+              task.tags.some((tag) => tag.name === filterTag)
+            ),
           };
         });
-      }
+      }      
 
       // Filter by due date shortcuts
     if (filter.dueDateShortCuts.length > 0) {
@@ -502,13 +505,13 @@ const filterTasksByShortcut = (
 
 const removeTagFromTasksByCategory = (tasks: TaskType[], tagName: string) =>
   tasks.map((task) => {
-    if (task.tags.includes(tagName)) {
+    if (task.tags.some(tag => tag.name === tagName)) {
       return {
         ...task,
-        tags: task.tags.filter((tag) => tag !== tagName)
+        tags: task.tags.filter((tag) => tag.name !== tagName),
       };
     }
     return task;
-  });
+});
 
 export default useTaskStore;

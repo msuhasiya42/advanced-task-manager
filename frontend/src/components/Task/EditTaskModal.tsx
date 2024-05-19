@@ -32,8 +32,9 @@ const EditTaskModal = (props: EditTaskModalProps) => {
     setModalData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleTagsChange = (tags: string[]) => {
-    setModalData((prevData) => ({ ...prevData, tags }));
+  const handleTagsChange = (selectedTags: string[]) => {
+    const newTags = tags.filter((tag) => selectedTags.includes(tag.name));
+    setModalData((prevData) => ({ ...prevData, tags: newTags }));
   };
 
   const handleDescChange = (value: string) => {
@@ -48,7 +49,6 @@ const EditTaskModal = (props: EditTaskModalProps) => {
   };
 
   const handleFormSubmit = () => {
-    // Trim title and description before updating
     const trimmedTitle = modalData.title?.trim();
     const trimmedDescription = modalData.description?.trim();
 
@@ -57,7 +57,6 @@ const EditTaskModal = (props: EditTaskModalProps) => {
       return;
     }
 
-    // Create a new object with trimmed title and description
     const updatedModalData = {
       ...modalData,
       title: trimmedTitle,
@@ -80,13 +79,13 @@ const EditTaskModal = (props: EditTaskModalProps) => {
   };
 
   const indianTimeOptions: Intl.DateTimeFormatOptions = {
-    timeZone: "Asia/Kolkata", // Indian Standard Time (IST)
+    timeZone: "Asia/Kolkata",
     hour: "numeric",
     minute: "numeric",
     hour12: true,
     day: "numeric",
     month: "short",
-    year: "numeric" as "numeric" | "2-digit" | undefined,
+    year: "numeric",
   };
 
   const updatedAt = new Date(task.updatedAt).toLocaleString(
@@ -99,13 +98,24 @@ const EditTaskModal = (props: EditTaskModalProps) => {
   );
 
   const tagOptions: SelectProps["options"] = tags
-    .map((tag) => {
-      return {
-        label: tag,
-        value: tag,
-      };
-    })
-    .sort((a, b) => a.label.localeCompare(b.label));
+    .map((tag) => ({
+      label: (
+        <span>
+          <span
+            style={{
+              display: "inline-block",
+              width: "12px",
+              height: "12px",
+              backgroundColor: tag.color,
+              marginRight: "8px",
+            }}
+          />
+          {tag.name}
+        </span>
+      ),
+      value: tag.name,
+    }))
+    .sort((a, b) => a.label.props.children[1].localeCompare(b.label.props.children[1]));
 
   return (
     <Modal
@@ -116,9 +126,7 @@ const EditTaskModal = (props: EditTaskModalProps) => {
         setShowModal(false);
         setModalData(task);
       }}
-      onOk={() => {
-        handleFormSubmit();
-      }}
+      onOk={handleFormSubmit}
       okText="Save"
       width={650}
       okButtonProps={{ style: { backgroundColor: "#1890ff", color: "#fff" } }}
@@ -130,7 +138,6 @@ const EditTaskModal = (props: EditTaskModalProps) => {
               required
               addonBefore="Title"
               name="title"
-              defaultValue={modalData.title}
               value={modalData.title}
               onChange={handleInputChange}
             />
@@ -197,7 +204,6 @@ const EditTaskModal = (props: EditTaskModalProps) => {
           </div>
 
           <div className="flex sm:block">
-            {/* select tag */}
             <div className="w-full mt-4">
               <label className="block mb-3 font-medium text-gray-700">Tag</label>
               <Select
@@ -205,15 +211,12 @@ const EditTaskModal = (props: EditTaskModalProps) => {
                 id="tag"
                 style={{ width: 190 }}
                 placeholder="Select Tag"
-                defaultValue={modalData.tags}
+                defaultValue={modalData.tags.map(tag => tag.name)}
                 onChange={(tags) => handleTagsChange(tags)}
-                optionLabelProp="label"
                 options={tagOptions}
-                optionRender={(option) => <Space>{option.label}</Space>}
               />
             </div>
 
-            {/* Date picker */}
             <div className="pt-3">
               <label className="block mb-3 font-medium text-gray-700">
                 Due Date
@@ -221,7 +224,7 @@ const EditTaskModal = (props: EditTaskModalProps) => {
               <DatePicker
                 className="block w-full rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
                 selected={
-                  modalData.dueDate == ""
+                  modalData.dueDate === ""
                     ? new Date()
                     : new Date(modalData.dueDate)
                 }
