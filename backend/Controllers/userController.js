@@ -1,9 +1,9 @@
 require("dotenv").config();
-const User = require("../Models/users");
+const User = require("../Models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const axios = require("axios"); // node
-const Task = require("../Models/tasks");
+const Task = require("../Models/task");
 
 const secretKey = process.env.SECRET_KEY;
 
@@ -52,7 +52,7 @@ const login = async (req, res) => {
 
         const { _id, name, tags, picture, email,filter } = user;
 
-        res.json({ token, userId: _id, name, tags, picture, email, filter });
+        res.json({ _id, name, tags, picture, email, filter, token });
       } else {
         res.status(401).json({ error: "Invalid credentials" });
       }

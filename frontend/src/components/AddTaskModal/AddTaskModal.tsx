@@ -22,7 +22,7 @@ const AddTaskModal = ({ showAddTaskModal, setShowAddTaskModal }: AddTaskModalPro
     });
 
     const inputRef = useRef<InputRef>(null);
-    const user = useAuthStore((state) => state.user?.userId);
+    const user = useAuthStore((state) => state.user?._id);
     const { addTaskDataStore, addTaskFilteredTasksStore } =
         useTaskStore();
 

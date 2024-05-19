@@ -22,17 +22,9 @@ const Login = () => {
   };
 
   const processLogin = (data: User) => {
-    const { userId, name, token, picture, tags, filter, email } = data;
-    const userData = {
-      userId,
-      name,
-      token,
-      email,
-      picture,
-      filter,
-    };
+    const { tags, filter } = data;
 
-    login(userData);
+    login(data);
     userAPI.getAllUsers().then((response) => {
       addListOfUser(response.data);
     });

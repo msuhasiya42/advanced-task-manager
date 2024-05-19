@@ -51,8 +51,8 @@ const TaskManager = () => {
   };
 
   useEffect(() => {
-    if (user?.userId) {
-      fetchAndProcessTasks(user.userId);
+    if (user?._id) {
+      fetchAndProcessTasks(user._id);
     }
   }, [user]);
 

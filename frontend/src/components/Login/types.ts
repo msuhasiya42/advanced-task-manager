@@ -1,6 +1,7 @@
+import { Tag } from "../../Store/taskStore";
 
 export type User = {
-    userId: string;
+    _id: string;
     name: string;
     token: string;
     email: string;
@@ -9,9 +10,8 @@ export type User = {
     family_name?: string;
     locale?: string;
     picture: string;
-    tags?:string[]
+    tags?: Tag[]
     filter?:string
-    // ... any other properties from your user object ...
   };
 
 export type otherUser = {

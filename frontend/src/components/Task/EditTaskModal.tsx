@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { TaskType } from "./Types/types";
-import { Input, Modal, Select, SelectProps, Space, message } from "antd";
+import { Input, Modal, Select, SelectProps, message } from "antd";
 import { taskAPI } from "../../Api";
 import useTaskStore from "../../Store/taskStore";
 import DatePicker from "react-datepicker";
 import { taskPriorities } from "./utils";
 import Editor from "./Editor";
 import DOMPurify from "dompurify";
+import useAuthStore from "../../Store/authStore";
+import Comments from "./Comments";
+
 
 interface EditTaskModalProps {
   task: TaskType;
@@ -23,9 +26,9 @@ const EditTaskModal = (props: EditTaskModalProps) => {
   };
 
   const [modalData, setModalData] = useState<TaskType>(sanitizedTask);
+  const { tags, updateTaskDataStore, updateTaskFilteredTasksStore } = useTaskStore();
+  const user = useAuthStore((state) => state?.user);
 
-  const { tags, updateTaskDataStore, updateTaskFilteredTasksStore } =
-    useTaskStore();
 
   const handleInputChange = (e: { target: { name: string; value: any } }) => {
     const { name, value } = e.target;
@@ -88,14 +91,8 @@ const EditTaskModal = (props: EditTaskModalProps) => {
     year: "numeric",
   };
 
-  const updatedAt = new Date(task.updatedAt).toLocaleString(
-    "en-IN",
-    indianTimeOptions
-  );
-  const createdAt = new Date(task.createdAt).toLocaleString(
-    "en-IN",
-    indianTimeOptions
-  );
+  const updatedAt = new Date(task.updatedAt).toLocaleString("en-IN", indianTimeOptions);
+  const createdAt = new Date(task.createdAt).toLocaleString("en-IN", indianTimeOptions);
 
   const tagOptions: SelectProps["options"] = tags
     .map((tag) => ({
@@ -119,8 +116,8 @@ const EditTaskModal = (props: EditTaskModalProps) => {
 
   return (
     <Modal
-      title={<div className="text-lg text-center mb-6">{"Edit Task"}</div>}
       centered
+      title={<div className="text-lg text-center mb-6">{"Edit Task"}</div>}
       open={showModal}
       onCancel={() => {
         setShowModal(false);
@@ -128,7 +125,7 @@ const EditTaskModal = (props: EditTaskModalProps) => {
       }}
       onOk={handleFormSubmit}
       okText="Save"
-      width={650}
+      width={750}
       okButtonProps={{ style: { backgroundColor: "#1890ff", color: "#fff" } }}
     >
       <div className="flex flex-col gap-4 sm:flex-row sm:gap-8">
@@ -144,19 +141,14 @@ const EditTaskModal = (props: EditTaskModalProps) => {
           </div>
 
           <div className="w-full mt-4">
-            <label className="block mb-3 font-medium text-gray-700">
-              Description
-            </label>
-            <Editor
-              description={modalData.description}
-              handleDescChange={handleDescChange}
-            />
+            <label className="block mb-3 font-bold text-gray-700">Description</label>
+            <Editor description={modalData.description} handleDescChange={handleDescChange} />
           </div>
           <div className="hidden sm:block">
-            <label className="block mb-3 font-medium text-gray-700">
+            <label className="block mb-3 font-bold text-gray-700">
               Created at :<span className="text-gray-500"> {createdAt}</span>
             </label>
-            <label className="block mb-3 font-medium text-gray-700">
+            <label className="block mb-3 font-bold text-gray-700">
               Last updated at :
               <span className="text-gray-500"> {updatedAt}</span>
             </label>
@@ -165,9 +157,7 @@ const EditTaskModal = (props: EditTaskModalProps) => {
         <div className="flex flex-col md:flex-col  gap-4">
           <div className="flex gap-4 sm:block">
             <div className="w-full">
-              <label className="block mb-3 font-medium text-gray-700">
-                Status
-              </label>
+              <label className="block mb-3 font-bold text-gray-700">Status</label>
               <select
                 id="status"
                 name="status"
@@ -176,16 +166,13 @@ const EditTaskModal = (props: EditTaskModalProps) => {
                 value={modalData.status}
                 onChange={handleInputChange}
               >
-                <option value="todo">Todo</option>
+                <option value="todo">To do</option>
                 <option value="inProgress">In Progress</option>
                 <option value="completed">Completed</option>
               </select>
             </div>
-
-            <div className="w-full sm:mt-4">
-              <label className="block mb-3 font-medium text-gray-700">
-                Priority
-              </label>
+            <div className="w-full">
+              <label className="block mb-3 font-bold text-gray-700">Priority</label>
               <select
                 id="priority"
                 name="priority"
@@ -194,8 +181,8 @@ const EditTaskModal = (props: EditTaskModalProps) => {
                 value={modalData.priority}
                 onChange={handleInputChange}
               >
-                {taskPriorities.map((priority, index) => (
-                  <option key={index} value={priority}>
+                {taskPriorities.map((priority) => (
+                  <option key={priority} value={priority}>
                     {priority}
                   </option>
                 ))}
@@ -203,47 +190,31 @@ const EditTaskModal = (props: EditTaskModalProps) => {
             </div>
           </div>
 
-          <div className="flex sm:block">
-            <div className="w-full mt-4">
-              <label className="block mb-3 font-medium text-gray-700">Tag</label>
-              <Select
-                mode="multiple"
-                id="tag"
-                style={{ width: 190 }}
-                placeholder="Select Tag"
-                defaultValue={modalData.tags.map(tag => tag.name)}
-                onChange={(tags) => handleTagsChange(tags)}
-                options={tagOptions}
-              />
-            </div>
-
-            <div className="pt-3">
-              <label className="block mb-3 font-medium text-gray-700">
-                Due Date
-              </label>
-              <DatePicker
-                className="block w-full rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
-                selected={
-                  modalData.dueDate === ""
-                    ? new Date()
-                    : new Date(modalData.dueDate)
-                }
-                onChange={handleDate}
-              />
-            </div>
+          <div className="w-full">
+            <label className="block mb-3 font-bold text-gray-700">Tags</label>
+            <Select
+              mode="multiple"
+              allowClear
+              placeholder="Please select tags"
+              value={modalData.tags.map((tag) => tag.name)}
+              onChange={handleTagsChange}
+              style={{ width: "100%" }}
+              options={tagOptions}
+            />
           </div>
-          <div className="sm:hidden">
-            <label className="block mb-3 font-medium text-gray-700">
-              Created at :<span className="text-gray-500"> {createdAt}</span>
-            </label>
-            <label className="block mb-3 font-medium text-gray-700">
-              Last updated at :
-              <span className="text-gray-500"> {updatedAt}</span>
-            </label>
+
+          <div className="w-full">
+            <label className="block mb-3 font-bold text-gray-700">Due Date</label>
+            <DatePicker
+              selected={new Date(modalData.dueDate)}
+              onChange={(date: Date) => handleDate(date)}
+              className="block w-full xt-select rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
+            />
           </div>
         </div>
       </div>
-    </Modal>
+      <Comments taskId={task._id} user={user!} />
+    </Modal >
   );
 };
 

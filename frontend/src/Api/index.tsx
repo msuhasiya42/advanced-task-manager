@@ -79,3 +79,27 @@ export const taskAPI = {
   updateTask: (id: string, task: TaskType) =>
     putToAPI(`tasks/update/${id}`, { task }),
 };
+
+// Comment related APIs
+export const commentAPI = {
+  getComments: (taskId: string) => getFromAPI(`/comments/task/${taskId}`),
+
+  addComment: (taskId: string, content: string, authorId: string) =>
+    postToAPI(`/comments/task/${taskId}/add`, { content, authorId }),
+
+  addReply: (commentId: string, content: string, authorId: string) =>
+    postToAPI(`/comments/${commentId}/reply/add`, { content, authorId }),
+
+  addReaction: (commentId: string, emoji: string, authorId: string) =>
+    postToAPI(`/comments/${commentId}/reaction/add`, { emoji, authorId }),
+
+  deleteComment: (commentId: string) =>
+    deleteFromAPI(`/comments/${commentId}/delete`),
+
+  deleteReply: (replyId: string) =>
+    deleteFromAPI(`/comments/replies/${replyId}/delete`),
+
+  deleteReaction: (reactionId: string) =>
+    deleteFromAPI(`/comments/reactions/${reactionId}/delete`),
+};
+

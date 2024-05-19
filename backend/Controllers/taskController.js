@@ -1,4 +1,4 @@
-const Task = require("../Models/tasks");
+const Task = require("../Models/task");
 
 // Controller for creating a new task
 const createTask = async (req, res) => {
@@ -15,17 +15,17 @@ const createTask = async (req, res) => {
     // Save the task to the database
     const task = await newTask.save();
 
-    res.status(200).json({ success: true, message: "Task added ", task: task });
+    res.status(200).json({ success: true, message: "Task added", task: task });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
 };
 
-// fetch tasks of user
+// Fetch tasks of user
 const fetchTask = async (req, res) => {
   try {
     const user = req.params.id;
-    // get task based on user id
+    // Get tasks based on user id
     const tasks = await Task.find({ user: user });
 
     res.status(200).json({ success: true, tasks: tasks });
@@ -34,7 +34,7 @@ const fetchTask = async (req, res) => {
   }
 };
 
-// Controller for updating task
+// Controller for updating a task
 const updateTask = async (req, res) => {
   try {
     const id = req.params.id;
@@ -46,14 +46,14 @@ const updateTask = async (req, res) => {
       return res.status(404).json({ error: "Task not found" });
     }
 
-    return res.status(200).json({ message: "Task Updated successfully" });
+    return res.status(200).json({ message: "Task updated successfully" });
   } catch (error) {
     console.error("Error updating task:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
 
-//delete task
+// Delete a task
 const deleteTask = async (req, res) => {
   const taskId = req.params.id;
   try {
@@ -71,24 +71,31 @@ const deleteTask = async (req, res) => {
   }
 };
 
-// get task by id
+// Get task by id
 const getTaskById = async (req, res) => {
   const taskId = req.params.id;
 
   try {
-    const task = await Task.findById(taskId);
+    const task = await Task.findById(taskId).populate({
+      path: 'comments',
+      populate: { path: 'author replies reactions.user' },
+    });
 
     if (!task) {
       return res.status(404).json({ message: "Task not found" });
     }
 
-    return res
-      .status(200)
-      .json({ message: "Task fetched successfully", task: task });
+    return res.status(200).json({ message: "Task fetched successfully", task: task });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ message: "Server error" });
   }
 };
 
-module.exports = { createTask, updateTask, fetchTask, getTaskById, deleteTask };
+module.exports = {
+  createTask,
+  updateTask,
+  fetchTask,
+  getTaskById,
+  deleteTask,
+};

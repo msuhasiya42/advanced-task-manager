@@ -35,7 +35,7 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
     copyTasks();
     setActiveTab("all");
   };
-  const userId = useAuthStore((state) => state?.user?.userId);
+  const userId = useAuthStore((state) => state?.user?._id);
 
   const handleDeleteTag = (tag: string) => {
     const updatedTags = tags.filter((t: Tag) => t.name !== tag);
@@ -150,7 +150,15 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
                   : "text-gray-300"
                   } transition duration-75 rounded-lg group  dark:hover:text-white`}
               >
-                <TagOutlined style={{ marginRight: "5px" }} />
+                <span
+                  style={{
+                    display: "inline-block",
+                    width: "12px",
+                    height: "12px",
+                    backgroundColor: tag.color,
+                    marginRight: "8px",
+                  }}
+                />
                 {tag.name}
               </div>
               <div>

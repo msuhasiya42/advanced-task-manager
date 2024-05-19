@@ -12,7 +12,7 @@ const AddTags = ({ onChildPopupInteraction }: { onChildPopupInteraction: (active
   const [tagName, setTagName] = useState("");
   const [tagColor, setTagColor] = useState("#2196F3");
 
-  const userId = useAuthStore((state) => state?.user?.userId);
+  const userId = useAuthStore((state) => state?.user?._id);
   const { addTag, checkTagExists, tags } = useTaskStore((state) => ({
     addTag: state.addTag,
     checkTagExists: state.checkTagExists,

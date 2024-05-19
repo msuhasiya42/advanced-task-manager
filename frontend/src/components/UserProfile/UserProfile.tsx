@@ -52,7 +52,7 @@ const UserProfile = () => {
               setUserPhoto(photoData);
 
               // Assuming you have userId available in this scope or as a prop
-              await userAPI.updateUserPhoto(user?.userId ?? "", photoData);
+              await userAPI.updateUserPhoto(user?._id ?? "", photoData);
               updateUser({ picture: photoData });
             } else {
               console.error("Failed to compress the image under 500KB");
@@ -80,7 +80,7 @@ const UserProfile = () => {
   const { logout } = useAuthStore();
 
   const handleDeleteUser = () => {
-    userAPI.deleteUser(user?.userId);
+    userAPI.deleteUser(user?._id);
     logout();
   };
 

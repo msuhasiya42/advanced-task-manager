@@ -13,7 +13,7 @@ interface StatusType {
 const AddNewTask = ({ status }: StatusType) => {
   const [showTextArea, setShowTextArea] = useState(false);
   const [task, setTask] = useState("");
-  const user = useAuthStore((state) => state.user?.userId);
+  const user = useAuthStore((state) => state.user?._id);
   const { addTaskDataStore, addTaskFilteredTasksStore } = useTaskStore();
   const textRef = React.useRef<InputRef>(null);
 
