@@ -1,16 +1,5 @@
 const mongoose = require("mongoose");
-
-const tagSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  color: {
-    type: String,
-    required: true,
-    default: "#2196F3",
-  },
-});
+const { tagSchema } = require('./tag');
 
 const userSchema = new mongoose.Schema({
   googleId: {
