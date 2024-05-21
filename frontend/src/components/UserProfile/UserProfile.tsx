@@ -80,7 +80,9 @@ const UserProfile = () => {
   const { logout } = useAuthStore();
 
   const handleDeleteUser = () => {
-    userAPI.deleteUser(user?._id);
+    userAPI.deleteUser(user?._id).then(() => {
+      updateUser({});
+    });
     logout();
   };
 

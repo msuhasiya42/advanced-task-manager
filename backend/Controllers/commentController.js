@@ -121,6 +121,66 @@ const getComments = async (req, res) => {
       res.status(500).json({ message: "Error deleting comment", error });
     }
   };
+
+  // Edit a comment
+const editComment = async (req, res) => {
+    try {
+      const commentId = req.params.commentId;
+      const { content } = req.body;
+  
+      const comment = await Comment.findById(commentId);
+      if (!comment) {
+        return res.status(404).json({ message: 'Comment not found' });
+      }
+  
+      if (!comment.author.equals(req.user._id)) {
+        return res.status(403).json({ message: 'You do not have permission to edit this comment' });
+      }
+  
+      comment.content = content;
+      await comment.save();
+  
+      const populatedComment = await comment.populate({
+        path: 'author',
+        select: 'name email picture'
+      });
+  
+      res.status(200).json({ message: 'Comment updated successfully', comment: populatedComment });
+    } catch (error) {
+      console.error('Error editing comment:', error);
+      res.status(500).json({ message: 'Error editing comment', error: error.message || error });
+    }
+  };
+  
+  // Edit a reply
+  const editReply = async (req, res) => {
+    try {
+      const replyId = req.params.replyId;
+      const { content } = req.body;
+  
+      const reply = await Comment.findById(replyId);
+      if (!reply) {
+        return res.status(404).json({ message: 'Reply not found' });
+      }
+  
+      if (!reply.author.equals(req.user._id)) {
+        return res.status(403).json({ message: 'You do not have permission to edit this reply' });
+      }
+  
+      reply.content = content;
+      await reply.save();
+  
+      const populatedReply = await reply.populate({
+        path: 'author',
+        select: 'name email picture'
+      });
+  
+      res.status(200).json({ message: 'Reply updated successfully', reply: populatedReply });
+    } catch (error) {
+      console.error('Error editing reply:', error);
+      res.status(500).json({ message: 'Error editing reply', error: error.message || error });
+    }
+  };
   
   const deleteReply = async (req, res) => {
     try {
@@ -149,7 +209,9 @@ const getComments = async (req, res) => {
     addComment,
     addReply,
     addReaction,
+    editComment,
     deleteComment,
     deleteReaction,
-    deleteReply,
+    editReply,
+    deleteReply
   };

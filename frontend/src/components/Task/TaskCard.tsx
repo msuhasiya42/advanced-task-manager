@@ -131,14 +131,14 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
               <div className="w-30">
                 <div className="mb-3 flex flex-wrap">
                   {tags &&
-                    tags.length !== 0 &&
-                    tags.map((tag) => (
+                    tags?.length !== 0 &&
+                    tags?.map((tag) => (
                       <span
                         key={tag.name}
                         className="text-xxs font-thin text-center px-2 py-1 mt-2 mr-1 rounded-xl dark:text-white"
                         style={{ backgroundColor: tag.color }}
                       >
-                        {tag.name}
+                        {tag?.name}
                       </span>
                     ))}
                 </div>
@@ -183,14 +183,14 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
 
             {/* links badge */}
             <div className="flex flex-row ml-2">
-              {attatchments.length > 0 && (
+              {attatchments?.length > 0 && (
                 <>
                   <LinkOutlined />
                   <span
                     className=" mr-3 ml-2 text-left whitespace-nowrap"
                   // sidebar-toggle-item
                   >
-                    {attatchments.length}
+                    {attatchments?.length}
                   </span>
                 </>
               )}

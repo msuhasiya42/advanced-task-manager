@@ -1,6 +1,8 @@
-import axios from "redaxios";
+import axios, { Options } from "redaxios";
 import { TaskType } from "../components/Task/Types/types";
 import { Tag } from "../Store/taskStore";
+import useAuthStore from "../Store/authStore";
+import { useNavigate } from "react-router-dom";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
@@ -9,20 +11,36 @@ const API = axios.create({
   baseURL: API_BASE_URL,
 });
 
+const getHeader = () => {
+  const auth = localStorage.getItem("auth");
+  const parsedUser = auth ? JSON.parse(auth)?.user : null;
+  const token = parsedUser?.token;
+  if (!token) {
+    console.log("no token found")
+  };
+  return {
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  };
+}
+
 function postToAPI(endpoint: string, data: object) {
-  return API.post(endpoint, data);
+  return API.post(endpoint, data, getHeader());
 }
 
 function getFromAPI(endpoint: string) {
-  return API.get(endpoint);
+  return API.get(endpoint, getHeader());
 }
 
-function putToAPI(endpoint: string, data: object, config?: object) {
-  return API.put(endpoint, data, config);
+// change type of config , don't use any
+function putToAPI(endpoint: string, data: object, config?: Object) {
+  return API.put(endpoint, data, getHeader());
 }
 
 function deleteFromAPI(endpoint: string) {
-  return API.delete(endpoint);
+  return API.delete(endpoint, getHeader());
 }
 
 // User related APIs
@@ -82,22 +100,34 @@ export const taskAPI = {
 
 // Comment related APIs
 export const commentAPI = {
+
+  // Comment apis
   getComments: (taskId: string) => getFromAPI(`/comments/task/${taskId}`),
 
   addComment: (taskId: string, content: string, authorId: string) =>
     postToAPI(`/comments/task/${taskId}/add`, { content, authorId }),
 
+  editComment: (commentId: string, content: string) =>
+    putToAPI(`/comments/${commentId}/edit`, { content }),
+
+
+  deleteComment: (commentId: string, token: string) =>
+    deleteFromAPI(`/comments/${commentId}/delete`),
+
+
+  // reply apis
   addReply: (commentId: string, content: string, authorId: string) =>
     postToAPI(`/comments/${commentId}/reply/add`, { content, authorId }),
 
-  addReaction: (commentId: string, emoji: string, authorId: string) =>
-    postToAPI(`/comments/${commentId}/reaction/add`, { emoji, authorId }),
-
-  deleteComment: (commentId: string) =>
-    deleteFromAPI(`/comments/${commentId}/delete`),
+  editReply: (replyId: string, content: string) =>
+    putToAPI(`/comments/replies/${replyId}/edit`, { content }),
 
   deleteReply: (replyId: string) =>
     deleteFromAPI(`/comments/replies/${replyId}/delete`),
+
+  // reaction apis
+  addReaction: (commentId: string, emoji: string, authorId: string) =>
+    postToAPI(`/comments/${commentId}/reaction/add`, { emoji, authorId }),
 
   deleteReaction: (reactionId: string) =>
     deleteFromAPI(`/comments/reactions/${reactionId}/delete`),

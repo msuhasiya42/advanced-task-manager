@@ -205,7 +205,7 @@ const useTaskStore = create<TaskStoreState>((set, get) => {
       filteredTasks: {
         ...state.filteredTasks,
         [category]: state.filteredTasks[category].filter(
-          (task: TaskType) => task.tags.length !== 0
+          (task: TaskType) => task.tags?.length !== 0
         ),
       },
     })),
@@ -319,7 +319,7 @@ const useTaskStore = create<TaskStoreState>((set, get) => {
       }
 
       // Filter by tags
-      if (filter.tags.length > 0) {
+      if (filter.tags?.length > 0) {
         filter.tags.forEach((filterTag) => {
           filteredTasks = {
             todo: filteredTasks.todo.filter((task) =>
@@ -336,7 +336,7 @@ const useTaskStore = create<TaskStoreState>((set, get) => {
       }      
 
       // Filter by due date shortcuts
-    if (filter.dueDateShortCuts.length > 0) {
+    if (filter.dueDateShortCuts?.length > 0) {
       filter.dueDateShortCuts.forEach((shortcut) => {
         switch (shortcut) {
           case "today":

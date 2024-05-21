@@ -21,8 +21,11 @@ const Comments = ({ taskId, user }: CommentsProps) => {
     const [comments, setComments] = useState<CommentType[]>([]);
     const [newComment, setNewComment] = useState<string>("");
     const [showReplyInput, setShowReplyInput] = useState("");
+    const [editCommentValue, setEditCommentValue] = useState("");
+    const [showEditCommentInput, setShowEditCommentInput] = useState("");
     const [showReplies, setShowReplies] = useState<String[]>([]);
 
+    const token = user.token;
     const userId = user?._id
     const reactionOptions = ["👀", "👍", "❤️", "✅", "😂", "😮", "😢", "👏"];
 
@@ -46,7 +49,7 @@ const Comments = ({ taskId, user }: CommentsProps) => {
                 {reactionOptions.map((emoji, index) => (
                     <span
                         key={index}
-                        className="cursor-pointer text-xl transform transition-transform duration-300 hover:-translate-y-2 hover:scale-110"
+                        className="cursor-pointer text-xl transform transition-transform duration-300 hover:-translate-y-1"
                         onClick={() => onSelectReaction(emoji)}
                     >
                         {emoji}
@@ -58,7 +61,7 @@ const Comments = ({ taskId, user }: CommentsProps) => {
 
     const handleDeleteComment = async (commentId: string) => {
         try {
-            await commentAPI.deleteComment(commentId);
+            await commentAPI.deleteComment(commentId, token);
             setComments((prevComments) =>
                 prevComments.filter((comment) => comment._id !== commentId)
             );
@@ -66,6 +69,29 @@ const Comments = ({ taskId, user }: CommentsProps) => {
         } catch (error) {
             console.error("Error deleting comment:", error);
             void message.error("Error deleting comment", 1.5);
+        }
+    };
+
+    const handleEditComment = async (commentId: string, newContent: string) => {
+        try {
+            await commentAPI.editComment(commentId, newContent);
+            setComments((prevComments) =>
+                prevComments.map((comment) => {
+                    if (comment._id === commentId) {
+                        return {
+                            ...comment,
+                            content: newContent,
+                        };
+                    }
+                    return comment;
+                })
+            );
+            setEditCommentValue("");
+            setShowEditCommentInput("");
+            void message.success("Comment edited successfully", 1.5);
+        } catch (error) {
+            console.error("Error editing comment:", error);
+            void message.error("Error editing comment", 1.5);
         }
     };
 
@@ -91,6 +117,8 @@ const Comments = ({ taskId, user }: CommentsProps) => {
             void message.error("Error deleting reply", 1.5);
         }
     }
+
+    console.log("Token", token)
 
     const handleAddComment = async () => {
         if (newComment.trim() === "") {
@@ -248,6 +276,31 @@ const Comments = ({ taskId, user }: CommentsProps) => {
                         {comment.replies.length > 0 && showReplies.includes(String(comment._id))
                             ? <button className="ml-10 text-blue-500" onClick={() => toggleReplies(comment._id)}>Hide Replies</button>
                             : comment.replies?.length > 0 && <button className="ml-10 text-blue-500" onClick={() => toggleReplies(comment._id)}>View Replies ({comment.replies?.length})</button>
+                        }
+
+                        {/* Edit comment button */}
+                        {/* Reply input */}
+                        {showEditCommentInput === comment._id ? (
+                            <div className="ml-10 mb-2 mt-2">
+                                <Input
+                                    placeholder="Edit comment"
+                                    value={editCommentValue}
+                                    onChange={(e) => setEditCommentValue(e.target.value)}
+                                    onPressEnter={(e) => handleEditComment(comment._id, e.currentTarget.value)}
+                                />
+                                <div className="mt-2">
+                                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded" onClick={() => { handleEditComment(comment._id, editCommentValue); setShowEditCommentInput(""); setEditCommentValue(""); }}>
+                                        Save
+                                    </button>
+                                    <button className=" ml-2 text-black border py-1 px-2 rounded" onClick={() => { setShowEditCommentInput(""); setEditCommentValue(""); }}>
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        )
+                            : <button className="ml-10 text-blue-500" onClick={() => { setEditCommentValue(comment.content); setShowEditCommentInput(comment._id) }}>
+                                Edit
+                            </button>
                         }
 
                         {/* Delete comment button */}

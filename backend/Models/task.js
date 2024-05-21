@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { tagSchema } = require('./tag');
+const { permissionSchema } = require('./permission');
 
 const taskSchema = new mongoose.Schema(
   {
@@ -36,17 +37,12 @@ const taskSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-    attatchments: [
+    attachments: [
       {
         type: String,
       },
     ],
-    collaborators: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
+    collaborators: [permissionSchema],
     comments: [
       {
         type: mongoose.Schema.Types.ObjectId,
