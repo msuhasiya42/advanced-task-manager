@@ -117,6 +117,7 @@ const EditTaskModal = (props: EditTaskModalProps) => {
   return (
     <Modal
       centered
+      closable={false}
       title={<div className="text-lg text-center mb-6">{"Edit Task"}</div>}
       open={showModal}
       onCancel={() => {
@@ -140,7 +141,7 @@ const EditTaskModal = (props: EditTaskModalProps) => {
             />
           </div>
 
-          <div className="w-full mt-4">
+          <div className="max-w-[350px] sm:max-w-[480px] sm:w-[480px] mt-4">
             <label className="block mb-3 font-bold text-gray-700">Description</label>
             <Editor description={modalData.description} handleDescChange={handleDescChange} />
           </div>
