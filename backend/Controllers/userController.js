@@ -76,8 +76,7 @@ const getUserById = async (req, res) => {
         return res.status(404).json({ error: "User not found" });
       }
       // User data retrieved successfully
-      const userData = { name: user.name, email: user.email };
-      res.json(userData);
+      res.json(user);
     })
     .catch((err) => {
       console.error("Error retrieving user data:", err);

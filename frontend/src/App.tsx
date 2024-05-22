@@ -13,6 +13,27 @@ import React from "react";
 import HeaderPage from "./components/HeaderPage/HeaderPage";
 
 function App() {
+
+  // Todo: need to review
+  // const user = localStorage.getItem("auth");
+  // const userId = user ? JSON.parse(user).user._id : null;
+  // const { login, logout } = useAuthStore();
+
+  // useEffect(() => {
+  //   if (userId) {
+  //     userAPI.getUserData(userId).then((response) => {
+  //       const userData = response.data;
+  //       login(userData);
+  //       console.log("userData", userData)
+  //     }).catch((error) => {
+  //       console.error(error);
+  //       logout();
+  //     })
+  //   } else {
+  //     logout();
+  //   }
+  // }, []);
+
   return (
     <Router>
       <div className="flex">

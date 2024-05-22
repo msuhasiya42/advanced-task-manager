@@ -58,7 +58,7 @@ export const userAPI = {
   googleLogin: (tokenId: string) =>
     postToAPI("users/googleLoginApi", { token: tokenId }),
 
-  getUserData: (userId: string) => getFromAPI(`/users/getUserById/${userId}`),
+  getUserData: (id: string) => getFromAPI(`/users/getById/${id}`),
 
   updateUserTag: (userId: string, tags: Tag[]) => {
     return putToAPI(`/users/update/${userId}`, { tags, type: "tag" });
