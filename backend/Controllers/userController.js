@@ -219,19 +219,6 @@ const googleLogin = async (req, res) => {
   }
 };
 
-// check if token expired or not
-const verifyToken = async (req, res) => {
-  const { token } = req.body;
-  try {
-    // @ts-ignore
-    const decoded = jwt.verify(token, secretKey);
-    return res.json({ decoded: decoded });
-  } catch (error) {
-    // Token has expired or is invalid
-    return res.json({ error: error });
-  }
-};
-
 // Get all users' names and IDs
 const getAllUserNamesAndIds = async (req, res) => {
   try {
@@ -254,6 +241,5 @@ module.exports = {
   googleLogin,
   updateUser,
   deleteUser,
-  verifyToken,
   getAllUserNamesAndIds
 };

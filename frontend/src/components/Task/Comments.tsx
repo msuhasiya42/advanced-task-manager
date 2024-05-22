@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { CommentType, ReactionType } from './Types/types'
 import { commentAPI } from '../../Api'
 import { User } from '../Login/types'
+import { reactionOptions } from './utils'
 
 interface CommentsProps {
     taskId: string
@@ -18,18 +19,22 @@ interface ReactionPopupProps {
 
 const Comments = ({ taskId, user }: CommentsProps) => {
 
+    // for comments
     const [comments, setComments] = useState<CommentType[]>([]);
     const [newComment, setNewComment] = useState<string>("");
-    const [showReplyInput, setShowReplyInput] = useState("");
     const [editCommentValue, setEditCommentValue] = useState("");
     const [showEditCommentInput, setShowEditCommentInput] = useState("");
+
+    // for replies
+    const [newReply, setNewReply] = useState<string>("");
+    const [showReplyInput, setShowReplyInput] = useState("");
+
+    const [editReplyValue, setEditReplyValue] = useState("");
+    const [showEditReplyInput, setShowEditReplyInput] = useState("");
     const [showReplies, setShowReplies] = useState<String[]>([]);
 
     const token = user.token;
     const userId = user?._id
-    const reactionOptions = ["👀", "👍", "❤️", "✅", "😂", "😮", "😢", "👏"];
-
-
     useEffect(() => {
         // Fetch comments for the task
         const fetchComments = async () => {
@@ -95,6 +100,37 @@ const Comments = ({ taskId, user }: CommentsProps) => {
         }
     };
 
+    const handleEditReply = async (commentId: string, replyId: string, newContent: string) => {
+        try {
+            await commentAPI.editReply(replyId, newContent);
+            setComments((prevComments) =>
+                prevComments.map((comment) => {
+                    if (comment._id === commentId) {
+                        return {
+                            ...comment,
+                            replies: comment.replies.map((reply) => {
+                                if (reply._id === replyId) {
+                                    return {
+                                        ...reply,
+                                        content: newContent,
+                                    };
+                                }
+                                return reply;
+                            }),
+                        };
+                    }
+                    return comment;
+                })
+            );
+            setEditReplyValue("");
+            setShowEditReplyInput("");
+            void message.success("Reply edited successfully", 1.5);
+        } catch (error) {
+            console.error("Error editing reply:", error);
+            void message.error("Error editing reply", 1.5);
+        }
+    }
+
     const handleDeleteReply = async (commentId: string, replyId: string) => {
         try {
             await commentAPI.deleteReply(replyId);
@@ -117,8 +153,6 @@ const Comments = ({ taskId, user }: CommentsProps) => {
             void message.error("Error deleting reply", 1.5);
         }
     }
-
-    console.log("Token", token)
 
     const handleAddComment = async () => {
         if (newComment.trim() === "") {
@@ -160,6 +194,7 @@ const Comments = ({ taskId, user }: CommentsProps) => {
                         : comment
                 )
             );
+            setNewReply("");
             void message.success("Reply added successfully", 1.5);
         } catch (error) {
             console.error("Error adding reply:", error);
@@ -232,6 +267,7 @@ const Comments = ({ taskId, user }: CommentsProps) => {
                 <Input.TextArea
                     placeholder="Add a comment"
                     value={newComment}
+                    onPressEnter={handleAddComment}
                     onChange={(e) => setNewComment(e.target.value)}
                     rows={2}
                 />
@@ -245,6 +281,8 @@ const Comments = ({ taskId, user }: CommentsProps) => {
             {comments.length > 0 && <div className="border-2 p-4 rounded">
                 {comments.map((comment) => (
                     <div key={comment._id} className="mb-4">
+
+                        {/* profile picture, name and time */}
                         <div className="flex items-center mb-2">
                             <Avatar src={comment.author.picture} className="mr-2 border-blue-500" />
                             <span className="font-bold text-blue-500">{comment.author.name}</span>
@@ -272,35 +310,11 @@ const Comments = ({ taskId, user }: CommentsProps) => {
                             </div>
                         </div>
 
-                        {/* show reply button */}
+                        {/* bottom buttons of comment */}
+                        {/* 1. show/hide replies button */}
                         {comment.replies.length > 0 && showReplies.includes(String(comment._id))
                             ? <button className="ml-10 text-blue-500" onClick={() => toggleReplies(comment._id)}>Hide Replies</button>
                             : comment.replies?.length > 0 && <button className="ml-10 text-blue-500" onClick={() => toggleReplies(comment._id)}>View Replies ({comment.replies?.length})</button>
-                        }
-
-                        {/* Edit comment button */}
-                        {/* Reply input */}
-                        {showEditCommentInput === comment._id ? (
-                            <div className="ml-10 mb-2 mt-2">
-                                <Input
-                                    placeholder="Edit comment"
-                                    value={editCommentValue}
-                                    onChange={(e) => setEditCommentValue(e.target.value)}
-                                    onPressEnter={(e) => handleEditComment(comment._id, e.currentTarget.value)}
-                                />
-                                <div className="mt-2">
-                                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded" onClick={() => { handleEditComment(comment._id, editCommentValue); setShowEditCommentInput(""); setEditCommentValue(""); }}>
-                                        Save
-                                    </button>
-                                    <button className=" ml-2 text-black border py-1 px-2 rounded" onClick={() => { setShowEditCommentInput(""); setEditCommentValue(""); }}>
-                                        Cancel
-                                    </button>
-                                </div>
-                            </div>
-                        )
-                            : <button className="ml-10 text-blue-500" onClick={() => { setEditCommentValue(comment.content); setShowEditCommentInput(comment._id) }}>
-                                Edit
-                            </button>
                         }
 
                         {/* Delete comment button */}
@@ -310,33 +324,62 @@ const Comments = ({ taskId, user }: CommentsProps) => {
                             </button>
                         }
 
-                        {/* Reply input */}
-                        {showReplyInput === comment._id ? (
+                        {/* Edit and reply comment button */}
+                        {comment.author._id === userId && showEditCommentInput !== comment._id && <button className="ml-8 text-blue-500" onClick={() => { setEditCommentValue(comment.content); setShowEditCommentInput(comment._id); setShowReplyInput("") }}>
+                            Edit
+                        </button>}
+
+                        {comment.author._id === userId && showReplyInput !== comment._id && <button className="ml-6 text-blue-500" onClick={() => { setShowReplyInput(comment._id); setShowEditCommentInput("") }}>
+                            Reply
+                        </button>}
+
+
+
+                        {/* Edit comment input */}
+                        {comment.author._id === userId && showEditCommentInput === comment._id && (
                             <div className="ml-10 mb-2 mt-2">
                                 <Input
-                                    placeholder="Add a reply"
-                                    onPressEnter={(e) => handleAddReply(comment._id, e.currentTarget.value)}
+                                    placeholder="Edit comment"
+                                    value={editCommentValue}
+                                    onChange={(e) => setEditCommentValue(e.target.value)}
+                                    onPressEnter={(e) => handleEditComment(comment._id, e.currentTarget.value)}
                                 />
                                 <div className="mt-2">
-                                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded" onClick={(e) => handleAddReply(comment._id, e.currentTarget.value)}>
+                                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded" onClick={() => { handleEditComment(comment._id, editCommentValue); }}>
                                         Save
                                     </button>
-                                    <button className=" ml-2 text-black border py-1 px-2 rounded" onClick={() => setShowReplyInput("")}>
+                                    <button className=" ml-2 text-black border py-1 px-2 rounded" onClick={() => { setShowEditCommentInput(""); setEditCommentValue(""); }}>
                                         Cancel
                                     </button>
                                 </div>
                             </div>
-                        )
-                            : <button className="ml-6 text-blue-500" onClick={() => setShowReplyInput(comment._id)}>
-                                Reply
-                            </button>
-                        }
+                        )}
+
+
+                        {/* add reply input */}
+                        {showReplyInput === comment._id && (
+                            <div className="ml-10 mb-2 mt-2">
+                                <Input
+                                    placeholder="Add a reply"
+                                    onChange={(e) => setNewReply(e.target.value)}
+                                    onPressEnter={(e) => handleAddReply(comment._id, e.currentTarget.value)}
+                                />
+                                <div className="mt-2">
+                                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded" onClick={(e) => handleAddReply(comment._id, newReply)}>
+                                        Save
+                                    </button>
+                                    <button className=" ml-2 text-black border py-1 px-2 rounded" onClick={() => { setShowReplyInput(""); setNewReply(""); }}>
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        )}
 
                         {/* Replies */}
                         <div className='mt-2 ml-2'>
                             {showReplies.includes(String(comment._id)) && (
                                 comment.replies.map((reply) => (
-                                    <div key={reply._id} className="ml-8 mb-2">
+                                    <div key={reply._id} className="ml-8 mb-2 bg-slate-100 p-2 rounded-lg">
                                         <div className="flex items-center mb-2">
                                             <Avatar icon={<UserOutlined />} src={reply.author.picture} className="mr-2 border-blue-500" />
                                             <span className="font-bold">{reply.author.name}</span>
@@ -345,6 +388,8 @@ const Comments = ({ taskId, user }: CommentsProps) => {
                                             </span>
                                         </div>
                                         <div className="ml-10">
+
+                                            {/* reply, emojis for replies */}
                                             <Popover
                                                 placement="topLeft"
                                                 content={<ReactionPopup reactions={reply.reactions} onSelectReaction={(emoji) => handleReaction(reply._id, emoji, true, comment._id)} />}
@@ -359,9 +404,37 @@ const Comments = ({ taskId, user }: CommentsProps) => {
                                                     </span>
                                                 ))}
                                             </div>
+
+
+                                            {/* Edit and delete for reply buttons */}
+                                            {/* delete reply */}
                                             {reply.author._id === userId &&
-                                                <button className="text-blue-500" onClick={() => handleDeleteReply(comment._id, reply._id)}>
+                                                <button className="text-blue-500 " onClick={() => handleDeleteReply(comment._id, reply._id)}>
                                                     Delete
+                                                </button>
+                                            }
+
+                                            {/* edit reply */}
+                                            {reply.author._id === userId && showEditReplyInput === reply._id ? (
+                                                <div className="mb-2 mt-2">
+                                                    <Input
+                                                        placeholder="Edit comment"
+                                                        value={editReplyValue}
+                                                        onChange={(e) => setEditReplyValue(e.target.value)}
+                                                        onPressEnter={(e) => handleEditReply(comment._id, reply._id, e.currentTarget.value)}
+                                                    />
+                                                    <div className="mt-2">
+                                                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded" onClick={() => { handleEditReply(comment._id, reply._id, editReplyValue); }}>
+                                                            Save
+                                                        </button>
+                                                        <button className=" ml-2 text-black border py-1 px-2 rounded" onClick={() => { setShowEditReplyInput(""); setEditReplyValue(""); }}>
+                                                            Cancel
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            )
+                                                : <button className="text-blue-500 ml-6" onClick={() => { setEditReplyValue(reply.content); setShowEditReplyInput(reply._id) }}>
+                                                    Edit
                                                 </button>
                                             }
                                         </div>

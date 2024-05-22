@@ -16,7 +16,7 @@ const {
 } = require("../Controllers/commentController");
 
 
-// apply auth middlware to all
+// apply auth middleware to all
 router.use(auth);
 
 // Comments Routes

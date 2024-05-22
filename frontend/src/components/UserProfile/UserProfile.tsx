@@ -88,20 +88,6 @@ const UserProfile = () => {
 
   return (
     <div>
-      <nav className="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
-        <div className="w-full flex justify-between mx-auto p-2">
-          <a href="/user-dashboard" className="flex items-center">
-            <span className="self-center text-2xl font-semibold bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent whitespace-nowrap">
-              Task-Manager
-            </span>
-          </a>
-
-          <div className="hidden w-full md:block md:w-auto">
-            <LogoutButton />
-          </div>
-        </div>
-      </nav>
-
       <div className="w-full h-[250px]">
         <img
           src="https://vojislavd.com/ta-template-demo/assets/img/profile-background.jpg"

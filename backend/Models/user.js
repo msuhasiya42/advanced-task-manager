@@ -26,18 +26,11 @@ const userSchema = new mongoose.Schema({
     // required: true,
   },
 
-  tags: [tagSchema], // Use the Tag schema here
+  tags: [tagSchema], 
 
   filter: {
     type: String,
   },
-
-  friends: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-    }
-  ],
 });
 
 const User = mongoose.model("User", userSchema);

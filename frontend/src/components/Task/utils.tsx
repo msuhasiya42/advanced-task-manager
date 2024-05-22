@@ -108,3 +108,8 @@ export const taskNameMap = {
   completed: "Completed",
 };
 
+export const reactionOptions = [
+  "👀", "👍", "❤️", "✅", "😂", "🤗", "😮", "😢", "👏",
+  "🔥", "🎉", "🙌", "🤔", "😎", "😍", "💯", "🥳"
+];
+
