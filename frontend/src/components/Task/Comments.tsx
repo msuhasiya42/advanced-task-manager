@@ -278,7 +278,7 @@ const Comments = ({ taskId, user }: CommentsProps) => {
             </div>
 
             {/* mapping over all comments */}
-            <Spin spinning={!commentsMutation.isLoading} tip="Loading Comments..." className="mt-4 mb-8">
+            <Spin spinning={commentsMutation.isLoading} tip="Loading Comments..." className="mt-4 mb-8">
                 {comments.length > 0 && <div className="border-2 p-4 rounded">
                     {comments.map((comment) => (
                         <div key={comment._id} className="mb-4">
