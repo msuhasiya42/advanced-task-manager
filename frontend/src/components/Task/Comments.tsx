@@ -1,11 +1,12 @@
 import { UserOutlined } from '@ant-design/icons'
-import { Avatar, Divider, Input, Popover, Tooltip, message } from 'antd'
+import { Avatar, Divider, Input, Popover, Spin, Tooltip, message } from 'antd'
 import { formatDistanceToNow } from 'date-fns'
 import React, { useEffect, useState } from 'react'
 import { CommentType, ReactionType } from './Types/types'
 import { commentAPI } from '../../Api'
 import { User } from '../Login/types'
 import { reactionOptions } from './utils'
+import { useMutation } from 'react-query'
 
 interface CommentsProps {
     taskId: string
@@ -35,17 +36,17 @@ const Comments = ({ taskId, user }: CommentsProps) => {
 
     const token = user.token;
     const userId = user?._id
+
+    const commentsMutation = useMutation(() => commentAPI.getComments(taskId), {
+        onSuccess: (res) => {
+            setComments(res.data)
+        },
+        onError: (error) => {
+            console.error("Error fetching comments:", error);
+        },
+    })
     useEffect(() => {
-        // Fetch comments for the task
-        const fetchComments = async () => {
-            try {
-                const response = await commentAPI.getComments(taskId);
-                setComments(response.data);
-            } catch (error) {
-                console.error("Error fetching comments:", error);
-            }
-        };
-        fetchComments();
+        commentsMutation.mutate();
     }, [taskId]);
 
     const ReactionPopup: React.FC<ReactionPopupProps> = ({ reactions, onSelectReaction }) => {
@@ -276,178 +277,179 @@ const Comments = ({ taskId, user }: CommentsProps) => {
                 </button>
             </div>
 
-
             {/* mapping over all comments */}
-            {comments.length > 0 && <div className="border-2 p-4 rounded">
-                {comments.map((comment) => (
-                    <div key={comment._id} className="mb-4">
+            <Spin spinning={commentsMutation.isLoading} tip="Loading Comments..." className="mt-4">
+                {comments.length > 0 && <div className="border-2 p-4 rounded">
+                    {comments.map((comment) => (
+                        <div key={comment._id} className="mb-4">
 
-                        {/* profile picture, name and time */}
-                        <div className="flex items-center mb-2">
-                            <Avatar src={comment.author.picture} className="mr-2 border-blue-500" />
-                            <span className="font-bold text-blue-500">{comment.author.name}</span>
-                            <span className="ml-2 text-gray-500">
-                                {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
-                            </span>
-                        </div>
-
-                        {/* comment and reaction of it */}
-                        <div className="ml-10">
-                            <Popover
-                                placement="topLeft"
-                                content={<ReactionPopup reactions={comment.reactions} onSelectReaction={(emoji) => handleReaction(comment._id, emoji)} />}
-                                trigger="hover"
-                            >
-                                <p className="-mt-2">{comment.content}</p>
-                            </Popover>
-
+                            {/* profile picture, name and time */}
                             <div className="flex items-center mb-2">
-                                {comment.reactions.map((reaction) => (
-                                    <span key={reaction._id} className="bg-blue-200 rounded-lg p-1 mr-2 cursor-pointer" onClick={() => handleReaction(comment._id, reaction.emoji)}>
-                                        {reaction.emoji}
-                                    </span>
-                                ))}
+                                <Avatar src={comment.author.picture} className="mr-2 border-blue-500" />
+                                <span className="font-bold text-blue-500">{comment.author.name}</span>
+                                <span className="ml-2 text-gray-500">
+                                    {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
+                                </span>
                             </div>
-                        </div>
 
-                        {/* bottom buttons of comment */}
-                        {/* 1. show/hide replies button */}
-                        {comment.replies.length > 0 && showReplies.includes(String(comment._id))
-                            ? <button className="ml-10 text-blue-500" onClick={() => toggleReplies(comment._id)}>Hide Replies</button>
-                            : comment.replies?.length > 0 && <button className="ml-10 text-blue-500" onClick={() => toggleReplies(comment._id)}>View Replies ({comment.replies?.length})</button>
-                        }
+                            {/* comment and reaction of it */}
+                            <div className="ml-10">
+                                <Popover
+                                    placement="topLeft"
+                                    content={<ReactionPopup reactions={comment.reactions} onSelectReaction={(emoji) => handleReaction(comment._id, emoji)} />}
+                                    trigger="hover"
+                                >
+                                    <p className="-mt-2">{comment.content}</p>
+                                </Popover>
 
-                        {/* Delete comment button */}
-                        {comment.author._id === userId &&
-                            <button className="ml-10 text-blue-500" onClick={() => handleDeleteComment(comment._id)}>
-                                Delete
-                            </button>
-                        }
-
-                        {/* Edit and reply comment button */}
-                        {comment.author._id === userId && showEditCommentInput !== comment._id && <button className="ml-8 text-blue-500" onClick={() => { setEditCommentValue(comment.content); setShowEditCommentInput(comment._id); setShowReplyInput("") }}>
-                            Edit
-                        </button>}
-
-                        {comment.author._id === userId && showReplyInput !== comment._id && <button className="ml-6 text-blue-500" onClick={() => { setShowReplyInput(comment._id); setShowEditCommentInput("") }}>
-                            Reply
-                        </button>}
-
-
-
-                        {/* Edit comment input */}
-                        {comment.author._id === userId && showEditCommentInput === comment._id && (
-                            <div className="ml-10 mb-2 mt-2">
-                                <Input
-                                    placeholder="Edit comment"
-                                    value={editCommentValue}
-                                    onChange={(e) => setEditCommentValue(e.target.value)}
-                                    onPressEnter={(e) => handleEditComment(comment._id, e.currentTarget.value)}
-                                />
-                                <div className="mt-2">
-                                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded" onClick={() => { handleEditComment(comment._id, editCommentValue); }}>
-                                        Save
-                                    </button>
-                                    <button className=" ml-2 text-black border py-1 px-2 rounded" onClick={() => { setShowEditCommentInput(""); setEditCommentValue(""); }}>
-                                        Cancel
-                                    </button>
+                                <div className="flex items-center mb-2">
+                                    {comment.reactions.map((reaction) => (
+                                        <span key={reaction._id} className="bg-blue-200 rounded-lg p-1 mr-2 cursor-pointer" onClick={() => handleReaction(comment._id, reaction.emoji)}>
+                                            {reaction.emoji}
+                                        </span>
+                                    ))}
                                 </div>
                             </div>
-                        )}
+
+                            {/* bottom buttons of comment */}
+                            {/* 1. show/hide replies button */}
+                            {comment.replies.length > 0 && showReplies.includes(String(comment._id))
+                                ? <button className="ml-10 text-blue-500" onClick={() => toggleReplies(comment._id)}>Hide Replies</button>
+                                : comment.replies?.length > 0 && <button className="ml-10 text-blue-500" onClick={() => toggleReplies(comment._id)}>View Replies ({comment.replies?.length})</button>
+                            }
+
+                            {/* Delete comment button */}
+                            {comment.author._id === userId &&
+                                <button className="ml-10 text-blue-500" onClick={() => handleDeleteComment(comment._id)}>
+                                    Delete
+                                </button>
+                            }
+
+                            {/* Edit and reply comment button */}
+                            {comment.author._id === userId && showEditCommentInput !== comment._id && <button className="ml-8 text-blue-500" onClick={() => { setEditCommentValue(comment.content); setShowEditCommentInput(comment._id); setShowReplyInput("") }}>
+                                Edit
+                            </button>}
+
+                            {comment.author._id === userId && showReplyInput !== comment._id && <button className="ml-6 text-blue-500" onClick={() => { setShowReplyInput(comment._id); setShowEditCommentInput("") }}>
+                                Reply
+                            </button>}
 
 
-                        {/* add reply input */}
-                        {showReplyInput === comment._id && (
-                            <div className="ml-10 mb-2 mt-2">
-                                <Input
-                                    placeholder="Add a reply"
-                                    onChange={(e) => setNewReply(e.target.value)}
-                                    onPressEnter={(e) => handleAddReply(comment._id, e.currentTarget.value)}
-                                />
-                                <div className="mt-2">
-                                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded" onClick={(e) => handleAddReply(comment._id, newReply)}>
-                                        Save
-                                    </button>
-                                    <button className=" ml-2 text-black border py-1 px-2 rounded" onClick={() => { setShowReplyInput(""); setNewReply(""); }}>
-                                        Cancel
-                                    </button>
-                                </div>
-                            </div>
-                        )}
 
-                        {/* Replies */}
-                        <div className='mt-2 ml-2'>
-                            {showReplies.includes(String(comment._id)) && (
-                                comment.replies.map((reply) => (
-                                    <div key={reply._id} className="ml-8 mb-2 bg-slate-100 p-2 rounded-lg">
-                                        <div className="flex items-center mb-2">
-                                            <Avatar icon={<UserOutlined />} src={reply.author.picture} className="mr-2 border-blue-500" />
-                                            <span className="font-bold">{reply.author.name}</span>
-                                            <span className="ml-2 text-gray-500">
-                                                {formatDistanceToNow(new Date(reply.createdAt), { addSuffix: true })}
-                                            </span>
-                                        </div>
-                                        <div className="ml-10">
-
-                                            {/* reply, emojis for replies */}
-                                            <Popover
-                                                placement="topLeft"
-                                                content={<ReactionPopup reactions={reply.reactions} onSelectReaction={(emoji) => handleReaction(reply._id, emoji, true, comment._id)} />}
-                                                trigger="hover"
-                                            >
-                                                <p className="-mt-2">{reply.content}</p>
-                                            </Popover>
-                                            <div className="flex items-center mb-2">
-                                                {reply.reactions.map((reaction) => (
-                                                    <span key={reaction._id} className="bg-blue-200 rounded-lg p-1 mr-2 cursor-pointer" onClick={() => handleReaction(reply._id, reaction.emoji, true, comment._id)}>
-                                                        {reaction.emoji}
-                                                    </span>
-                                                ))}
-                                            </div>
-
-
-                                            {/* Edit and delete for reply buttons */}
-                                            {/* delete reply */}
-                                            {reply.author._id === userId &&
-                                                <button className="text-blue-500 " onClick={() => handleDeleteReply(comment._id, reply._id)}>
-                                                    Delete
-                                                </button>
-                                            }
-
-                                            {/* edit reply */}
-                                            {reply.author._id === userId && showEditReplyInput === reply._id ? (
-                                                <div className="mb-2 mt-2">
-                                                    <Input
-                                                        placeholder="Edit comment"
-                                                        value={editReplyValue}
-                                                        onChange={(e) => setEditReplyValue(e.target.value)}
-                                                        onPressEnter={(e) => handleEditReply(comment._id, reply._id, e.currentTarget.value)}
-                                                    />
-                                                    <div className="mt-2">
-                                                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded" onClick={() => { handleEditReply(comment._id, reply._id, editReplyValue); }}>
-                                                            Save
-                                                        </button>
-                                                        <button className=" ml-2 text-black border py-1 px-2 rounded" onClick={() => { setShowEditReplyInput(""); setEditReplyValue(""); }}>
-                                                            Cancel
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            )
-                                                : <button className="text-blue-500 ml-6" onClick={() => { setEditReplyValue(reply.content); setShowEditReplyInput(reply._id) }}>
-                                                    Edit
-                                                </button>
-                                            }
-                                        </div>
+                            {/* Edit comment input */}
+                            {comment.author._id === userId && showEditCommentInput === comment._id && (
+                                <div className="ml-10 mb-2 mt-2">
+                                    <Input
+                                        placeholder="Edit comment"
+                                        value={editCommentValue}
+                                        onChange={(e) => setEditCommentValue(e.target.value)}
+                                        onPressEnter={(e) => handleEditComment(comment._id, e.currentTarget.value)}
+                                    />
+                                    <div className="mt-2">
+                                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded" onClick={() => { handleEditComment(comment._id, editCommentValue); }}>
+                                            Save
+                                        </button>
+                                        <button className=" ml-2 text-black border py-1 px-2 rounded" onClick={() => { setShowEditCommentInput(""); setEditCommentValue(""); }}>
+                                            Cancel
+                                        </button>
                                     </div>
-                                ))
+                                </div>
                             )}
 
-                        </div>
 
-                        <Divider className="my-2 border-b-1 border-gray-300" />
-                    </div>
-                ))}
-            </div>}
+                            {/* add reply input */}
+                            {showReplyInput === comment._id && (
+                                <div className="ml-10 mb-2 mt-2">
+                                    <Input
+                                        placeholder="Add a reply"
+                                        onChange={(e) => setNewReply(e.target.value)}
+                                        onPressEnter={(e) => handleAddReply(comment._id, e.currentTarget.value)}
+                                    />
+                                    <div className="mt-2">
+                                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded" onClick={(e) => handleAddReply(comment._id, newReply)}>
+                                            Save
+                                        </button>
+                                        <button className=" ml-2 text-black border py-1 px-2 rounded" onClick={() => { setShowReplyInput(""); setNewReply(""); }}>
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Replies */}
+                            <div className='mt-2 ml-2'>
+                                {showReplies.includes(String(comment._id)) && (
+                                    comment.replies.map((reply) => (
+                                        <div key={reply._id} className="ml-8 mb-2 bg-slate-100 p-2 rounded-lg">
+                                            <div className="flex items-center mb-2">
+                                                <Avatar icon={<UserOutlined />} src={reply.author.picture} className="mr-2 border-blue-500" />
+                                                <span className="font-bold">{reply.author.name}</span>
+                                                <span className="ml-2 text-gray-500">
+                                                    {formatDistanceToNow(new Date(reply.createdAt), { addSuffix: true })}
+                                                </span>
+                                            </div>
+                                            <div className="ml-10">
+
+                                                {/* reply, emojis for replies */}
+                                                <Popover
+                                                    placement="topLeft"
+                                                    content={<ReactionPopup reactions={reply.reactions} onSelectReaction={(emoji) => handleReaction(reply._id, emoji, true, comment._id)} />}
+                                                    trigger="hover"
+                                                >
+                                                    <p className="-mt-2">{reply.content}</p>
+                                                </Popover>
+                                                <div className="flex items-center mb-2">
+                                                    {reply.reactions.map((reaction) => (
+                                                        <span key={reaction._id} className="bg-blue-200 rounded-lg p-1 mr-2 cursor-pointer" onClick={() => handleReaction(reply._id, reaction.emoji, true, comment._id)}>
+                                                            {reaction.emoji}
+                                                        </span>
+                                                    ))}
+                                                </div>
+
+
+                                                {/* Edit and delete for reply buttons */}
+                                                {/* delete reply */}
+                                                {reply.author._id === userId &&
+                                                    <button className="text-blue-500 " onClick={() => handleDeleteReply(comment._id, reply._id)}>
+                                                        Delete
+                                                    </button>
+                                                }
+
+                                                {/* edit reply */}
+                                                {reply.author._id === userId && showEditReplyInput === reply._id ? (
+                                                    <div className="mb-2 mt-2">
+                                                        <Input
+                                                            placeholder="Edit comment"
+                                                            value={editReplyValue}
+                                                            onChange={(e) => setEditReplyValue(e.target.value)}
+                                                            onPressEnter={(e) => handleEditReply(comment._id, reply._id, e.currentTarget.value)}
+                                                        />
+                                                        <div className="mt-2">
+                                                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded" onClick={() => { handleEditReply(comment._id, reply._id, editReplyValue); }}>
+                                                                Save
+                                                            </button>
+                                                            <button className=" ml-2 text-black border py-1 px-2 rounded" onClick={() => { setShowEditReplyInput(""); setEditReplyValue(""); }}>
+                                                                Cancel
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                )
+                                                    : <button className="text-blue-500 ml-6" onClick={() => { setEditReplyValue(reply.content); setShowEditReplyInput(reply._id) }}>
+                                                        Edit
+                                                    </button>
+                                                }
+                                            </div>
+                                        </div>
+                                    ))
+                                )}
+
+                            </div>
+
+                            <Divider className="my-2 border-b-1 border-gray-300" />
+                        </div>
+                    ))}
+                </div>}
+            </Spin>
         </div>
     )
 }
