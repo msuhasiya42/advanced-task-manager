@@ -113,3 +113,14 @@ export const reactionOptions = [
   "🔥", "🎉", "🙌", "🤔", "😎", "😍", "💯", "🥳"
 ];
 
+export const lightColors = [
+  "#add8e6", // Light Blue
+  "#e6e6fa", // Lavender
+  "#d8bfd8", // Thistle
+  "#dda0dd", // Plum
+  "#b0e0e6", // Powder Blue
+  "#afeeee", // Pale Turquoise
+  "#f0e68c", // Khaki
+  "#e0ffff", // Light Cyan
+];
+

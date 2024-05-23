@@ -26,7 +26,7 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
   const {
     title,
     description,
-    attatchments,
+    attachments,
     status,
     done,
     dueDate,
@@ -183,14 +183,14 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
 
             {/* links badge */}
             <div className="flex flex-row ml-2">
-              {attatchments?.length > 0 && (
+              {attachments?.length > 0 && (
                 <>
                   <LinkOutlined />
                   <span
                     className=" mr-3 ml-2 text-left whitespace-nowrap"
                   // sidebar-toggle-item
                   >
-                    {attatchments?.length}
+                    {attachments?.length}
                   </span>
                 </>
               )}

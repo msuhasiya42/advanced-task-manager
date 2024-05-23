@@ -4,21 +4,35 @@ import { User } from "../../Login/types";
 
 export type TaskCategory = "todo" | "inProgress" | "completed";
 
+export interface CollabUser {
+   _id: string,
+   picture?: string
+   name?: string
+}
+
+export interface Collaborator {
+  user: CollabUser;
+  permissionType: 'read' | 'edit' | 'admin';
+}
+
+
 export interface TaskType {
   _id: string;
   title: string;
   description: string;
   startDate: string;
   dueDate: string;
-  attatchments: string[];
+  attachments: string[];
   tags: Tag[];
   priority: string;
   status: TaskCategory;
   done: boolean;
-  collaborators: string[]; 
+  collaborators: Collaborator[];
   user: string;
-  createdAt: string
-  updatedAt: string
+  createdAt: string;
+  updatedAt: string;
+  createdBy: string;
+  updatedBy: string;
 }
 /* eslint-disable no-unused-vars */
 export interface TasksProps {

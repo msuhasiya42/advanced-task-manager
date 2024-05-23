@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TaskType } from "./Types/types";
+import { Collaborator, TaskType } from "./Types/types";
 import { Input, Modal, Select, SelectProps, message } from "antd";
 import { taskAPI } from "../../Api";
 import useTaskStore from "../../Store/taskStore";
@@ -9,6 +9,7 @@ import Editor from "./Editor";
 import DOMPurify from "dompurify";
 import useAuthStore from "../../Store/authStore";
 import Comments from "./Comments";
+import CollaboratorsSelector from "./CollaboratorsSelector";
 
 
 interface EditTaskModalProps {
@@ -27,8 +28,7 @@ const EditTaskModal = (props: EditTaskModalProps) => {
 
   const [modalData, setModalData] = useState<TaskType>(sanitizedTask);
   const { tags, updateTaskDataStore, updateTaskFilteredTasksStore } = useTaskStore();
-  const user = useAuthStore((state) => state?.user);
-
+  const { user, allUsers } = useAuthStore();
 
   const handleInputChange = (e: { target: { name: string; value: any } }) => {
     const { name, value } = e.target;
@@ -91,9 +91,19 @@ const EditTaskModal = (props: EditTaskModalProps) => {
     year: "numeric",
   };
 
+  // user can edit task 
+  // 1. user is owner of task
+  // 2. collab user with 'edit' access
+  const canEditTask = user?._id === task?.user
+    || (task.collaborators && task.collaborators.some(collab => collab.user._id === user?._id && collab.permissionType === "edit"));
+
+  // need to fix this 
   const updatedAt = new Date(task.updatedAt).toLocaleString("en-IN", indianTimeOptions);
   const createdAt = new Date(task.createdAt).toLocaleString("en-IN", indianTimeOptions);
+  const createdBy = allUsers?.find((user) => user._id === task.user)?.name || "N/A";
+  const updatedBy = allUsers?.find((user) => String(user._id) === String(task.updatedBy))?.name || "N/A";
 
+  console.log("updatedBy", createdBy, updatedBy, task.updatedBy)
   const tagOptions: SelectProps["options"] = tags
     .map((tag) => ({
       label: (
@@ -127,7 +137,7 @@ const EditTaskModal = (props: EditTaskModalProps) => {
       onOk={handleFormSubmit}
       okText="Save"
       width={750}
-      okButtonProps={{ style: { backgroundColor: "#1890ff", color: "#fff" } }}
+      okButtonProps={{ style: { backgroundColor: "#1890ff", color: "#fff" }, disabled: !canEditTask }}
     >
       <div className="flex flex-col gap-4 sm:flex-row sm:gap-8">
         <div>
@@ -138,20 +148,24 @@ const EditTaskModal = (props: EditTaskModalProps) => {
               name="title"
               value={modalData.title}
               onChange={handleInputChange}
+              placeholder="Enter title"
+              disabled={!canEditTask}
             />
           </div>
 
           <div className="max-w-[350px] sm:max-w-[480px] sm:w-[480px] mt-4">
             <label className="block mb-3 font-bold text-gray-700">Description</label>
-            <Editor description={modalData.description} handleDescChange={handleDescChange} />
+            <Editor canEdit={canEditTask} description={modalData.description} handleDescChange={handleDescChange} />
           </div>
           <div className="hidden sm:block">
             <label className="block mb-3 font-bold text-gray-700">
               Created at :<span className="text-gray-500"> {createdAt}</span>
+              {createdBy && <span className="text-gray-500"> {task.createdBy}</span>}
             </label>
             <label className="block mb-3 font-bold text-gray-700">
               Last updated at :
               <span className="text-gray-500"> {updatedAt}</span>
+              {updatedBy && <span className="text-gray-500"> {task.createdBy}</span>}
             </label>
           </div>
         </div>
@@ -166,6 +180,7 @@ const EditTaskModal = (props: EditTaskModalProps) => {
                 aria-label="Select"
                 value={modalData.status}
                 onChange={handleInputChange}
+                disabled={!canEditTask}
               >
                 <option value="todo">To do</option>
                 <option value="inProgress">In Progress</option>
@@ -181,6 +196,7 @@ const EditTaskModal = (props: EditTaskModalProps) => {
                 aria-label="Select"
                 value={modalData.priority}
                 onChange={handleInputChange}
+                disabled={!canEditTask}
               >
                 {taskPriorities.map((priority) => (
                   <option key={priority} value={priority}>
@@ -201,15 +217,28 @@ const EditTaskModal = (props: EditTaskModalProps) => {
               onChange={handleTagsChange}
               style={{ width: "100%" }}
               options={tagOptions}
+              disabled={!canEditTask}
             />
           </div>
 
           <div className="w-full">
             <label className="block mb-3 font-bold text-gray-700">Due Date</label>
             <DatePicker
+              disabled={!canEditTask}
               selected={new Date(modalData.dueDate)}
               onChange={(date: Date) => handleDate(date)}
               className="block w-full xt-select rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="block mb-3 font-bold text-gray-700">Collaborators</label>
+            <CollaboratorsSelector
+              collaborators={modalData.collaborators}
+              setCollaborators={(newCollaborators: Collaborator[]) =>
+                setModalData(prevData => ({ ...prevData, collaborators: newCollaborators }))
+              }
+              canEdit={canEditTask}
             />
           </div>
         </div>

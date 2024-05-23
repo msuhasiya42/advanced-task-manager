@@ -330,7 +330,7 @@ const Comments = ({ taskId, user }: CommentsProps) => {
                                 Edit
                             </button>}
 
-                            {comment.author._id === userId && showReplyInput !== comment._id && <button className="ml-6 text-blue-500" onClick={() => { setShowReplyInput(comment._id); setShowEditCommentInput("") }}>
+                            {showReplyInput !== comment._id && <button className="ml-10 text-blue-500" onClick={() => { setShowReplyInput(comment._id); setShowEditCommentInput("") }}>
                                 Reply
                             </button>}
 
@@ -416,7 +416,7 @@ const Comments = ({ taskId, user }: CommentsProps) => {
                                                 }
 
                                                 {/* edit reply */}
-                                                {reply.author._id === userId && showEditReplyInput === reply._id ? (
+                                                {reply.author._id === userId && (showEditReplyInput === reply._id ? (
                                                     <div className="mb-2 mt-2">
                                                         <Input
                                                             placeholder="Edit comment"
@@ -436,7 +436,7 @@ const Comments = ({ taskId, user }: CommentsProps) => {
                                                 )
                                                     : <button className="text-blue-500 ml-6" onClick={() => { setEditReplyValue(reply.content); setShowEditReplyInput(reply._id) }}>
                                                         Edit
-                                                    </button>
+                                                    </button>)
                                                 }
                                             </div>
                                         </div>

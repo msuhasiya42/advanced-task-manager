@@ -2,13 +2,13 @@ import React from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
-interface editorProps {
+interface EditorProps {
   description: string;
-  // eslint-disable-next-line no-unused-vars
   handleDescChange: (value: string) => void;
+  canEdit: boolean;
 }
 
-const Editor = ({ description, handleDescChange }: editorProps) => {
+const Editor = ({ description, canEdit, handleDescChange }: EditorProps) => {
   return (
     <ReactQuill
       theme="snow"
@@ -17,6 +17,7 @@ const Editor = ({ description, handleDescChange }: editorProps) => {
         handleDescChange(changeDesc);
       }}
       style={{ height: "100px", marginBottom: "70px" }}
+      readOnly={!canEdit}
     />
   );
 };

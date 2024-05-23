@@ -4,12 +4,15 @@ const Task = require("../Models/task");
 const createTask = async (req, res) => {
   try {
     const { title, status, user } = req.body;
+    const createdBy = req.user._id; // Assuming you have user information stored in the request object
 
     // Create a new task object
     const newTask = new Task({
       title,
       status,
       user,
+      createdBy,
+      updatedBy: createdBy,
     });
 
     // Save the task to the database
@@ -23,22 +26,34 @@ const createTask = async (req, res) => {
 
 // Fetch tasks of user
 const fetchTask = async (req, res) => {
-  try {
-    const user = req.params.id;
-    // Get tasks based on user id
-    const tasks = await Task.find({ user: user });
+  const userId = req.params.id;
 
-    res.status(200).json({ success: true, tasks: tasks });
+  try {
+    const tasks = await Task.find({
+      $or: [
+        { user: userId },
+        { 'collaborators.user': userId }
+      ]
+    }).populate({
+      path: 'collaborators.user',
+      select: 'name _id picture email' // Specify the fields to retrieve
+    });
+
+    res.status(200).json({ tasks });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ error: 'Server error' });
   }
 };
+
 
 // Controller for updating a task
 const updateTask = async (req, res) => {
   try {
     const id = req.params.id;
     const updatedTask = req.body.task;
+    const updatedBy = req.user._id; // Assuming you have user information stored in the request object
+
+    updatedTask.updatedBy = updatedBy;
 
     const task = await Task.findByIdAndUpdate(id, updatedTask, { new: true });
 
@@ -92,10 +107,61 @@ const getTaskById = async (req, res) => {
   }
 };
 
+
+const addCollaborator = async (req, res) => {
+  const { taskId } = req.params;
+  const { userId, permissionType } = req.body;
+
+  try {
+      const task = await Task.findById(taskId);
+      if (!task) {
+          return res.status(404).json({ error: 'Task not found' });
+      }
+
+      // Check if user already exists as a collaborator
+      const existingCollaborator = task.collaborators.find(collab => collab.user.equals(userId));
+      if (existingCollaborator) {
+          return res.status(400).json({ error: 'User is already a collaborator' });
+      }
+
+      task.collaborators.push({ user: userId, permissionType });
+      await task.save();
+
+      res.status(200).json({ message: 'Collaborator added successfully' });
+  } catch (error) {
+      res.status(500).json({ error: 'Server error' });
+  }
+};
+
+
+// Remove a collaborator from a task
+const removeCollaborator = async (req, res) => {
+  const { taskId } = req.params;
+  const { userId } = req.body;
+
+  try {
+      const task = await Task.findById(taskId);
+      if (!task) {
+          return res.status(404).json({ error: 'Task not found' });
+      }
+
+      task.collaborators = task.collaborators.filter(collab => !collab.user.equals(userId));
+      await task.save();
+
+      res.status(200).json({ message: 'Collaborator removed successfully' });
+  } catch (error) {
+      res.status(500).json({ error: 'Server error' });
+  }
+};
+
+
+
 module.exports = {
   createTask,
   updateTask,
   fetchTask,
   getTaskById,
   deleteTask,
+  addCollaborator,
+  removeCollaborator
 };
