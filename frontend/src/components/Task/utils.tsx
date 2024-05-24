@@ -88,7 +88,6 @@ export const dateOptions = [
 ];
 
 export const statusOptions = [
-  { label: "None", value: "" },
   { label: "Todo", value: "todo" },
   { label: "In Progress", value: "inProgress" },
   { label: "Completed", value: "completed" },

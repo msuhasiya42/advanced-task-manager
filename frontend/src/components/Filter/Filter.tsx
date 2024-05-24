@@ -34,7 +34,7 @@ export const initialFilterValue: FilterType = {
   dueDate: "",
   tags: [],
   priority: "",
-  status: "",
+  status: [],
 };
 
 const Filter: React.FC<FilterProps> = ({ setShowFilter }) => {
@@ -84,7 +84,7 @@ const Filter: React.FC<FilterProps> = ({ setShowFilter }) => {
     } else if (type === "status") {
       setFilterValues((prevFilterValues) => ({
         ...prevFilterValues,
-        status: value as string,
+        status: value as string[],
       }));
     } else if (type === "dueDate") {
       // due date can be type of number, need to handle it in different way
@@ -129,7 +129,6 @@ const Filter: React.FC<FilterProps> = ({ setShowFilter }) => {
   const resetFilter = () => {
     setFilterValues(initialFilterValue);
     message.success("Filter reset");
-
   };
 
   return (
@@ -181,10 +180,13 @@ const Filter: React.FC<FilterProps> = ({ setShowFilter }) => {
               Status
             </label>
             <Select
+              mode="multiple"
               style={{ width: 110 }}
-              placeholder="status"
+              placeholder="Select Status"
               value={filterValues.status}
-              onChange={(value: string) => handleFilterChange("status", value)}
+              onChange={(value: string[]) =>
+                handleFilterChange("status", value)
+              }
               optionLabelProp="label"
               options={statusOptions}
               optionRender={(option) => <Space>{option.label}</Space>}
@@ -192,7 +194,7 @@ const Filter: React.FC<FilterProps> = ({ setShowFilter }) => {
           </div>
           <div className="w-full mt-4">
             <label className="block mb-1 font-medium text-gray-700">
-              <TagOutlined /> Label
+              <TagOutlined /> Tag
             </label>
             <Select
               mode="multiple"
@@ -208,7 +210,7 @@ const Filter: React.FC<FilterProps> = ({ setShowFilter }) => {
         </div>
       </div>
 
-      <div className="flex justify-between	 mt-4 gap-2">
+      <div className="flex justify-between mt-4 gap-2">
         <div>
           <Button
             shape="circle"

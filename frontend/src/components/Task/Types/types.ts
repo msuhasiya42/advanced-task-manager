@@ -52,7 +52,7 @@ export interface FilterType {
   dueDate: string;
   tags: string[];
   priority: string;
-  status: string
+  status: string[]
 }
 
 export interface ReactionType {

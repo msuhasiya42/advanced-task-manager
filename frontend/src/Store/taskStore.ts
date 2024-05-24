@@ -310,11 +310,11 @@ const useTaskStore = create<TaskStoreState>((set, get) => {
       }
 
       // Filter by status
-      if (filter.status !== "") {
+      if (filter.status?.length > 0) {
         filteredTasks = {
-          todo: filteredTasks.todo.filter((task) => task.status === filter.status),
-          inProgress: filteredTasks.inProgress.filter((task) => task.status === filter.status),
-          completed: filteredTasks.completed.filter((task) => task.status === filter.status),
+          todo: filteredTasks.todo.filter((task) => filter.status.includes(task.status)),
+          inProgress: filteredTasks.inProgress.filter((task) => filter.status.includes(task.status)),
+          completed: filteredTasks.completed.filter((task) => filter.status.includes(task.status)),
         };
       }
 

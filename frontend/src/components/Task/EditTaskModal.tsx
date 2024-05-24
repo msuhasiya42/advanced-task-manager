@@ -127,7 +127,6 @@ const EditTaskModal = (props: EditTaskModalProps) => {
   return (
     <Modal
       centered
-      closable={false}
       title={<div className="text-lg text-center mb-6">{"Edit Task"}</div>}
       open={showModal}
       onCancel={() => {
