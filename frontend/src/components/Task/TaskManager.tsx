@@ -6,6 +6,7 @@ import useTaskStore from "../../Store/taskStore";
 import useAuthStore from "../../Store/authStore";
 import { TaskCategory, TaskType } from "./Types/types";
 import { DragDropContext } from "react-beautiful-dnd";
+import AddNewTask from "./AddNewTask";
 
 
 export const filterTasksByStatus = (tasks: TaskType[], status: string) => {
@@ -100,24 +101,28 @@ const TaskManager = () => {
     copyTasks();
   };
 
+  const noTasks = filteredTasks.todo.length === 0 && filteredTasks.inProgress.length === 0 && filteredTasks.completed.length === 0
+
   return (
     <>
       {loading ? (
         <LoadingPage />
       ) : (
-        <div className="flex p-8 h-full w-full bg-gray-900 justify-center sm:justify-start sm:pl-12">
-          <DragDropContext onDragEnd={handleDragEnd}>
-            <div className="flex flex-col sm:flex-row gap-8">
-              {Object.entries(filteredTasks).map(([taskType, tasks]) => (
-                <TasksList
-                  key={taskType}
-                  tasks={tasks}
-                  taskType={taskType as TaskCategory}
-                />
-              ))}
-            </div>
-          </DragDropContext>
-        </div>
+        noTasks ?
+          <div className="flex mt-[50%] items-center h-full w-full bg-gray-900 justify-center"><AddNewTask status="todo" /></div>
+          : (<div className="flex p-8 h-full w-full bg-gray-900 justify-center sm:justify-start sm:pl-12">
+            <DragDropContext onDragEnd={handleDragEnd}>
+              <div className="flex flex-col sm:flex-row gap-8">
+                {Object.entries(filteredTasks).map(([taskType, tasks]) => (
+                  <TasksList
+                    key={taskType}
+                    tasks={tasks}
+                    taskType={taskType as TaskCategory}
+                  />
+                ))}
+              </div>
+            </DragDropContext>
+          </div>)
       )}
     </ >
   );

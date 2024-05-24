@@ -9,6 +9,7 @@ import {
   MenuProps,
   Popconfirm,
   Popover,
+  Tooltip,
   message,
 } from "antd";
 import EditTaskModal from "./EditTaskModal";
@@ -21,6 +22,7 @@ import {
 } from "@ant-design/icons";
 import { convertToIndianTime, getPriorityIcon, taskPriorities } from "./utils";
 import { deleteDesc, deleteText } from "../../utils/strings";
+import useAuthStore from "../../Store/authStore";
 
 const TaskCard = ({ task, handleDelete }: TasksProps) => {
   const {
@@ -51,6 +53,7 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
   const classNameDueDate = `text-xs ml-1 w-18 bg-${dateColor}-400 text-black font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-${dateColor}-400 dark:text-white border border-white-600  `;
 
   const { updateTaskDataStore, updateTaskFilteredTasksStore } = useTaskStore();
+  const { user } = useAuthStore()
 
   const toggleTaskDone = () => {
     task.done = !done;
@@ -112,6 +115,11 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
       />
     </Card>
   );
+
+  const editAccessToCurrentUser = task.collaborators?.find(
+    (collaborator) => String(collaborator.user?._id) === String(user?._id)
+  )?.permissionType === "read" ? false : true;
+
   return (
     <div>
       <div
@@ -147,7 +155,7 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
                 </h1>
               </div>
               <div onClick={(e) => e.stopPropagation()}>
-                <Dropdown menu={priorityOptions}>
+                <Dropdown menu={priorityOptions} disabled={!editAccessToCurrentUser}>
                   <Button style={{ border: "none" }}>
                     {getPriorityIcon(priority)}
                   </Button>
@@ -166,20 +174,23 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
 
           <div className="flex items-center justify-between ml-1 py-2 bg-transparent">
             {/* Due Date */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation(), toggleTaskDone();
-              }}
-            >
-              <span className={classNameDueDate}>
-                {dateColor === "green" ? (
-                  <CheckCircleOutlined />
-                ) : (
-                  <ClockCircleOutlined />
-                )}
-                <p className="ml-1">{indianTime}</p>
-              </span>
-            </button>
+            <Tooltip title={!editAccessToCurrentUser ? "Read Only: You don't have access to edit" : ""}>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation(), toggleTaskDone();
+                }}
+                disabled={!editAccessToCurrentUser}
+              >
+                <span className={classNameDueDate}>
+                  {dateColor === "green" ? (
+                    <CheckCircleOutlined />
+                  ) : (
+                    <ClockCircleOutlined />
+                  )}
+                  <p className="ml-1">{indianTime}</p>
+                </span>
+              </button>
+            </Tooltip>
 
             {/* links badge */}
             <div className="flex flex-row ml-2">
@@ -210,10 +221,10 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
               }}
               cancelText="No"
             >
-              <DeleteOutlined
+              {editAccessToCurrentUser && <DeleteOutlined
                 className="mr-4"
                 onClick={(e) => e.stopPropagation()}
-              />
+              />}
             </Popconfirm>
           </div>
         </div>
