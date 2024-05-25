@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../Store/authStore";
 import useTaskStore from "../../Store/taskStore";
 import { GoogleLogin } from "@react-oauth/google";
-import { ErrorResponse, User } from "./types";
+import { AuthData, ErrorResponse } from "./types";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,7 +21,7 @@ const Login = () => {
     setShowPassword(!showPassword);
   };
 
-  const processLogin = (data: User) => {
+  const processLogin = (data: AuthData) => {
     const { tags, filter } = data;
 
     login(data);

@@ -111,7 +111,7 @@ const AddNewTask = ({ status }: StatusType) => {
           className="hover:bg-slate-700 pl-3 rounded-md py-1 cursor-pointer"
           onClick={handleClick}
         >
-          <PlusOutlined /> <span className="text-sm pr-3">Add Card</span>
+          <PlusOutlined /> <span className="text-sm pr-3">Add Task</span>
         </div>
       )}
     </div>

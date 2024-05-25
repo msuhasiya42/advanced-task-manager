@@ -115,7 +115,7 @@ const Filter: React.FC<FilterProps> = ({ setShowFilter }) => {
   const saveFilter = async () => {
     try {
       // Make API call to save filter
-      await userAPI.updateUserFilter(userId ?? "", JSON.stringify(filterValues));
+      await userAPI.updateFilter(userId ?? "", JSON.stringify(filterValues));
       // Show success message
       message.success("Filter saved");
     } catch (error) {

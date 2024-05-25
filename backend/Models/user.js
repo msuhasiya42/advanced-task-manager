@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { tagSchema } = require('./tag');
 
 const userSchema = new mongoose.Schema({
   googleId: {
@@ -26,7 +25,10 @@ const userSchema = new mongoose.Schema({
     // required: true,
   },
 
-  tags: [tagSchema], 
+  tags: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Tag',
+  }],
 
   filter: {
     type: String,

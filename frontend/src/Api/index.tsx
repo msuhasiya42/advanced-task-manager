@@ -10,9 +10,7 @@ const API = axios.create({
 });
 
 const getHeader = () => {
-  const auth = localStorage.getItem("auth");
-  const parsedUser = auth ? JSON.parse(auth)?.user : null;
-  const token = parsedUser?.token;
+  const token = localStorage.getItem("token");
   if (!token) {
     console.log("no token found")
   };
@@ -37,8 +35,11 @@ function putToAPI(endpoint: string, data: object, config?: Object) {
   return API.put(endpoint, data, getHeader());
 }
 
-function deleteFromAPI(endpoint: string) {
-  return API.delete(endpoint, getHeader());
+function deleteFromAPI(endpoint: string, data?: object) {
+  return API.delete(endpoint, {
+    ...getHeader(),
+    data,
+  });
 }
 
 // User related APIs
@@ -58,26 +59,41 @@ export const userAPI = {
 
   getUserData: (id: string) => getFromAPI(`/users/getById/${id}`),
 
-  updateUserTag: (userId: string, tags: Tag[]) => {
-    return putToAPI(`/users/update/${userId}`, { tags, type: "tag" });
-  },
-
-  updateUserPhoto: (userId: string, photo: string) => {
-    const body = { photo, type: "photo" };
-    return putToAPI(`/users/update/${userId}`, body, {
+  updatePhoto: (userId: string, photo: string) => {
+    return putToAPI(`/users/update/photo/${userId}`, { photo }, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
   },
 
-  updateUserFilter: (userId: string, filter: string) => {
-    return putToAPI(`/users/update/${userId}`, { filter, type: "filter" });
+  updateFilter: (userId: string, filter: string) => {
+    return putToAPI(`/users/update/filter/${userId}`, { filter });
   },
 
   deleteUser: (id: string) => deleteFromAPI(`/users/delete/${id}`),
 
   getAllUsers: () => getFromAPI("users/getAllUsers"),
+};
+
+// Tag related APIs
+export const tagAPI = {
+  // Function to add a new tag
+  addTag: (userId: string, name: string, color: string) => {
+    const data = { userId, name, color };
+    return postToAPI("tags/add", data);
+  },
+
+  // Function to delete a tag
+  deleteTag: (userId: string, id: string) => {
+    return deleteFromAPI(`tags/delete/${id}`, { userId });
+  },
+
+  // Function to update an existing tag
+  updateTag: (id: string, userId: string, name: string, color: string) => {
+    const data = { userId, name, color };
+    return putToAPI(`tags/update/${id}`, data);
+  },
 };
 
 // Task related APIs
@@ -107,7 +123,7 @@ export const commentAPI = {
     putToAPI(`/comments/${commentId}/edit`, { content }),
 
 
-  deleteComment: (commentId: string, token: string) =>
+  deleteComment: (commentId: string) =>
     deleteFromAPI(`/comments/${commentId}/delete`),
 
 

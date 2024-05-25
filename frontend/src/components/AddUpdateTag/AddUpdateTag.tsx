@@ -1,23 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Input, message, Button } from "antd";
 import { CompactPicker, TwitterPicker } from "react-color";
-import { userAPI } from "../../Api";
+import { tagAPI, userAPI } from "../../Api";
 import useAuthStore from "../../Store/authStore";
 import useTaskStore, { Tag } from "../../Store/taskStore";
 import Title from "antd/es/typography/Title";
 import { TagOutlined } from "@ant-design/icons";
 
-const AddTags = ({ onChildPopupInteraction }: { onChildPopupInteraction: (active: boolean) => void }) => {
-  const [showModal, setShowModal] = useState(false);
-  const [tagName, setTagName] = useState("");
-  const [tagColor, setTagColor] = useState("#2196F3");
+interface AddTagsProps {
+  showModal: boolean;
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+  onChildPopupInteraction: (active: boolean) => void;
+  tagId?: string;
+  initialTagName?: string;
+  initialTagColor?: string;
+  onUpdateTag?: (_id: string, tagName: string, tagColor: string) => void;
+}
+
+const AddUpdateTag = ({ tagId, showModal, setShowModal, onChildPopupInteraction, initialTagName, initialTagColor, onUpdateTag }: AddTagsProps) => {
+  const [tagName, setTagName] = useState(initialTagName ?? "");
+  const [tagColor, setTagColor] = useState(initialTagColor ?? "#2196F3");
 
   const userId = useAuthStore((state) => state?.user?._id);
-  const { addTag, checkTagExists, tags } = useTaskStore((state) => ({
-    addTag: state.addTag,
-    checkTagExists: state.checkTagExists,
-    tags: state.tags,
-  }));
+  const { updateTags, checkTagExists, tags } = useTaskStore();
+
+  const isEditMode = !!initialTagName; // Check if component is in edit mode
 
   const handleToggle = () => {
     onChildPopupInteraction(!showModal);
@@ -25,7 +32,7 @@ const AddTags = ({ onChildPopupInteraction }: { onChildPopupInteraction: (active
   };
 
   const handleSubmit = async () => {
-    if (checkTagExists(tagName)) {
+    if (checkTagExists(tagName) && !isEditMode) {
       message.error("Tag already exists.", 2);
     } else {
       try {
@@ -34,11 +41,18 @@ const AddTags = ({ onChildPopupInteraction }: { onChildPopupInteraction: (active
           setShowModal(false);
           return;
         }
-        const newTag: Tag = { name: tagName, color: tagColor };
-        const updatedTags = [...tags, newTag];
-        await userAPI.updateUserTag(userId ?? "", updatedTags);
-        addTag(newTag);
-        message.success("Tag Added.", 1.5);
+
+        if (isEditMode && onUpdateTag) {
+          onUpdateTag(tagId ?? "", tagName, tagColor); // Call update callback in edit mode
+        }
+
+        else {
+          await tagAPI.addTag(userId ?? "", tagName, tagColor).then((res) => {
+            message.success("Tag Added.", 1.5);
+            const newTag = res.data;
+            updateTags([...tags, newTag]);
+          });
+        }
         setTagName("");
         setTagColor("#2196F3");
         setShowModal(false);
@@ -51,17 +65,18 @@ const AddTags = ({ onChildPopupInteraction }: { onChildPopupInteraction: (active
     }
   };
 
+
   return (
     <>
-      <button
+      {!isEditMode && <button
         onClick={handleToggle}
         className="px-5 py-1 ml-8 w-32 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
       >
         Add Tag
-      </button>
+      </button>}
       <Modal
         open={showModal}
-        title={<div className="flex text-lg justify-start"><TagOutlined className="mr-2" />Add Tag</div>}
+        title={<div className="flex text-lg justify-start"><TagOutlined className="mr-2" />{isEditMode ? "Update Tag" : "Add Tag"}</div>}
         centered
         onCancel={handleToggle}
         width={330}
@@ -78,7 +93,7 @@ const AddTags = ({ onChildPopupInteraction }: { onChildPopupInteraction: (active
             className="text-gray-900 bg-white border ml-2 px-5 py-1 border-blue-300 focus:outline-none hover:bg-blue-400 focus:ring-4 focus:ring-blue-200 font-medium rounded-lg text-sm mr-2 mb-2 dark:bg-blue-500 dark:text-white dark:border-blue-600 dark:hover:bg-blue-700 dark:hover:border-blue-600 dark:focus:ring-blue-700"
             onClick={handleSubmit}
           >
-            Add
+            {isEditMode ? "Update" : "Add"} {/* Change button label based on mode */}
           </button>,
         ]}
       >
@@ -106,4 +121,4 @@ const AddTags = ({ onChildPopupInteraction }: { onChildPopupInteraction: (active
   );
 };
 
-export default AddTags;
+export default AddUpdateTag;

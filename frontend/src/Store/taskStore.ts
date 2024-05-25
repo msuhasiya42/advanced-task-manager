@@ -3,7 +3,9 @@ import { create } from "zustand";
 import { FilterType, TaskCategory } from "../components/Task/Types/types";
 import { TaskType } from "../components/Task/Types/types";
 import dayjs from "dayjs";
+import { initialFilterValue } from "../components/Filter/Filter";
 export interface Tag {
+  _id: string;
   name: string;
   color: string;
 }
@@ -30,17 +32,16 @@ export type TaskStoreState = {
   setTodaysTasks: (category: TaskCategory) => void;
   setUpcomingTasks: (category: TaskCategory) => void;
 
-  filterTasksByTag: (category: TaskCategory, tag: string) => void;
+  filterTasksByTag: (category: TaskCategory, tagId: string) => void;
   filterTaskByHavingTag: (category: TaskCategory) => void;
 
-  removeTagFromAllTasks: (tagName: string) => void;
-
+  removeTagFromAllTasks: (tagId: string) => void;
+  updateTagsInTasks: (tagId: string, updatedTag: Tag) => void;
   // from tag store
   tags: Tag[];
   setTags: (newTags: Tag[]) => void;
   checkTagExists: (tag: string) => boolean;
-  addTag: (tag: Tag) => void;
-  deleteTag: (tag: string) => void;
+  updateTags: (updatedTags: Tag[]) => void;
 
   // filter data
   filter: FilterType;
@@ -50,10 +51,11 @@ export type TaskStoreState = {
 
 const useTaskStore = create<TaskStoreState>((set, get) => {
     
-  const persistedTags = localStorage.getItem("tags");
-  const persistedFilter = localStorage.getItem("filter");
-  const initialTags: string[] = persistedTags ? JSON.parse(persistedTags) : [];
-  const initialFilter: string = persistedFilter ? JSON.parse(persistedFilter) : "";
+  const user = localStorage.getItem("user");
+  console.log("userDataInStore", user && JSON.parse(user))
+  const initialTags: string[] = user ? JSON.parse(user)?.tags : [];
+  const jsonFilter: string = user ? JSON.parse(user)?.filter : "";
+  const initialFilter = jsonFilter ? JSON.parse(jsonFilter) : initialFilterValue
 
   return {
   allTasks: [],
@@ -189,12 +191,12 @@ const useTaskStore = create<TaskStoreState>((set, get) => {
   },
 
   // Filter by tag
-  filterTasksByTag: (category: TaskCategory, tag: string) =>
+  filterTasksByTag: (category: TaskCategory, tagId) =>
     set((state: TaskStoreState) => ({
       filteredTasks: {
         ...state.filteredTasks,
         [category]: state.filteredTasks[category].filter(
-          (task: TaskType) => task.tags.some((t) => String(t.name) === String(tag))
+          (task: TaskType) => task.tags.some((t) => String(t._id) === String(tagId))
         ),
       },
     })),
@@ -211,52 +213,65 @@ const useTaskStore = create<TaskStoreState>((set, get) => {
     })),
 
   // delete tag from all tasks linked to it
-  removeTagFromAllTasks: (tag: string) =>
+  removeTagFromAllTasks: (tagId: string) =>
     set((state: TaskStoreState) => ({
       tasksDataByCategory: {
-        todo: removeTagFromTasksByCategory(state.tasksDataByCategory.todo, tag),
+        todo: removeTagFromTasksByCategory(state.tasksDataByCategory.todo, tagId),
         inProgress: removeTagFromTasksByCategory(
           state.tasksDataByCategory.inProgress,
-          tag
+          tagId
         ),
         completed: removeTagFromTasksByCategory(
           state.tasksDataByCategory.completed,
-          tag
+          tagId
         ),
       },
       filteredTasks: {
-        todo: removeTagFromTasksByCategory(state.filteredTasks.todo, tag),
+        todo: removeTagFromTasksByCategory(state.filteredTasks.todo, tagId),
         inProgress: removeTagFromTasksByCategory(
           state.filteredTasks.inProgress,
-          tag
+          tagId
         ),
         completed: removeTagFromTasksByCategory(
           state.filteredTasks.completed,
-          tag
+          tagId
         ),
       },
     })),
 
+  updateTagsInTasks: (tagId: string, updatedTag: Tag) => {
+    set((state: TaskStoreState) => ({
+      tasksDataByCategory: {
+        todo: updateTasksByCategory(state.tasksDataByCategory.todo, tagId, updatedTag),
+        inProgress: updateTasksByCategory(state.tasksDataByCategory.inProgress, tagId, updatedTag),
+        completed: updateTasksByCategory(state.tasksDataByCategory.completed, tagId, updatedTag),
+      },
+      filteredTasks: {
+        todo: updateTasksByCategory(state.filteredTasks.todo, tagId, updatedTag),
+        inProgress: updateTasksByCategory(state.filteredTasks.inProgress, tagId, updatedTag),
+        completed: updateTasksByCategory(state.filteredTasks.completed, tagId, updatedTag),
+      },
+    }));
+  },
+    
+
   // for tags
   // setting tags when we fetch
   setTags: (newTags: Tag[]) => {
-    localStorage.setItem('tags', JSON.stringify(newTags));
     set({ tags: newTags });
   },
   checkTagExists: (tagName: string) => {
     const state = get();
     return state.tags.some(tag => tag.name === tagName);
   },
-  addTag: (tag: Tag) => {
-    const state = get();
-    const updatedTags = [...state.tags, tag];
-    localStorage.setItem('tags', JSON.stringify(updatedTags));
-    set({ tags: updatedTags });
-  },
-  deleteTag: (tagName: string) => {
-    const state = get();
-    const updatedTags = state.tags.filter(tag => tag.name !== tagName);
-    localStorage.setItem('tags', JSON.stringify(updatedTags));
+  updateTags: (updatedTags: Tag[]) => {
+    const user = localStorage.getItem('user');
+    if (user) {
+      const parsedUser = JSON.parse(user);
+      parsedUser.tags = updatedTags;
+      localStorage.setItem('user', JSON.stringify(parsedUser));
+      set({ tags: updatedTags });
+    }
     set({ tags: updatedTags });
   },
 
@@ -503,12 +518,20 @@ const filterTasksByShortcut = (
   return filteredTasks;
 };
 
-const removeTagFromTasksByCategory = (tasks: TaskType[], tagName: string) =>
+const updateTasksByCategory = (tasks: TaskType[], tagId: string, updatedTag: Tag) => {
+  return tasks.map(task => {
+    task.tags = task.tags.map(tag => tag._id === tagId ? updatedTag: tag);
+    return task;
+  });
+};
+
+
+const removeTagFromTasksByCategory = (tasks: TaskType[], tagId: string) =>
   tasks.map((task) => {
-    if (task.tags.some(tag => tag.name === tagName)) {
+    if (task.tags.some(tag => tag._id === tagId)) {
       return {
         ...task,
-        tags: task.tags.filter((tag) => tag.name !== tagName),
+        tags: task.tags.filter((tag) => tag._id !== tagId),
       };
     }
     return task;

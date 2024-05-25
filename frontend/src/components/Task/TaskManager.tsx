@@ -109,7 +109,7 @@ const TaskManager = () => {
         <LoadingPage />
       ) : (
         noTasks ?
-          <div className="flex mt-[50%] items-center h-full w-full bg-gray-900 justify-center"><AddNewTask status="todo" /></div>
+          <div className="flex items-center w-full bg-gray-900 justify-center"><AddNewTask status="todo" /></div>
           : (<div className="flex p-8 h-full w-full bg-gray-900 justify-center sm:justify-start sm:pl-12">
             <DragDropContext onDragEnd={handleDragEnd}>
               <div className="flex flex-col sm:flex-row gap-8">

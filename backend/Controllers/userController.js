@@ -35,8 +35,7 @@ const createUser = async (req, res) => {
 const login = async (req, res) => {
   const { email, password } = req.body;
   try {
-    // Find the user with the given username
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).populate('tags');
 
     if (user) {
       const userPassword = user.password == undefined ? "" : user.password;
@@ -50,9 +49,9 @@ const login = async (req, res) => {
           expiresIn: "1w",
         });
 
-        const { _id, name, tags, picture, email,filter } = user;
+        const { _id, name, picture, email, filter, tags } = user;
 
-        res.json({ _id, name, tags, picture, email, filter, token });
+        res.json({ _id, name, picture, email, filter, tags, token });
       } else {
         res.status(401).json({ error: "Invalid credentials" });
       }
@@ -67,82 +66,79 @@ const login = async (req, res) => {
 
 // Get user by id
 const getUserById = async (req, res) => {
-  // Logic to get a user by ID
-  const userId = req.params.id; // Retrieve the user ID from the route parameters
-  // Query the database to retrieve the user data based on the user ID
-  await User.findById(userId)
-    .then((user) => {
-      if (!user) {
-        return res.status(404).json({ error: "User not found" });
-      }
-      // User data retrieved successfully
-      res.json(user);
-    })
-    .catch((err) => {
-      console.error("Error retrieving user data:", err);
-      res.status(500).json({ error: "Failed to retrieve user data" });
-    });
-};
-
-// update the user
-const updateUser = async (req, res) => {
-  const type = req.body.type;
-  const userId = req.params.id;
-
   try {
-    const user = await User.findById(userId);
+    const userId = req.params.id;
+    
+    const user = await User.findById(userId).populate('tags');
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    if (!type) {
-      return res.status(400).json({ error: "Type field is required" });
-    }
-
-    switch (type) {
-      case "photo":
-        const photo = req.body.photo;
-        if (!photo) {
-          return res.status(400).json({ error: "Photo data is required" });
-        }
-        user.picture = photo;
-        await user.save();
-        return res.json({ message: "Photo updated successfully" });
-
-      case "filter":
-        const filter = req.body.filter;
-        if (!filter) {
-          return res.status(400).json({ error: "Filter data is required" });
-        }
-        user.filter = filter;
-        await user.save();
-        return res.json({ message: "Filter updated successfully" });
-
-      case "tag":
-        const tags = req.body.tags;
-        if (!tags || !Array.isArray(tags)) {
-          return res.status(400).json({ error: "Tags data is required and should be an array" });
-        }
-
-        // Validate each tag object
-        for (const tag of tags) {
-          if (!tag.name || !tag.color) {
-            return res.status(400).json({ error: "Each tag must have a name and a color" });
-          }
-        }
-
-        user.tags = tags;
-        await user.save();
-        return res.json({ message: "Tags updated successfully" });
-
-      default:
-        return res.status(400).json({ error: "Invalid type" });
-    }
-
+    // User data retrieved successfully
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      picture: user.picture,
+      filter: user.filter,
+      tags: user.tags.map(tag => ({
+        _id: tag._id,
+        name: tag.name,
+        color: tag.color
+      }))
+    });
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ error: "Failed to update user" });
+    console.error("Error retrieving user data:", err);
+    res.status(500).json({ error: "Failed to retrieve user data" });
+  }
+};
+
+// update the user
+const updatePhoto = async (req, res) => {
+  const userId = req.params.id;
+  const photo = req.body.photo;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    if (!photo) {
+      return res.status(400).json({ error: "Photo data is required" });
+    }
+
+    user.picture = photo;
+    await user.save();
+    return res.json({ message: "Photo updated successfully" });
+  } catch (error) {
+    console.error("Error updating photo:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// Function to update user's filter
+const updateFilter = async (req, res) => {
+  const userId = req.params.id;
+  const filter = req.body.filter;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    if (!filter) {
+      return res.status(400).json({ error: "Filter data is required" });
+    }
+
+    user.filter = filter;
+    await user.save();
+    return res.json({ message: "Filter updated successfully" });
+  } catch (error) {
+    console.error("Error updating filter:", error);
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -238,7 +234,8 @@ module.exports = {
   createUser,
   login,
   googleLogin,
-  updateUser,
+  updatePhoto,
+  updateFilter,
   deleteUser,
   getAllUserNamesAndIds
 };

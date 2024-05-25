@@ -103,9 +103,8 @@ const EditTaskModal = (props: EditTaskModalProps) => {
   const createdBy = allUsers?.find((user) => user._id === task.user)?.name || "N/A";
   const updatedBy = allUsers?.find((user) => String(user._id) === String(task.updatedBy))?.name || "N/A";
 
-  console.log("updatedBy", createdBy, updatedBy, task.updatedBy)
   const tagOptions: SelectProps["options"] = tags
-    .map((tag) => ({
+    ?.map((tag) => ({
       label: (
         <span>
           <span
@@ -242,7 +241,7 @@ const EditTaskModal = (props: EditTaskModalProps) => {
           </div>
         </div>
       </div>
-      <Comments taskId={task._id} user={user!} />
+      <Comments taskId={task._id} userId={user?._id ?? ""} />
     </Modal >
   );
 };

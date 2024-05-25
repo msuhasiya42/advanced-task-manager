@@ -34,16 +34,22 @@ const fetchTask = async (req, res) => {
         { user: userId },
         { 'collaborators.user': userId }
       ]
-    }).populate({
-      path: 'collaborators.user',
-      select: 'name _id picture email' // Specify the fields to retrieve
-    });
+    }).populate([
+      {
+        path: 'collaborators.user',
+        select: 'name _id picture email' // Specify the fields to retrieve for collaborators
+      },
+      {
+        path: 'tags' // Populate the tags field without specifying select
+      }
+    ]);
 
     res.status(200).json({ tasks });
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
   }
 };
+
 
 
 // Controller for updating a task

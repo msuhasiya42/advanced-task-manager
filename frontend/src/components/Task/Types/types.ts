@@ -1,6 +1,6 @@
 import { CheckboxValueType } from "antd/es/checkbox/Group";
 import { Tag } from "../../../Store/taskStore";
-import { User } from "../../Login/types";
+import { User } from "../../../Store/authStore";
 
 export type TaskCategory = "todo" | "inProgress" | "completed";
 

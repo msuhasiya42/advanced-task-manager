@@ -1,6 +1,5 @@
 import React from "react";
-import useAuthStore from "../../../Store/authStore";
-import { User } from "../../Login/types";
+import useAuthStore, { User } from "../../../Store/authStore";
 const ProfileButton = () => {
   const user = useAuthStore((state) => state.user);
   if (!user) {
@@ -9,7 +8,7 @@ const ProfileButton = () => {
     return; // or handle it accordingly
   }
 
-  const { name, picture }: User = user;
+  const { name, picture } = user;
   const getUserName = () => {
     return name.split(" ")[0];
   };

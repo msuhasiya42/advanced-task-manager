@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { tagSchema } = require('./tag');
+const Tag = require('./tag');
 const { permissionSchema } = require('./permission');
 
 const taskSchema = new mongoose.Schema(
@@ -11,10 +11,10 @@ const taskSchema = new mongoose.Schema(
     description: {
       type: String,
     },
-    tags: {
-      type: [tagSchema],
-      default: [],
-    },
+    tags: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Tag',
+    }],
     done: {
       type: Boolean,
       default: false,

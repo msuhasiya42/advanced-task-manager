@@ -1,14 +1,11 @@
 import { Tag } from "../../Store/taskStore";
 
-export type User = {
+export type AuthData = {
     _id: string;
     name: string;
     token: string;
     email: string;
     email_verified?: boolean;
-    given_name?: string;
-    family_name?: string;
-    locale?: string;
     picture: string;
     tags?: Tag[]
     filter?:string

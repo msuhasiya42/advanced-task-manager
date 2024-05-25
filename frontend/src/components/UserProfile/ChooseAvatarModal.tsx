@@ -34,7 +34,7 @@ const ChooseAvatarModal = ({
     setUserPhoto(selectedAvatar);
 
     // Assuming you have userId available in this scope or as a prop
-    userAPI.updateUserPhoto(user?._id ?? "", selectedAvatar);
+    userAPI.updatePhoto(user?._id ?? "", selectedAvatar);
     updateUser({ picture: selectedAvatar });
 
     // Close the modal after selecting an avatar

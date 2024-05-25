@@ -4,13 +4,13 @@ import { formatDistanceToNow } from 'date-fns'
 import React, { useEffect, useState } from 'react'
 import { CommentType, ReactionType } from './Types/types'
 import { commentAPI } from '../../Api'
-import { User } from '../Login/types'
 import { reactionOptions } from './utils'
 import { useMutation } from 'react-query'
+import useAuthStore, { User } from '../../Store/authStore'
 
 interface CommentsProps {
     taskId: string
-    user: User
+    userId: string
 }
 
 interface ReactionPopupProps {
@@ -18,7 +18,7 @@ interface ReactionPopupProps {
     onSelectReaction: (emoji: string) => void;
 }
 
-const Comments = ({ taskId, user }: CommentsProps) => {
+const Comments = ({ taskId, userId }: CommentsProps) => {
 
     // for comments
     const [comments, setComments] = useState<CommentType[]>([]);
@@ -33,9 +33,6 @@ const Comments = ({ taskId, user }: CommentsProps) => {
     const [editReplyValue, setEditReplyValue] = useState("");
     const [showEditReplyInput, setShowEditReplyInput] = useState("");
     const [showReplies, setShowReplies] = useState<String[]>([]);
-
-    const token = user.token;
-    const userId = user?._id
 
     const commentsMutation = useMutation(() => commentAPI.getComments(taskId), {
         onSuccess: (res) => {
@@ -67,7 +64,7 @@ const Comments = ({ taskId, user }: CommentsProps) => {
 
     const handleDeleteComment = async (commentId: string) => {
         try {
-            await commentAPI.deleteComment(commentId, token);
+            await commentAPI.deleteComment(commentId);
             setComments((prevComments) =>
                 prevComments.filter((comment) => comment._id !== commentId)
             );

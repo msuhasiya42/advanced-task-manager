@@ -1,61 +1,35 @@
 import React, { useState } from "react";
-import useTaskStore, { Tag } from "../../Store/taskStore";
-import useAuthStore from "../../Store/authStore";
-import { userAPI } from "../../Api";
-import AddTags from "../Add Tags/AddTags";
+import useTaskStore from "../../Store/taskStore";
+import AddTags from "../AddUpdateTag/AddUpdateTag";
 import { TaskCategory } from "../Task/Types/types";
-import { Popconfirm, message } from "antd";
 import {
   BellOutlined,
   CalendarOutlined,
-  DeleteOutlined,
   HomeOutlined,
   SnippetsOutlined,
-  TagOutlined,
 } from "@ant-design/icons";
-import { deleteTagStr, deleteTagTitle } from "../../utils/strings";
 import ProfileButton from "../SmallComp/ProfileButton/ProfileButton";
 import LogoutButton from "../SmallComp/Logout/LogoutButton";
+import TagList from "./TagList";
 interface Props {
   onChildPopupInteraction: (active: boolean) => void;
 }
+
+export const taskTypes: TaskCategory[] = ["todo", "inProgress", "completed"];
+
 const SideBar = ({ onChildPopupInteraction }: Props) => {
   const [activeTab, setActiveTab] = useState("all");
+  const [showModal, setShowModal] = useState(false);
 
-  const { tags, deleteTag } = useTaskStore();
   const {
     copyTasks,
     setTodaysTasks,
-    setUpcomingTasks,
-    filterTasksByTag,
-    removeTagFromAllTasks,
+    setUpcomingTasks
   } = useTaskStore();
 
   const handleAllTasks = () => {
     copyTasks();
     setActiveTab("all");
-  };
-  const userId = useAuthStore((state) => state?.user?._id);
-
-  const handleDeleteTag = (tag: string) => {
-    const updatedTags = tags.filter((t: Tag) => t.name !== tag);
-    userAPI
-      .updateUserTag(userId as string, updatedTags)
-      .then(() => {
-        void message.success("Tag Deleted", 1.5);
-        deleteTag(tag);
-        removeTagFromAllTasks(tag);
-      })
-      .catch(() => {
-        void message.error("Error: Tag Not deleted", 2);
-      });
-  };
-
-  const taskTypes: TaskCategory[] = ["todo", "inProgress", "completed"];
-
-  const filterTaskByTagName = (tag: string) => {
-    copyTasks();
-    taskTypes.forEach((category) => filterTasksByTag(category, tag));
   };
 
   const handleFilter = (handler: any) => {
@@ -134,69 +108,10 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
             </button>
           </li>
         </ul>
-        <div className="border border-gray-500 max-h-[500px] bg-gray-800 rounded-lg overflow-y-auto">
-          {tags.map((tag, index) => (
-            <div
-              className="flex flex-row items-center justify-between mx-2 my-1"
-              key={index}
-            >
-              <div
-                onClick={() => {
-                  filterTaskByTagName(tag.name);
-                  setActiveTab(`${index}-${tag}`);
-                }}
-                className={`flex items-center h-10 cursor-pointer ${activeTab === `${index}-${tag}`
-                  ? "text-cyan-500"
-                  : "text-gray-300"
-                  } transition duration-75 rounded-lg group  dark:hover:text-white`}
-              >
-                <span
-                  style={{
-                    display: "inline-block",
-                    width: "12px",
-                    height: "12px",
-                    backgroundColor: tag.color,
-                    marginRight: "8px",
-                  }}
-                />
-                {tag.name}
-              </div>
-              <div>
-                <Popconfirm
-                  placement="top"
-                  title={deleteTagTitle}
-                  description={deleteTagStr}
-                  okText={
-                    <span className="bg-blue-500 rounded-sm w-12">Yes</span>
-                  }
-                  onConfirm={(e) => {
-                    e?.stopPropagation();
-                    onChildPopupInteraction(false);
-                    handleDeleteTag(tag.name);
-                  }}
-                  onCancel={(e) => {
-                    onChildPopupInteraction(false);
-                    e?.stopPropagation();
-                  }}
-                  cancelText="No"
-                  style={{ height: "200px" }}
-                  overlayStyle={{ width: "250px" }}
-                >
-                  <DeleteOutlined
-                    className="text-white hover:text-red-400 cursor-pointer"
-                    onClick={(e) => {
-                      onChildPopupInteraction(true);
-                      e.stopPropagation();
-                    }}
-                  />
-                </Popconfirm>
-              </div>
-            </div>
-          ))}
-        </div>
+        <TagList activeTab={activeTab} setActiveTab={setActiveTab} onChildPopupInteraction={onChildPopupInteraction} />
         {/* Add tag button */}
         <div className="tags-container">
-          <AddTags onChildPopupInteraction={onChildPopupInteraction} />
+          <AddTags showModal={showModal} setShowModal={setShowModal} onChildPopupInteraction={onChildPopupInteraction} />
         </div>
       </nav>
     </div>
