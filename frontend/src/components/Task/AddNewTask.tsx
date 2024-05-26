@@ -75,8 +75,8 @@ const AddNewTask = ({ status }: StatusType) => {
     <div>
       {showTextArea ? (
         <form onSubmit={onSaveTask}>
-          <div className="w-full mb-2 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
-            {/* <div className="flex items-center justify-between px-3 py-2 border-b dark:border-gray-600"></div> */}
+          <div className="w-full mb-2 border rounded-lg  bg-gray-700 border-gray-600">
+            {/* <div className="flex items-center justify-between px-3 py-2 border-b border-gray-600"></div> */}
             <div>
               <Input
                 ref={textRef}
@@ -92,7 +92,7 @@ const AddNewTask = ({ status }: StatusType) => {
           <div className="flex gap-2">
             <button
               type="submit"
-              className="h-7 inline-flex items-center justify-center px-4 py-1 text-sm font-medium text-center text-gray-300 bg-blue-700 rounded-md focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800"
+              className="h-7 inline-flex items-center justify-center px-4 py-1 text-sm font-medium text-center text-gray-300 bg-blue-700 rounded-md focus:ring-4 focus:ring-blue-900 hover:bg-blue-800"
             >
               Add
             </button>
@@ -108,7 +108,7 @@ const AddNewTask = ({ status }: StatusType) => {
         </form>
       ) : (
         <div
-          className="hover:bg-slate-700 pl-3 rounded-md py-1 cursor-pointer"
+          className="hover:bg-slate-700 pl-3 rounded-md py-1 cursor-pointer text-white"
           onClick={handleClick}
         >
           <PlusOutlined /> <span className="text-sm pr-3">Add Task</span>

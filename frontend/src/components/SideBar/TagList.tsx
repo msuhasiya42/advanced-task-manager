@@ -111,7 +111,7 @@ const TagList = ({ setActiveTab, activeTab, onChildPopupInteraction }: TagListPr
                             filterTaskByTagName(tag.name);
                             setActiveTab(`${index}-${tag}`);
                         }}
-                        className={`flex items-center h-10 cursor-pointer ${activeTab === `${index}-${tag}` ? "text-cyan-500" : "text-gray-300"} transition duration-75 rounded-lg group dark:hover:text-white`}
+                        className={`flex items-center h-10 cursor-pointer ${activeTab === `${index}-${tag}` ? "text-blue-500" : "text-gray-300"} transition duration-75 rounded-lg group hover:text-white`}
                     >
                         <span
                             style={{

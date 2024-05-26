@@ -48,7 +48,7 @@ const Comments = ({ taskId, userId }: CommentsProps) => {
 
     const ReactionPopup: React.FC<ReactionPopupProps> = ({ reactions, onSelectReaction }) => {
         return (
-            <div className="flex space-x-2 p-2 bg-white border rounded shadow-lg">
+            <div className="flex space-x-2 p-2 border rounded shadow-lg">
                 {reactionOptions.map((emoji, index) => (
                     <span
                         key={index}

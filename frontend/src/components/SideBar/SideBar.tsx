@@ -41,7 +41,7 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
     setActiveTab("reminders");
   };
   return (
-    <div className="fixed h-full pt-4 sm:static text-gray-400 flex-col w-72 px-5 bg-white border-r dark:bg-gray-900 dark:border-gray-700">
+    <div className="fixed h-full pt-4 sm:static text-gray-400 flex-col w-72 px-5  border-r bg-gray-900 border-gray-700">
       <div className="flex flex-row ml-[-4px] sm:hidden ">
         <ProfileButton />
         <div className="ml-24">
@@ -55,8 +55,11 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
           <li>
             <button
               onClick={handleAllTasks}
-              className={`bold flex items-center w-full p-2 ${activeTab === "all" ? "bg-gray-700" : ""
-                } text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white`}
+              className={`bold flex items-center w-full p-2 transition duration-75 rounded-lg group 
+          ${activeTab === "all" ? "bg-gray-700 text-white" : "text-gray-300"}
+          hover:bg-gray-400 hover:text-white 
+          focus:bg-gray-600 focus:text-white outline-none
+          active:bg-gray-700 active:text-white`}
             >
               <HomeOutlined className="text-lg" />
               <span className="ml-3">All Tasks</span>
@@ -69,8 +72,11 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
                 handleFilter(setTodaysTasks);
                 setActiveTab("todays");
               }}
-              className={`bold flex items-center w-full p-2 ${activeTab === "todays" ? "bg-gray-700" : ""
-                } text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white`}
+              className={`bold flex items-center w-full p-2 transition duration-75 rounded-lg group 
+          ${activeTab === "todays" ? "bg-gray-700 text-white" : "text-gray-300"}
+          hover:bg-gray-400 hover:text-white 
+          focus:bg-gray-600 focus:text-white outline-none
+          active:bg-gray-700 active:text-white`}
             >
               <SnippetsOutlined className="text-lg" />
               <span className="flex-1 ml-3 whitespace-nowrap">
@@ -86,8 +92,11 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
                 handleFilter(setUpcomingTasks);
                 setActiveTab("upcomingTasks");
               }}
-              className={`bold flex items-center w-full p-2 ${activeTab === "upcomingTasks" ? "bg-gray-700" : ""
-                } text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white`}
+              className={`bold flex items-center w-full p-2 transition duration-75 rounded-lg group 
+          ${activeTab === "upcomingTasks" ? "bg-gray-700 text-white" : "text-gray-300"}
+          hover:bg-gray-400 hover:text-white 
+          focus:bg-gray-600 focus:text-white outline-none
+          active:bg-gray-700 active:text-white`}
             >
               <CalendarOutlined className="text-lg" />
               <span className="flex-1 ml-3 whitespace-nowrap">
@@ -97,16 +106,16 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
           </li>
 
           {/* Reminders */}
-          <li>
+          {/* <li>
             <button
               onClick={handleTemp}
               className={`bold flex items-center w-full p-2 ${activeTab === "reminders" ? "bg-gray-700" : ""
-                } text-gray-900 transition duration-75 rounded-lg  group hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white`}
+                } transition duration-75 rounded-lg  group text-gray-300 hover:bg-gray-700 hover:text-white`}
             >
               <BellOutlined className="text-lg" />
               <span className="flex-1 ml-3 whitespace-nowrap">Reminders</span>
             </button>
-          </li>
+          </li> */}
         </ul>
         <TagList activeTab={activeTab} setActiveTab={setActiveTab} onChildPopupInteraction={onChildPopupInteraction} />
         {/* Add tag button */}

@@ -94,7 +94,7 @@ const UserDashboard = () => {
     <div className="flex h-full w-full">
       {/* Render Sidebar based on showSidebar state */}
       {showSidebar && (
-        <div ref={sideBarRef} className="h-full">
+        <div ref={sideBarRef} className="h-full z-20 mt-1 sm:mt-3">
           <SideBar onChildPopupInteraction={handleChildPopupInteraction} />
         </div>
       )}
@@ -151,7 +151,7 @@ const UserDashboard = () => {
           )
         }
         onClick={toggleAddTaskFunc}
-        className="sm:hidden fixed bottom-4 right-4 bg-blue-500 text-white rounded-full shadow-md z-50"
+        className="fixed bottom-4 right-4 bg-blue-500 text-white rounded-full shadow-md z-50"
       ></Button>
     </div>
   );

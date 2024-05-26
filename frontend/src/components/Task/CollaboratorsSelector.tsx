@@ -42,7 +42,7 @@ const CollaboratorsSelector = ({ collaborators, setCollaborators, canEdit }: Col
       <Select
         mode="multiple"
         allowClear
-        placeholder="Please select collaborators"
+        placeholder="Select collaborators"
         value={collaborators?.length > 0 ? collaborators.map(collab => collab.user._id) : []}
         onChange={handleUserChange}
         style={{ width: "100%" }}
@@ -77,7 +77,7 @@ const CollaboratorsSelector = ({ collaborators, setCollaborators, canEdit }: Col
                 <Avatar
                   src={allUsers?.find(user => user._id === collab.user._id)?.picture}
                   alt={collab.user.name}
-                  className="rounded-full bg-white m-2 border-blue-500 "
+                  className="rounded-full m-2 border-blue-500 "
                 />
                 <p>
                   {allUsers?.find(user => user._id === collab.user._id)?.name} {user?._id === collab.user._id ? "(You)" : ""}

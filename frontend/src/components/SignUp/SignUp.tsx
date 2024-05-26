@@ -99,23 +99,23 @@ const SignUp = () => {
   const handleCheckbox = () => setIsSubscribed((prev) => !prev);
 
   return (
-    <div className="bg-gray-900 flex h-screen flex-col overflow-y-hidden overflow-x-hidden">
+    <div className="bg-gray-900 flex h-full flex-col overflow-y-hidden overflow-x-hidden">
       <section>
         {/* <form onSubmit={handleSubmit}> */}
         <div className="flex flex-col items-center mt-20 mx-auto  lg:py-0">
           <a
             href="/signup"
-            className="flex items-center mb-6 text-xl font-semibold text-gray-900 dark:text-white"
+            className="flex items-center mb-6 text-xl font-semibold text-white"
           >
             Sign Up
           </a>
-          <div className=" bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+          <div className="flex justify-center items-center rounded-lg shadow border md:mt-0 sm:max-w-md xl:p-0 bg-gray-800 border-gray-700">
             <div className="p-5 space-y-5 md:space-y-5 sm:p-5">
               <form className="space-y-4 md:space-y-6" action="#">
                 {/*error message */}
                 {userData.showErrMsg === true ? (
                   <div
-                    className="flex p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800"
+                    className="flex p-4 mb-4 text-sm border rounded-lg bg-gray-800 text-red-400 border-red-800"
                     role="alert"
                   >
                     <svg
@@ -144,7 +144,7 @@ const SignUp = () => {
                 <div>
                   <label
                     htmlFor="name"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    className="block mb-2 text-sm font-medium text-white"
                   >
                     Your Name
                   </label>
@@ -152,7 +152,7 @@ const SignUp = () => {
                     type="text"
                     name="name"
                     id="name"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-80 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="border sm:text-sm rounded-lg block w-80 p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
                     placeholder="tom Cruise"
                     required
                     value={userData.name}
@@ -162,7 +162,7 @@ const SignUp = () => {
                 <div>
                   <label
                     htmlFor="email"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    className="block mb-2 text-sm font-medium text-white"
                   >
                     Your email
                   </label>
@@ -170,7 +170,7 @@ const SignUp = () => {
                     type="email"
                     name="email"
                     id="email"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-80 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="border sm:text-sm rounded-lg block w-80 p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
                     placeholder="name@company.com"
                     required
                     value={userData.email}
@@ -180,7 +180,7 @@ const SignUp = () => {
                 <div>
                   <label
                     htmlFor="password"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    className="block mb-2 text-sm font-medium text-white"
                   >
                     Password
                   </label>
@@ -191,7 +191,7 @@ const SignUp = () => {
                     value={userData.password}
                     onChange={handleChange}
                     placeholder="••••••••"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-80 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="border sm:text-sm rounded-lg block w-80 p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
                     required
                   />
                 </div>
@@ -199,7 +199,7 @@ const SignUp = () => {
                 <div>
                   <label
                     htmlFor="confirm-password"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    className="block mb-2 text-sm font-medium text-white"
                   >
                     Confirm password
                   </label>
@@ -210,7 +210,7 @@ const SignUp = () => {
                     value={userData.conPassword}
                     onChange={handleChange}
                     placeholder="••••••••"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-80 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="border sm:text-sm rounded-lg block w-80 p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
                     required
                   />
                 </div>
@@ -221,7 +221,7 @@ const SignUp = () => {
                       id="terms"
                       aria-describedby="terms"
                       type="checkbox"
-                      className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+                      className="w-4 h-4 border rounded focus:ring-3 bg-gray-700 border-gray-600 focus:ring-primary-600 ring-offset-gray-800"
                       required
                       // value={isSubscribed}
                       onChange={handleCheckbox}
@@ -230,7 +230,7 @@ const SignUp = () => {
                   <div className="ml-3 text-sm">
                     <label
                       htmlFor="terms"
-                      className="font-light text-gray-500 dark:text-gray-300"
+                      className="font-light text-gray-300"
                     >
                       I accept the Terms and Conditions
                     </label>
@@ -241,7 +241,7 @@ const SignUp = () => {
                     type="submit"
                     id="successButton"
                     data-modal-toggle="successModal"
-                    className="w-80 text-white hover:bg-cyan-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 disabled: bg-cyan-400"
+                    className="w-80 text-white focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center bg-primary-600 hover:bg-primary-700 focus:ring-primary-800 disabled: bg-cyan-400"
                     onClick={(e) => handleSubmit(e)}
                     disabled={
                       userData.email.length === 0 ||
@@ -253,11 +253,11 @@ const SignUp = () => {
                     Create an account
                   </button>
                 </div>
-                <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+                <p className="text-sm font-light text-gray-400">
                   Already have an account?{" "}
                   <a
                     href="/login"
-                    className="font-medium text-primary-600 hover:underline dark:text-primary-500"
+                    className="font-medium hover:underline text-primary-500"
                   >
                     Login here
                   </a>

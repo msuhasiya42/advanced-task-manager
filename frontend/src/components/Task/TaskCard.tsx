@@ -50,7 +50,7 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
 
   const redOrYellow = () => (taskDueDay < currentDay ? "red" : "yellow");
   const dateColor = task.done ? "green" : redOrYellow();
-  const classNameDueDate = `text-xs ml-1 w-18 bg-${dateColor}-400 text-black font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-${dateColor}-400 dark:text-white border border-white-600  `;
+  const classNameDueDate = `text-xs ml-1 w-18 text-black font-medium inline-flex items-center px-2.5 py-0.5 rounded bg-${dateColor}-400 text-white border border-white-600  `;
 
   const { updateTaskDataStore, updateTaskFilteredTasksStore } = useTaskStore();
   const { user } = useAuthStore()
@@ -128,7 +128,7 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
           e.stopPropagation(), setShowModal(true);
         }}
       >
-        <div className="font-thin w-full mb-2 overflow-hidden rounded-lg shadow-lg dark:bg-gray-800 border hover:border-cyan-400 border-solid border-transparent transition duration-300 ease-in-out ">
+        <div className="font-thin w-full mb-2 overflow-hidden rounded-lg shadow-lg bg-gray-800 border hover:border-cyan-400 border-solid border-transparent transition duration-300 ease-in-out ">
           {/* <img
             className="w-full h-48 mt-2"
             src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=320&q=80"
@@ -143,14 +143,15 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
                     tags?.map((tag) => (
                       <span
                         key={tag.name}
-                        className="text-xxs font-thin text-center px-2 py-1 mt-2 mr-1 rounded-xl dark:text-white"
+                        className="text-xxs font-thin text-center px-2 py-1 mt-2 mr-1 rounded-xl text-white"
                         style={{ backgroundColor: tag.color }}
                       >
                         {tag?.name}
                       </span>
                     ))}
                 </div>
-                <h1 className="text-sm font-extralight text-gray-400 dark:text-gray-300">
+                {/* task title */}
+                <h1 className="text-sm font-extralight text-gray-300">
                   {title}
                 </h1>
               </div>
@@ -163,7 +164,7 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
               </div>
             </div>
 
-            <div className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+            <div className="mt-1 text-sm text-gray-400">
               {description && description?.replace(/<[^>]*>/g, "") !== "" && (
                 <Popover content={content} trigger="hover">
                   <AlignLeftOutlined />

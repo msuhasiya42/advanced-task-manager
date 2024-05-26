@@ -210,7 +210,7 @@ const EditTaskModal = (props: EditTaskModalProps) => {
             <Select
               mode="multiple"
               allowClear
-              placeholder="Please select tags"
+              placeholder="Select tags"
               value={modalData.tags.map((tag) => tag.name)}
               onChange={handleTagsChange}
               style={{ width: "100%" }}

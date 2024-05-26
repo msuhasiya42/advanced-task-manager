@@ -7,7 +7,7 @@ const Notifications = () => {
       <button
         type="button"
         data-dropdown-toggle="notification-dropdown"
-        className="mr-2 text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+        className="mr-2 text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 text-gray-400 hover:text-white hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 focus:ring-gray-600"
       >
         <span className="sr-only">View notifications</span>
         {/* <!-- Bell icon --> */}
@@ -23,21 +23,21 @@ const Notifications = () => {
       </button>
       {/* <!-- Dropdown menu --> */}
       <div
-        className="mr-4 hidden overflow-hidden z-50 my-4 max-w-xs text-base list-none bg-white rounded divide-y divide-gray-100 shadow-lg dark:divide-gray-600 dark:bg-gray-700"
+        className="mr-4 hidden overflow-hidden z-50 my-4 max-w-xs text-base list-none rounded divide-y divide-gray-100 shadow-lg divide-gray-600 bg-gray-700"
         id="notification-dropdown"
       >
-        <div className="block py-2 px-4 text-base font-medium text-center text-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <div className="block py-2 px-4 text-base font-medium text-center text-gray-700 bg-gray-50 bg-gray-700 text-gray-400">
           Notifications
         </div>
         <div>
-          <button className="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600">
+          <button className="flex py-3 px-4 border-b hover:bg-gray-100 hover:bg-gray-600 border-gray-600">
             <div className="flex-shrink-0">
               <img
                 className="w-11 h-11 rounded-full"
                 src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png"
                 alt="Bonnie Green avatar"
               />
-              <div className="flex absolute justify-center items-center ml-6 -mt-5 w-5 h-5 rounded-full border border-white bg-primary-700 dark:border-gray-700">
+              <div className="flex absolute justify-center items-center ml-6 -mt-5 w-5 h-5 rounded-full border border-white bg-primary-700 border-gray-700">
                 <svg
                   aria-hidden="true"
                   className="w-3 h-3 text-white"
@@ -51,26 +51,26 @@ const Notifications = () => {
               </div>
             </div>
             <div className="pl-3 w-full">
-              <div className="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400">
+              <div className="text-gray-500 font-normal text-sm mb-1.5 text-gray-400">
                 New message from{" "}
-                <span className="font-semibold text-gray-900 dark:text-white">
+                <span className="font-semibold text-gray-900 text-white">
                   Bonnie Green
                 </span>
                 : "Hey, what's up? All set for the presentation?"
               </div>
-              <div className="text-xs font-medium text-primary-700 dark:text-primary-400">
+              <div className="text-xs font-medium text-primary-700 text-primary-400">
                 a few moments ago
               </div>
             </div>
           </button>
-          <button className="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600">
+          <button className="flex py-3 px-4 border-b hover:bg-gray-100 hover:bg-gray-600 border-gray-600">
             <div className="flex-shrink-0">
               <img
                 className="w-11 h-11 rounded-full"
                 src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/jese-leos.png"
                 alt="Jese Leos avatar"
               />
-              <div className="flex absolute justify-center items-center ml-6 -mt-5 w-5 h-5 bg-gray-900 rounded-full border border-white dark:border-gray-700">
+              <div className="flex absolute justify-center items-center ml-6 -mt-5 w-5 h-5 bg-gray-900 rounded-full border border-white border-gray-700">
                 <svg
                   aria-hidden="true"
                   className="w-3 h-3 text-white"
@@ -83,29 +83,29 @@ const Notifications = () => {
               </div>
             </div>
             <div className="pl-3 w-full">
-              <div className="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400">
-                <span className="font-semibold text-gray-900 dark:text-white">
+              <div className="text-gray-500 font-normal text-sm mb-1.5 text-gray-400">
+                <span className="font-semibold text-gray-900 text-white">
                   Jese leos
                 </span>{" "}
                 and{" "}
-                <span className="font-medium text-gray-900 dark:text-white">
+                <span className="font-medium text-gray-900 text-white">
                   5 others
                 </span>{" "}
                 started following you.
               </div>
-              <div className="text-xs font-medium text-primary-700 dark:text-primary-400">
+              <div className="text-xs font-medium text-primary-700 text-primary-400">
                 10 minutes ago
               </div>
             </div>
           </button>
-          <button className="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600">
+          <button className="flex py-3 px-4 border-b hover:bg-gray-100 hover:bg-gray-600 border-gray-600">
             <div className="flex-shrink-0">
               <img
                 className="w-11 h-11 rounded-full"
                 src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/joseph-mcfall.png"
                 alt="Joseph McFall avatar"
               />
-              <div className="flex absolute justify-center items-center ml-6 -mt-5 w-5 h-5 bg-red-600 rounded-full border border-white dark:border-gray-700">
+              <div className="flex absolute justify-center items-center ml-6 -mt-5 w-5 h-5 bg-red-600 rounded-full border border-white border-gray-700">
                 <svg
                   aria-hidden="true"
                   className="w-3 h-3 text-white"
@@ -122,29 +122,29 @@ const Notifications = () => {
               </div>
             </div>
             <div className="pl-3 w-full">
-              <div className="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400">
-                <span className="font-semibold text-gray-900 dark:text-white">
+              <div className="text-gray-500 font-normal text-sm mb-1.5 text-gray-400">
+                <span className="font-semibold text-gray-900 text-white">
                   Joseph Mcfall
                 </span>{" "}
                 and{" "}
-                <span className="font-medium text-gray-900 dark:text-white">
+                <span className="font-medium text-gray-900 text-white">
                   141 others
                 </span>{" "}
                 love your story. See it and view more stories.
               </div>
-              <div className="text-xs font-medium text-primary-700 dark:text-primary-400">
+              <div className="text-xs font-medium text-primary-700 text-primary-400">
                 44 minutes ago
               </div>
             </div>
           </button>
-          <button className="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600">
+          <button className="flex py-3 px-4 border-b hover:bg-gray-100 hover:bg-gray-600 border-gray-600">
             <div className="flex-shrink-0">
               <img
                 className="w-11 h-11 rounded-full"
                 src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/roberta-casas.png"
                 alt="Roberta Casas "
               />
-              <div className="flex absolute justify-center items-center ml-6 -mt-5 w-5 h-5 bg-green-400 rounded-full border border-white dark:border-gray-700">
+              <div className="flex absolute justify-center items-center ml-6 -mt-5 w-5 h-5 bg-green-400 rounded-full border border-white border-gray-700">
                 <svg
                   aria-hidden="true"
                   className="w-3 h-3 text-white"
@@ -161,29 +161,29 @@ const Notifications = () => {
               </div>
             </div>
             <div className="pl-3 w-full">
-              <div className="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400">
-                <span className="font-semibold text-gray-900 dark:text-white">
+              <div className="text-gray-500 font-normal text-sm mb-1.5 text-gray-400">
+                <span className="font-semibold text-gray-900 text-white">
                   Leslie Livingston
                 </span>{" "}
                 mentioned you in a comment:{" "}
-                <span className="font-medium text-primary-700 dark:text-primary-500">
+                <span className="font-medium text-primary-700 text-primary-500">
                   @bonnie.green
                 </span>{" "}
                 what do you say?
               </div>
-              <div className="text-xs font-medium text-primary-700 dark:text-primary-400">
+              <div className="text-xs font-medium text-primary-700 text-primary-400">
                 1 hour ago
               </div>
             </div>
           </button>
-          <button className="flex py-3 px-4 hover:bg-gray-100 dark:hover:bg-gray-600">
+          <button className="flex py-3 px-4 hover:bg-gray-100 hover:bg-gray-600">
             <div className="flex-shrink-0">
               <img
                 className="w-11 h-11 rounded-full"
                 src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/robert-brown.png"
                 alt="Robert "
               />
-              <div className="flex absolute justify-center items-center ml-6 -mt-5 w-5 h-5 bg-purple-500 rounded-full border border-white dark:border-gray-700">
+              <div className="flex absolute justify-center items-center ml-6 -mt-5 w-5 h-5 bg-purple-500 rounded-full border border-white border-gray-700">
                 <svg
                   aria-hidden="true"
                   className="w-3 h-3 text-white"
@@ -196,20 +196,20 @@ const Notifications = () => {
               </div>
             </div>
             <div className="pl-3 w-full">
-              <div className="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400">
-                <span className="font-semibold text-gray-900 dark:text-white">
+              <div className="text-gray-500 font-normal text-sm mb-1.5 text-gray-400">
+                <span className="font-semibold text-gray-900 text-white">
                   Robert Brown
                 </span>{" "}
                 posted a new video: Glassmorphism - learn how to implement the
                 new design trend.
               </div>
-              <div className="text-xs font-medium text-primary-700 dark:text-primary-400">
+              <div className="text-xs font-medium text-primary-700 text-primary-400">
                 3 hours ago
               </div>
             </div>
           </button>
         </div>
-        <button className="block py-2 text-base font-normal text-center text-gray-900 bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:text-white dark:hover:underline">
+        <button className="block py-2 text-base font-normal text-center text-gray-900 bg-gray-50 hover:bg-gray-100 bg-gray-700 text-white hover:underline">
           <div className="inline-flex items-center ">
             <svg
               aria-hidden="true"

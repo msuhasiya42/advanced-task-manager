@@ -17,7 +17,7 @@ const HeaderPage = () => {
 
 
   return (
-    <div className="fixed z-20 justify-center w-full border-b-2 py-2 flex flex-wrap sm:justify-between mx-auto dark:bg-gray-900 dark:border-gray-700">
+    <div className="fixed z-20 justify-center w-full border-b-2 py-2 flex flex-wrap sm:justify-between mx-auto bg-gray-900 border-gray-700">
       <a href="/user-dashboard" className="flex items-center">
         <span className="sm:ml-6 self-center text-2xl font-semibold bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent whitespace-nowrap">
           Task Manager
@@ -38,13 +38,13 @@ const HeaderPage = () => {
         : <div
           className="hidden w-full md:block md:w-auto"
         >
-          <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-transparent dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+          <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border rounded-lg md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-transparent bg-gray-800 md:bg-gray-900 border-gray-700">
             <li>
               <a
                 href="/"
-                className={`block py-2 pl-3 pr-4 rounded transition-all duration-300 md:hover:bg-transparent ${isActive("/")
-                  ? "text-white bg-blue-700 hover:bg-blue-600"
-                  : "text-gray-900 hover:bg-gray-100 md:text-white dark:hover:bg-gray-700"
+                className={`block p-2 rounded transition-all duration-300 md:hover:bg-transparent ${isActive("/")
+                  ? "text-white bg-blue-700 hover:bg-blue-400"
+                  : "text-gray-900 md:text-white"
                   }`}
               >
                 Home
@@ -54,8 +54,8 @@ const HeaderPage = () => {
               <a
                 href="/login"
                 className={`block py-2 pl-3 pr-4 rounded transition-all duration-300 md:hover:bg-transparent ${isActive("/login")
-                  ? "text-white bg-blue-700 hover:bg-blue-600"
-                  : "text-gray-900 hover:bg-gray-100 md:text-white dark:hover:bg-gray-700"
+                  ? "text-white bg-blue-700 hover:bg-blue-500"
+                  : "text-gray-900 md:text-white hover:bg-gray-500"
                   }`}
               >
                 Login
@@ -64,9 +64,9 @@ const HeaderPage = () => {
             <li>
               <a
                 href="/signup"
-                className={`block py-2 pl-3 pr-4 rounded transition-all duration-300 md:hover:bg-transparent ${isActive("/signup")
+                className={`block p-2 rounded transition-all duration-300 md:hover:bg-transparent ${isActive("/signup")
                   ? "text-white bg-blue-700 hover:bg-blue-600"
-                  : "text-gray-900 hover:bg-gray-100 md:text-white dark:hover:bg-gray-700"
+                  : "text-gray-900 md:text-white hover:bg-gray-700"
                   }`}
               >
                 Sign Up

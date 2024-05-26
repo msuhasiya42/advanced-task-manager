@@ -16,19 +16,17 @@ const ProfileButton = () => {
   return (
     <div>
       <a href="/user-profile">
-        <div className="ml-2 mr-2 w-22 mt-1 h-8 items-center justify-center text-white bg-gray-900 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-2 py-1.5  dark:hover:bg-gray-800 dark:focus:ring-gray-700 dark:border-gray-700">
-          <div className="flex items-center space-x-1 ">
-            <img
-              className="w-6 h-6 rounded-xl bg-gray-700"
-              src={
-                picture == undefined
-                  ? "https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-PNG-Images.png"
-                  : picture
-              }
-              alt="User profile"
-            />
-            <div className="text-sm">{getUserName()}</div>
-          </div>
+        <div className="gap-2 flex ml-2 mr-2 w-22 mt-1 h-8 items-center justify-center text-white bg-gray-900  focus:outline-none focus:ring-4 font-medium rounded-lg text-sm px-2 py-1.5  hover:bg-gray-700 focus:ring-gray-700 border-gray-700">
+          <img
+            className="w-6 h-6 rounded-xl bg-gray-700"
+            src={
+              picture == undefined
+                ? "https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-PNG-Images.png"
+                : picture
+            }
+            alt="User profile"
+          />
+          {getUserName()}
         </div>
       </a>
     </div>

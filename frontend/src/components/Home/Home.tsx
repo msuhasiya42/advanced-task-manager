@@ -37,12 +37,12 @@ const Home = () => {
   ];
 
   return (
-    <div>
+    <div className="flex justify-center items-center h-screen bg-gray-900">
       <div className="text-center p-5">
-        <h1 className="text-4xl font-bold mb-4">
-          Welcome to Your Todo Manager
+        <h1 className="text-white text-4xl font-bold mb-4">
+          Welcome to Your Advance Task Manager
         </h1>
-        <p className="text-lg mb-8">
+        <p className="text-lg mb-8 text-gray-400">
           Organize your tasks efficiently and increase your productivity.
         </p>
 
@@ -65,9 +65,9 @@ const Home = () => {
           >
             Get Started
           </Link>
-          <p className="mt-4">
+          <p className="mt-8 text-gray-400">
             Already have an account?{" "}
-            <Link to="/login" className="text-blue-600 hover:underline">
+            <Link to="/login" className="text-blue-500 hover:underline">
               Login
             </Link>
           </p>

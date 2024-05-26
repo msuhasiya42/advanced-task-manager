@@ -37,7 +37,7 @@ function App() {
 
   return (
     <Router>
-      <div className="flex">
+      <div className="flex h-full">
         <HeaderPage />
         <div className="flex-1 w-screen mt-12">
           <Routes>

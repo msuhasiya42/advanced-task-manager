@@ -90,7 +90,7 @@ const AddUpdateTag = ({ tagId, showModal, setShowModal, onChildPopupInteraction,
           </Button>,
           <button
             key="add"
-            className="text-gray-900 bg-white border ml-2 px-5 py-1 border-blue-300 focus:outline-none hover:bg-blue-400 focus:ring-4 focus:ring-blue-200 font-medium rounded-lg text-sm mr-2 mb-2 dark:bg-blue-500 dark:text-white dark:border-blue-600 dark:hover:bg-blue-700 dark:hover:border-blue-600 dark:focus:ring-blue-700"
+            className="text-gray-900 border ml-2 px-5 py-1 border-blue-300 focus:outline-none hover:bg-blue-400 focus:ring-4 focus:ring-blue-200 font-medium rounded-lg text-sm mr-2 mb-2 bg-blue-500 text-white border-blue-600 hover:bg-blue-700 hover:border-blue-600 focus:ring-blue-700"
             onClick={handleSubmit}
           >
             {isEditMode ? "Update" : "Add"} {/* Change button label based on mode */}
@@ -104,7 +104,7 @@ const AddUpdateTag = ({ tagId, showModal, setShowModal, onChildPopupInteraction,
             onChange={(e) => setTagName(e.target.value)}
             id="tagName"
             type="text"
-            className="block w-full text-gray-800 bg-white mb-4 focus:ring-0"
+            className="block w-full text-gray-800 mb-4 focus:ring-0"
             required
           />
           <Title level={5}>Tag color</Title>
