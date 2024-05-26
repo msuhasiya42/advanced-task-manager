@@ -3,7 +3,6 @@ import UserDashboard from "./components/UserDashboard/UserDashboard";
 import NotFound from "./components/NotFound/NotFound";
 import Login from "./components/Login/Login";
 import SignUp from "./components/SignUp/SignUp";
-import AboutUs from "./components/AboutUs/AboutUs";
 import ContactUs from "./components/ContactUs/ContactUs";
 import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
 import ProtectedRoute from "./components/Protected/Protected";
@@ -13,6 +12,7 @@ import React, { useEffect } from "react";
 import HeaderPage from "./components/HeaderPage/HeaderPage";
 import useAuthStore from "./Store/authStore";
 import { userAPI } from "./Api";
+import AboutMe from "./components/AboutMe/AboutMe";
 
 function App() {
 
@@ -44,7 +44,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/" element={<Home />} />
-            <Route path="/about-us" element={<AboutUs />} />
+            <Route path="/about-me" element={<AboutMe />} />
             <Route
               path="/user-dashboard"
               element={
