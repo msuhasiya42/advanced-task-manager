@@ -28,9 +28,9 @@ const TagList = ({ setActiveTab, activeTab, onChildPopupInteraction }: TagListPr
         updateTagsInTasks
     } = useTaskStore();
 
-    const filterTaskByTagName = (tag: string) => {
+    const filterTaskByTagName = (tagId: string) => {
         copyTasks();
-        taskTypes.forEach((category) => filterTasksByTag(category, tag));
+        taskTypes.forEach((category) => filterTasksByTag(category, tagId));
     };
 
     const userId = useAuthStore((state) => state?.user?._id);
@@ -108,7 +108,7 @@ const TagList = ({ setActiveTab, activeTab, onChildPopupInteraction }: TagListPr
                 <div className="flex flex-row items-center justify-between mx-2 my-1" key={index}>
                     <div
                         onClick={() => {
-                            filterTaskByTagName(tag.name);
+                            filterTaskByTagName(tag._id);
                             setActiveTab(`${index}-${tag}`);
                         }}
                         className={`flex items-center h-10 cursor-pointer ${activeTab === `${index}-${tag}` ? "text-blue-500" : "text-gray-300"} transition duration-75 rounded-lg group hover:text-white`}

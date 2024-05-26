@@ -41,8 +41,8 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
     setActiveTab("reminders");
   };
   return (
-    <div className="fixed h-full pt-4 sm:static text-gray-400 flex-col w-72 px-5  border-r bg-gray-900 border-gray-700">
-      <div className="flex flex-row ml-[-4px] sm:hidden ">
+    <div className="fixed h-full sm:static text-gray-400 flex-col w-72 px-5  border-r bg-gray-900 border-gray-700">
+      <div className="mt-4 flex flex-row sm:hidden ">
         <ProfileButton />
         <div className="ml-24">
           <LogoutButton />
@@ -50,7 +50,7 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
       </div>
       <hr className="border-t sm:hidden border-gray-300 my-4" />
       <nav className="flex-1 space-y-3 ">
-        <ul className="menu text-base-content bg-gray-900">
+        <ul className="menu text-base-content bg-gray-900 sm:mt-8">
           {/* Sidebar content here */}
           <li>
             <button

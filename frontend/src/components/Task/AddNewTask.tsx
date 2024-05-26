@@ -82,7 +82,7 @@ const AddNewTask = ({ status }: StatusType) => {
                 ref={textRef}
                 size="large"
                 placeholder="Write about task..."
-                prefix={<EditOutlined />}
+                prefix={<EditOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />}
                 onChange={updateTitle}
               />
             </div>
@@ -100,9 +100,9 @@ const AddNewTask = ({ status }: StatusType) => {
             <button
               type="button"
               onClick={handleClick}
-              className=" mb-5 inline-flex justify-center items-center py-1 text-lg text-center rounded-md p-2 hover:bg-gray-800"
+              className=" mb-5 inline-flex justify-center items-center py-1 text-white text-lg text-center rounded-md p-2 hover:bg-gray-800"
             >
-              <CloseOutlined />
+              <CloseOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
             </button>
           </div>
         </form>
@@ -111,7 +111,7 @@ const AddNewTask = ({ status }: StatusType) => {
           className="hover:bg-slate-700 pl-3 rounded-md py-1 cursor-pointer text-white"
           onClick={handleClick}
         >
-          <PlusOutlined /> <span className="text-sm pr-3">Add Task</span>
+          <PlusOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} /> <span className="text-sm pr-3">Add Task</span>
         </div>
       )}
     </div>
