@@ -3,14 +3,11 @@ const Task = require("../Models/task");
 // Controller for creating a new task
 const createTask = async (req, res) => {
   try {
-    const { title, status, user } = req.body;
     const createdBy = req.user._id; // Assuming you have user information stored in the request object
 
     // Create a new task object
     const newTask = new Task({
-      title,
-      status,
-      user,
+      ...req.body,
       createdBy,
       updatedBy: createdBy,
     });

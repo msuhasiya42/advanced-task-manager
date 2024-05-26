@@ -99,10 +99,10 @@ const SignUp = () => {
   const handleCheckbox = () => setIsSubscribed((prev) => !prev);
 
   return (
-    <div className="bg-gray-900 flex h-full flex-col overflow-y-hidden overflow-x-hidden">
+    <div className="bg-gray-900 flex h-full flex-col justify-center items-center overflow-y-hidden overflow-x-hidden">
       <section>
         {/* <form onSubmit={handleSubmit}> */}
-        <div className="flex flex-col items-center mt-20 mx-auto  lg:py-0">
+        <div className="flex flex-col items-center mx-auto  lg:py-0">
           <a
             href="/signup"
             className="flex items-center mb-6 text-xl font-semibold text-white"

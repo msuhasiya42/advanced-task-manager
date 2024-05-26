@@ -28,7 +28,7 @@ const AddNewTask = ({ status }: StatusType) => {
         return;
       }
       taskAPI
-        .createTask(task, status, user)
+        .createTask({ title: task, status, user })
         .then((response) => {
           const newTask = response.data.task;
           addTaskDataStore(status, newTask);

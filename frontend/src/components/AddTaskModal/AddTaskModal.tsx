@@ -40,7 +40,7 @@ const AddTaskModal = ({ showAddTaskModal, setShowAddTaskModal }: AddTaskModalPro
                 return;
             }
             taskAPI
-                .createTask(title, status, user)
+                .createTask({ title, status, user })
                 .then((response) => {
                     console.log("Response", response.data.task);
                     const newTask = response.data.task;

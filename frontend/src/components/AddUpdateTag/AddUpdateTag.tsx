@@ -70,13 +70,13 @@ const AddUpdateTag = ({ tagId, showModal, setShowModal, onChildPopupInteraction,
     <>
       {!isEditMode && <button
         onClick={handleToggle}
-        className="px-5 py-1 ml-8 w-32 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
+        className="px-5 py-1 w-32 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
       >
         Add Tag
       </button>}
       <Modal
         open={showModal}
-        title={<div className="flex text-lg justify-start"><TagOutlined className="mr-2" />{isEditMode ? "Update Tag" : "Add Tag"}</div>}
+        title={<div className="flex text-lg justify-start"><TagOutlined className="mr-2" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />{isEditMode ? "Update Tag" : "Add Tag"}</div>}
         centered
         onCancel={handleToggle}
         width={330}

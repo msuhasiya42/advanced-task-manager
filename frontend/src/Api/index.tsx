@@ -98,8 +98,8 @@ export const tagAPI = {
 
 // Task related APIs
 export const taskAPI = {
-  createTask: (title: string, status: string, user: string) =>
-    postToAPI("tasks/add", { title, status, user }),
+  createTask: (taskData: object) =>
+    postToAPI("tasks/add", taskData),
 
   fetchTask: (userId: string) =>
     getFromAPI(`/tasks/getByUserId/${userId}`),

@@ -61,7 +61,7 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
           focus:bg-gray-600 focus:text-white outline-none
           active:bg-gray-700 active:text-white`}
             >
-              <HomeOutlined className="text-lg" />
+              <HomeOutlined className="text-lg" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
               <span className="ml-3">All Tasks</span>
             </button>
           </li>
@@ -78,7 +78,7 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
           focus:bg-gray-600 focus:text-white outline-none
           active:bg-gray-700 active:text-white`}
             >
-              <SnippetsOutlined className="text-lg" />
+              <SnippetsOutlined className="text-lg" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
               <span className="flex-1 ml-3 whitespace-nowrap">
                 Todays Tasks
               </span>
@@ -98,7 +98,7 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
           focus:bg-gray-600 focus:text-white outline-none
           active:bg-gray-700 active:text-white`}
             >
-              <CalendarOutlined className="text-lg" />
+              <CalendarOutlined className="text-lg" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
               <span className="flex-1 ml-3 whitespace-nowrap">
                 Upcoming Tasks
               </span>
@@ -119,7 +119,7 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
         </ul>
         <TagList activeTab={activeTab} setActiveTab={setActiveTab} onChildPopupInteraction={onChildPopupInteraction} />
         {/* Add tag button */}
-        <div className="tags-container">
+        <div className="flex justify-center">
           <AddTags showModal={showModal} setShowModal={setShowModal} onChildPopupInteraction={onChildPopupInteraction} />
         </div>
       </nav>

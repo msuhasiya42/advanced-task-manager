@@ -52,7 +52,7 @@ const UserProfile = () => {
               setUserPhoto(photoData);
 
               // Assuming you have userId available in this scope or as a prop
-              await userAPI.updateUserPhoto(user?._id ?? "", photoData);
+              await userAPI.updatePhoto(user?._id ?? "", photoData);
               updateUser({ picture: photoData });
             } else {
               console.error("Failed to compress the image under 500KB");
@@ -160,7 +160,7 @@ const UserProfile = () => {
           >
             <Button
               className="mt-6"
-              icon={<DeleteOutlined onClick={(e) => e.stopPropagation()} />}
+              icon={<DeleteOutlined onClick={(e) => e.stopPropagation()} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />}
               type="primary"
               danger
             >
