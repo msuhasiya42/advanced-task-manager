@@ -1,3 +1,4 @@
+// server.js
 require("dotenv").config();
 const express = require("express");
 const http = require('http');
@@ -5,7 +6,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const routes = require("./Routes");
-const socket = require('./socket');
+// const socket = require('./socket');
 
 const app = express();
 const server = http.createServer(app);
@@ -42,23 +43,25 @@ mongoose
   });
 
 // Initialize Socket.IO
-const io = socket.init(server);
+// const io = socket.init(server);
 
-io.on("connection", (socket) => {
-    console.log("A user connected");
+// io.on("connection", (socket) => {
+//     console.log("A user connected");
 
-    socket.on("typing", (data) => {
-        socket.broadcast.emit("typing", data);
-    });
+//     socket.on("typing", (data) => {
+//         console.log("Received typing event from client:", data);
+//         socket.broadcast.emit("typing", data);
+//     });
 
-    socket.on("stopTyping", (data) => {
-        socket.broadcast.emit("stopTyping", data);
-    });
+//     socket.on("stopTyping", (data) => {
+//         console.log("Received stopTyping event from client:", data);
+//         socket.broadcast.emit("stopTyping", data);
+//     });
 
-    socket.on("disconnect", () => {
-        console.log("User disconnected");
-    });
-});
+//     socket.on("disconnect", () => {
+//         console.log("User disconnected");
+//     });
+// });
 
 app.use("/", routes);
 

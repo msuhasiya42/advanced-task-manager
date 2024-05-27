@@ -7,7 +7,7 @@ import { API_BASE_URL, commentAPI } from '../../Api'
 import { reactionOptions } from './utils'
 import { useMutation } from 'react-query'
 import useAuthStore, { User } from '../../Store/authStore'
-import io from 'socket.io-client'
+// import io from 'socket.io-client'
 
 interface CommentsProps {
     taskId: string
@@ -19,7 +19,7 @@ interface ReactionPopupProps {
     onSelectReaction: (emoji: string) => void;
 }
 
-const socket = io(API_BASE_URL); // Ensure this URL matches your server URL
+// const socket = io(API_BASE_URL); // Ensure this URL matches your server URL
 
 const Comments = ({ taskId, userId }: CommentsProps) => {
 
@@ -50,26 +50,31 @@ const Comments = ({ taskId, userId }: CommentsProps) => {
         },
     })
     useEffect(() => {
+        // Request existing comments
         commentsMutation.mutate();
 
-        socket.on('newComment', (data) => {
-            setComments((prevComments) => [...prevComments, data.comment]);
-        });
+        // socket.on('newComment', (data) => {
+        //     console.log("Received new comment:", data);
+        //     setComments((prevComments) => [...prevComments, data.comment]);
+        // });
 
         // Listen for typing events
-        socket.on('typing', () => {
-            setIsTyping(true);
-        });
+        // socket.on('typing', (data) => {
+        //     console.log("Typing event received:", data);
+        //     setIsTyping(true);
+        // });
 
-        socket.on('stopTyping', () => {
-            setIsTyping(false);
-        });
+        // socket.on('stopTyping', () => {
+        //     console.log("Stop typing event received");
+        //     setIsTyping(false);
+        // });
 
-        return () => {
-            socket.off('newComment');
-            socket.off('typing');
-            socket.off('stopTyping');
-        };
+        // Clean up socket listeners on unmount
+        // return () => {
+        //     socket.off('newComment');
+        //     socket.off('typing');
+        //     socket.off('stopTyping');
+        // };
 
     }, [taskId]);
 
@@ -191,20 +196,20 @@ const Comments = ({ taskId, userId }: CommentsProps) => {
             message.success("Comment added successfully", 1.5);
 
             // Emit new comment event
-            socket.emit('newComment', { comment: response.data.comment });
+            // socket.emit('newComment', { comment: response.data.comment });
         } catch (error) {
             console.error("Error adding comment:", error);
             message.error("Error adding comment", 1.5);
         }
     };
 
-    const handleTyping = () => {
-        socket.emit('typing', { userId, taskId });
-    };
+    // const handleTyping = () => {
+    //     socket.emit('typing', { userId, taskId });
+    // };
 
-    const handleStopTyping = () => {
-        socket.emit('stopTyping', { userId, taskId });
-    };
+    // const handleStopTyping = () => {
+    //     socket.emit('stopTyping', { userId, taskId });
+    // };
 
     const handleAddReply = async (commentId: string, content: string) => {
         setShowReplies((prevShowReplies) => [...prevShowReplies, commentId]);
@@ -302,8 +307,8 @@ const Comments = ({ taskId, userId }: CommentsProps) => {
                     onPressEnter={handleAddComment}
                     onChange={(e) => setNewComment(e.target.value)}
                     rows={2}
-                    onKeyDown={handleTyping}
-                    onBlur={handleStopTyping}
+                // onKeyDown={handleTyping}
+                // onBlur={handleStopTyping}
                 />
                 <button onClick={handleAddComment} className="w-[130px] mt-2 my-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 rounded">
                     Add Comment

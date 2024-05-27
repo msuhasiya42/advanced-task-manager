@@ -26,7 +26,7 @@ const addComment = async (req, res) => {
         await task.save();
 
         // Broadcast the new comment to all connected clients
-        req.io.emit('newComment', { comment: populatedComment });
+        // req.io.emit('newComment', { comment: populatedComment });
 
         // Send the response with the populated comment
         res.status(201).json({ message: 'Comment added successfully', comment: populatedComment });
@@ -78,7 +78,7 @@ const getComments = async (req, res) => {
         comment.replies.push(newReply._id);
         await comment.save();
 
-        req.io.emit('newReply', { reply: populatedReply }); // Broadcast the new reply to all connected clients
+        // req.io.emit('newReply', { reply: populatedReply }); // Broadcast the new reply to all connected clients
 
         res.status(201).json({ message: 'Reply added successfully', reply: populatedReply });
     } catch (error) {
@@ -108,7 +108,7 @@ const addReaction = async (req, res) => {
         }
 
         await comment.save();
-        req.io.emit('reactionUpdated', { commentId, comment }); // Broadcast the reaction update to all connected clients
+        // req.io.emit('reactionUpdated', { commentId, comment }); // Broadcast the reaction update to all connected clients
 
         res.status(200).json({ message: 'Reaction updated successfully', comment });
     } catch (error) {
@@ -125,7 +125,7 @@ const deleteComment = async (req, res) => {
         // Remove the comment from the task's comments array
         await Task.updateOne({}, { $pull: { comments: commentId } });
 
-        req.io.emit('commentDeleted', commentId); // Broadcast the deleted comment ID to all connected clients
+        // req.io.emit('commentDeleted', commentId); // Broadcast the deleted comment ID to all connected clients
 
         res.status(200).json({ message: "Comment deleted successfully" });
     } catch (error) {
@@ -156,7 +156,7 @@ const editComment = async (req, res) => {
         select: 'name email picture'
       });
 
-      req.io.emit('commentUpdated', {comment: populatedComment}); // Broadcast the updated comment to all connected clients
+      // req.io.emit('commentUpdated', {comment: populatedComment}); // Broadcast the updated comment to all connected clients
 
       res.status(200).json({ message: 'Comment updated successfully', comment: populatedComment });
     } catch (error) {
@@ -188,7 +188,7 @@ const editReply = async (req, res) => {
         select: 'name email picture'
       });
 
-      req.io.emit('replyUpdated', {reply: populatedReply}); // Broadcast the updated reply to all connected clients
+      // req.io.emit('replyUpdated', {reply: populatedReply}); // Broadcast the updated reply to all connected clients
   
       res.status(200).json({ message: 'Reply updated successfully', reply: populatedReply });
     } catch (error) {
@@ -204,7 +204,7 @@ const deleteReply = async (req, res) => {
       // Delete the reply
       await Comment.findByIdAndDelete(replyId);
 
-      req.io.emit('replyDeleted', replyId); // Broadcast the deleted reply ID to all connected clients
+      // req.io.emit('replyDeleted', replyId); // Broadcast the deleted reply ID to all connected clients
       res.status(200).json({ message: "Reply deleted successfully" });
     } catch (error) {
       res.status(500).json({ message: "Error deleting reply", error });
@@ -218,7 +218,7 @@ const deleteReaction = async (req, res) => {
       // Delete the reaction
       await Comment.updateOne({}, { $pull: { reactions: { _id: reactionId } } });
 
-      req.io.emit('reactionDeleted', reactionId); // Broadcast the deleted reaction ID to all connected clients
+      // req.io.emit('reactionDeleted', reactionId); // Broadcast the deleted reaction ID to all connected clients
       res.status(200).json({ message: "Reaction deleted successfully" });
     } catch (error) {
       res.status(500).json({ message: "Error deleting reaction", error });

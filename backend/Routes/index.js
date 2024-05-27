@@ -10,10 +10,10 @@ const commentsRouter = require("./commentsRoute");
 const tagsRouter = require("./tagsRoute");
 
 // Middleware to attach io object to the request object
-router.use((req, res, next) => {
-    req.io = socket.getIO(); // Get the initialized io object from the socket module
-    next();
-});
+// router.use((req, res, next) => {
+//     req.io = socket.getIO(); // Get the initialized io object from the socket module
+//     next();
+// });
 
 router.get("/", (req, res) => {
     res.send("Server Working!");
