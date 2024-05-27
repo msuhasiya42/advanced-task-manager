@@ -7,6 +7,7 @@ import { commentAPI } from '../../Api'
 import { reactionOptions } from './utils'
 import { useMutation } from 'react-query'
 import useAuthStore, { User } from '../../Store/authStore'
+import io from 'socket.io-client'
 
 interface CommentsProps {
     taskId: string
@@ -18,6 +19,8 @@ interface ReactionPopupProps {
     onSelectReaction: (emoji: string) => void;
 }
 
+const socket = io();
+
 const Comments = ({ taskId, userId }: CommentsProps) => {
 
     // for comments
@@ -25,6 +28,10 @@ const Comments = ({ taskId, userId }: CommentsProps) => {
     const [newComment, setNewComment] = useState<string>("");
     const [editCommentValue, setEditCommentValue] = useState("");
     const [showEditCommentInput, setShowEditCommentInput] = useState("");
+    const [isTyping, setIsTyping] = useState(false);
+
+    const user = useAuthStore((state) => state.user)
+
 
     // for replies
     const [newReply, setNewReply] = useState<string>("");
@@ -44,6 +51,26 @@ const Comments = ({ taskId, userId }: CommentsProps) => {
     })
     useEffect(() => {
         commentsMutation.mutate();
+
+        socket.on('newComment', (data) => {
+            setComments((prevComments) => [...prevComments, data.comment]);
+        });
+
+        // Listen for typing events
+        socket.on('typing', () => {
+            setIsTyping(true);
+        });
+
+        socket.on('stopTyping', () => {
+            setIsTyping(false);
+        });
+
+        return () => {
+            socket.off('newComment');
+            socket.off('typing');
+            socket.off('stopTyping');
+        };
+
     }, [taskId]);
 
     const ReactionPopup: React.FC<ReactionPopupProps> = ({ reactions, onSelectReaction }) => {
@@ -154,22 +181,29 @@ const Comments = ({ taskId, userId }: CommentsProps) => {
 
     const handleAddComment = async () => {
         if (newComment.trim() === "") {
-            void message.error("Comment cannot be empty", 1.5);
+            message.error("Comment cannot be empty", 1.5);
             return;
         }
         try {
-            const response = await commentAPI.addComment(
-                taskId,
-                newComment,
-                userId ?? ""
-            );
+            const response = await commentAPI.addComment(taskId, newComment, userId ?? "");
             setComments([...comments, response.data.comment]);
             setNewComment("");
-            void message.success("Comment added successfully", 1.5);
+            message.success("Comment added successfully", 1.5);
+
+            // Emit new comment event
+            socket.emit('newComment', { comment: response.data.comment });
         } catch (error) {
             console.error("Error adding comment:", error);
-            void message.error("Error adding comment", 1.5);
+            message.error("Error adding comment", 1.5);
         }
+    };
+
+    const handleTyping = () => {
+        socket.emit('typing', { userId, taskId });
+    };
+
+    const handleStopTyping = () => {
+        socket.emit('stopTyping', { userId, taskId });
     };
 
     const handleAddReply = async (commentId: string, content: string) => {
@@ -268,10 +302,13 @@ const Comments = ({ taskId, userId }: CommentsProps) => {
                     onPressEnter={handleAddComment}
                     onChange={(e) => setNewComment(e.target.value)}
                     rows={2}
+                    onKeyDown={handleTyping}
+                    onBlur={handleStopTyping}
                 />
                 <button onClick={handleAddComment} className="w-[130px] mt-2 my-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 rounded">
                     Add Comment
                 </button>
+                {isTyping && <span className="text-sm text-gray-500">{user?.name} Typing...</span>}
             </div>
 
             {/* mapping over all comments */}
@@ -379,7 +416,7 @@ const Comments = ({ taskId, userId }: CommentsProps) => {
                                     comment.replies.map((reply) => (
                                         <div key={reply._id} className="ml-8 mb-2 bg-slate-100 p-2 rounded-lg">
                                             <div className="flex items-center mb-2">
-                                                <Avatar icon={<UserOutlined />} src={reply.author.picture} className="mr-2 border-blue-500" />
+                                                <Avatar icon={<UserOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />} src={reply.author.picture} className="mr-2 border-blue-500" />
                                                 <span className="font-bold">{reply.author.name}</span>
                                                 <span className="ml-2 text-gray-500">
                                                     {formatDistanceToNow(new Date(reply.createdAt), { addSuffix: true })}

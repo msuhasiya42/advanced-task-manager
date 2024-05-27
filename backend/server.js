@@ -1,11 +1,14 @@
-// @ts-nocheck
 require("dotenv").config();
 const express = require("express");
+const http = require('http');
 const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const routes = require("./Routes");
+const socket = require('./socket');
 
 const app = express();
+const server = http.createServer(app);
 
 const corsOptions = {
   origin: '*',
@@ -30,7 +33,7 @@ mongoose
   })
   .then(() => {
     console.log("Connection successful");
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.log(`Server started on port ${PORT}`);
     });
   })
@@ -38,7 +41,24 @@ mongoose
     console.error("Connection failed:", err);
   });
 
-const routes = require("./Routes");
+// Initialize Socket.IO
+const io = socket.init(server);
+io.on('connection', clientSocket => {
+  console.log("A user connected");
+
+  socket.on("typing", (data) => {
+      socket.broadcast.emit("typing", data);
+  });
+
+  socket.on("stopTyping", (data) => {
+      socket.broadcast.emit("stopTyping", data);
+  });
+
+  socket.on("disconnect", () => {
+      console.log("User disconnected");
+  });
+});
+
 app.use("/", routes);
 
 // CORS headers
