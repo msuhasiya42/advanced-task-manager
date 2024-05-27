@@ -9,12 +9,11 @@ const tasksRouter = require("./tasksRoute");
 const commentsRouter = require("./commentsRoute");
 const tagsRouter = require("./tagsRoute");
 
-// Define a middleware to attach io object to the request object
+// Middleware to attach io object to the request object
 router.use((req, res, next) => {
     req.io = socket.getIO(); // Get the initialized io object from the socket module
     next();
 });
-
 
 router.get("/", (req, res) => {
     res.send("Server Working!");

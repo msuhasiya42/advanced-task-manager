@@ -43,20 +43,21 @@ mongoose
 
 // Initialize Socket.IO
 const io = socket.init(server);
-io.on('connection', clientSocket => {
-  console.log("A user connected");
 
-  socket.on("typing", (data) => {
-      socket.broadcast.emit("typing", data);
-  });
+io.on("connection", (socket) => {
+    console.log("A user connected");
 
-  socket.on("stopTyping", (data) => {
-      socket.broadcast.emit("stopTyping", data);
-  });
+    socket.on("typing", (data) => {
+        socket.broadcast.emit("typing", data);
+    });
 
-  socket.on("disconnect", () => {
-      console.log("User disconnected");
-  });
+    socket.on("stopTyping", (data) => {
+        socket.broadcast.emit("stopTyping", data);
+    });
+
+    socket.on("disconnect", () => {
+        console.log("User disconnected");
+    });
 });
 
 app.use("/", routes);

@@ -3,7 +3,7 @@ import { Avatar, Divider, Input, Popover, Spin, Tooltip, message } from 'antd'
 import { formatDistanceToNow } from 'date-fns'
 import React, { useEffect, useState } from 'react'
 import { CommentType, ReactionType } from './Types/types'
-import { commentAPI } from '../../Api'
+import { API_BASE_URL, commentAPI } from '../../Api'
 import { reactionOptions } from './utils'
 import { useMutation } from 'react-query'
 import useAuthStore, { User } from '../../Store/authStore'
@@ -19,7 +19,7 @@ interface ReactionPopupProps {
     onSelectReaction: (emoji: string) => void;
 }
 
-const socket = io();
+const socket = io(API_BASE_URL); // Ensure this URL matches your server URL
 
 const Comments = ({ taskId, userId }: CommentsProps) => {
 
