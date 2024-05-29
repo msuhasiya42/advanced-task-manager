@@ -106,7 +106,7 @@ const TaskManager = () => {
   return (
     <>
       {loading ? (
-        <LoadingPage />
+        <LoadingPage message="Fetching tasks..." />
       ) : (
         noTasks ?
           <div className="flex items-center w-full bg-gray-900 justify-center"><AddNewTask status="todo" /></div>

@@ -71,7 +71,7 @@ const UserProfile = () => {
   if (!user) {
     return (
       <div>
-        <LoadingPage />
+        <LoadingPage message="Loading User Profile..." />
       </div>
     );
   }
