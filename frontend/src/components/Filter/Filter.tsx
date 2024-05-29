@@ -136,7 +136,7 @@ const Filter: React.FC<FilterProps> = ({ setShowFilter }) => {
       <div className="flex flex-row gap-4">
         <div>
           <label className="block mt-2 font-medium text-gray-700">
-            <CalendarOutlined className="mr-1" /> Due Date
+            <CalendarOutlined className="mr-1" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} /> Due Date
           </label>
           <Checkbox.Group
             className="flex flex-col gap-2 mt-1"
@@ -160,7 +160,7 @@ const Filter: React.FC<FilterProps> = ({ setShowFilter }) => {
         <div>
           <div>
             <label className="block mt-2 mb-1 font-medium text-gray-700">
-              <FlagOutlined /> Priority
+              <FlagOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} /> Priority
             </label>
             <Select
               style={{ width: 110 }}
@@ -176,7 +176,7 @@ const Filter: React.FC<FilterProps> = ({ setShowFilter }) => {
           </div>
           <div className="w-full mt-4">
             <label className="block font-medium mb-1 text-gray-700">
-              <CheckCircleOutlined className="mr-1" />
+              <CheckCircleOutlined className="mr-1" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
               Status
             </label>
             <Select
@@ -194,7 +194,7 @@ const Filter: React.FC<FilterProps> = ({ setShowFilter }) => {
           </div>
           <div className="w-full mt-4">
             <label className="block mb-1 font-medium text-gray-700">
-              <TagOutlined /> Tag
+              <TagOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} /> Tag
             </label>
             <Select
               mode="multiple"
@@ -218,16 +218,16 @@ const Filter: React.FC<FilterProps> = ({ setShowFilter }) => {
               JSON.stringify(filterValues) ===
               JSON.stringify(initialFilterValue)
             }
-            icon={<UndoOutlined />}
+            icon={<UndoOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />}
             onClick={resetFilter}
           ></Button>
         </div>
         <div className="flex gap-2">
-          <Button icon={<CheckOutlined />} onClick={saveFilter}></Button>
+          <Button icon={<CheckOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />} onClick={saveFilter}></Button>
           <Button
             onClick={() => setShowFilter(false)}
             className="text-red-400"
-            icon={<CloseOutlined />}
+            icon={<CloseOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />}
           ></Button>
         </div>
       </div>

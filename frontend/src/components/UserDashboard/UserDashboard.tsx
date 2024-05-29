@@ -108,9 +108,9 @@ const UserDashboard = () => {
         className="sm:hidden fixed bottom-4 left-4 bg-blue-500 text-white px-4 py-2 rounded-full shadow-md z-50"
       >
         {showSidebar ? (
-          <DoubleLeftOutlined />
+          <DoubleLeftOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
         ) : (
-          <AlignLeftOutlined />
+          <AlignLeftOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
         )}
       </button>
 
@@ -122,7 +122,7 @@ const UserDashboard = () => {
           content={filterContent}
           title={
             <div className="flex gap-1">
-              <FilterOutlined className="text-lg" />{" "}
+              <FilterOutlined className="text-lg" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />{" "}
               <p className="text-lg">Filter</p>
             </div>
           }
@@ -132,9 +132,9 @@ const UserDashboard = () => {
           <Button
             icon={
               showFilter ? (
-                <DownOutlined className="text-white" />
+                <DownOutlined className="text-white" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
               ) : (
-                <FilterOutlined className="text-white" />
+                <FilterOutlined className="text-white" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
               )
             }
             onClick={toggleFilter}
@@ -145,9 +145,9 @@ const UserDashboard = () => {
       <Button
         icon={
           showAddTaskModal ? (
-            <DownOutlined className="text-white" />
+            <DownOutlined className="text-white" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
           ) : (
-            <PlusOutlined className="text-white" />
+            <PlusOutlined className="text-white" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
           )
         }
         onClick={toggleAddTaskFunc}

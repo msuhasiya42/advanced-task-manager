@@ -8,7 +8,7 @@ import useAuthStore from "../../Store/authStore";
 const HeaderPage = () => {
   const location = useLocation();
 
-  const isActive = (path) => {
+  const isActive = (path: string) => {
     return location.pathname === path;
   };
 
@@ -46,8 +46,8 @@ const HeaderPage = () => {
               <a
                 href="/login"
                 className={`block py-2 px-4 rounded-lg transition-all duration-300 ${isActive("/login")
-                    ? "text-white bg-blue-700"
-                    : "text-gray-400"
+                  ? "text-white bg-blue-700"
+                  : "text-gray-400"
                   } hover:bg-blue-500 hover:text-white`}
               >
                 Login
@@ -57,8 +57,8 @@ const HeaderPage = () => {
               <a
                 href="/signup"
                 className={`block py-2 px-4 rounded-lg transition-all duration-300 ${isActive("/signup")
-                    ? "text-white bg-blue-700"
-                    : "text-gray-400"
+                  ? "text-white bg-blue-700"
+                  : "text-gray-400"
                   } hover:bg-blue-500 hover:text-white`}
               >
                 Sign Up

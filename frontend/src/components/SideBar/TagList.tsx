@@ -58,7 +58,7 @@ const TagList = ({ setActiveTab, activeTab, onChildPopupInteraction }: TagListPr
         {
             key: 'edit',
             label: 'Edit',
-            icon: <EditOutlined />,
+            icon: <EditOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />,
             onClick: () => {
                 // Handle edit action
                 handleEditTag(tag); // Set the tag for editing
@@ -67,7 +67,10 @@ const TagList = ({ setActiveTab, activeTab, onChildPopupInteraction }: TagListPr
         {
             key: "delete",
             label: 'Delete',
-            icon: <DeleteOutlined />,
+            icon: <DeleteOutlined
+                onPointerEnterCapture={() => { }}
+                onPointerLeaveCapture={() => { }}
+            />,
             onClick: () => {
                 setVisibleTag(tag.name)
             }
@@ -126,7 +129,7 @@ const TagList = ({ setActiveTab, activeTab, onChildPopupInteraction }: TagListPr
                     </div>
                     <div>
                         <Dropdown menu={{ items: menuItems(tag) }} trigger={['click']}>
-                            <EllipsisOutlined className="text-white hover:text-gray-500 cursor-pointer" onClick={(e) => e.stopPropagation()} />
+                            <EllipsisOutlined className="text-white hover:text-gray-500 cursor-pointer" onClick={(e) => e.stopPropagation()} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
                         </Dropdown>
                     </div>
                     {visibleTag === tag.name && (

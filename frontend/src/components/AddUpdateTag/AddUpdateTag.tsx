@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Modal, Input, message, Button } from "antd";
-import { CompactPicker, TwitterPicker } from "react-color";
-import { tagAPI, userAPI } from "../../Api";
+import { CompactPicker } from "react-color";
 import useAuthStore from "../../Store/authStore";
 import useTaskStore, { Tag } from "../../Store/taskStore";
 import Title from "antd/es/typography/Title";
 import { TagOutlined } from "@ant-design/icons";
+import { tagAPI } from "../../Api";
 
 interface AddTagsProps {
   showModal: boolean;

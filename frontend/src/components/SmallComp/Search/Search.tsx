@@ -10,7 +10,7 @@ const Search = () => {
       <li>
         <div className="relative">
           <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-            <SearchOutlined />
+            <SearchOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
           </span>
           <input
             type="text"

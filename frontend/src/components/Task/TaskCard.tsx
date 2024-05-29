@@ -167,7 +167,7 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
             <div className="mt-1 text-sm text-gray-400">
               {description && description?.replace(/<[^>]*>/g, "") !== "" && (
                 <Popover content={content} trigger="hover">
-                  <AlignLeftOutlined />
+                  <AlignLeftOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
                 </Popover>
               )}
             </div>
@@ -184,9 +184,9 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
               >
                 <span className={classNameDueDate}>
                   {dateColor === "green" ? (
-                    <CheckCircleOutlined />
+                    <CheckCircleOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
                   ) : (
-                    <ClockCircleOutlined />
+                    <ClockCircleOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
                   )}
                   <p className="ml-1">{indianTime}</p>
                 </span>
@@ -197,7 +197,7 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
             <div className="flex flex-row ml-2">
               {attachments?.length > 0 && (
                 <>
-                  <LinkOutlined />
+                  <LinkOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
                   <span
                     className=" mr-3 ml-2 text-left whitespace-nowrap"
                   // sidebar-toggle-item
@@ -224,8 +224,7 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
             >
               {editAccessToCurrentUser && <DeleteOutlined
                 className="mr-4"
-                onClick={(e) => e.stopPropagation()}
-              />}
+                onClick={(e) => e.stopPropagation()} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />}
             </Popconfirm>
           </div>
         </div>
