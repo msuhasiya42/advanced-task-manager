@@ -1,12 +1,12 @@
 import { UserOutlined } from '@ant-design/icons'
-import { Avatar, Divider, Input, Popover, Spin, Tooltip, message } from 'antd'
+import { Avatar, Divider, Input, Popover, Spin, message } from 'antd'
 import { formatDistanceToNow } from 'date-fns'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { CommentType, ReactionType } from './Types/types'
-import { API_BASE_URL, commentAPI } from '../../Api'
+import { commentAPI } from '../../Api'
 import { reactionOptions } from './utils'
-import { useMutation } from 'react-query'
-import useAuthStore, { User } from '../../Store/authStore'
+import { useMutation, useQuery } from 'react-query'
+import useAuthStore from '../../Store/authStore'
 // import io from 'socket.io-client'
 
 interface CommentsProps {
@@ -41,42 +41,19 @@ const Comments = ({ taskId, userId }: CommentsProps) => {
     const [showEditReplyInput, setShowEditReplyInput] = useState("");
     const [showReplies, setShowReplies] = useState<String[]>([]);
 
-    const commentsMutation = useMutation(() => commentAPI.getComments(taskId), {
-        onSuccess: (res) => {
-            setComments(res.data)
-        },
-        onError: (error) => {
-            console.error("Error fetching comments:", error);
-        },
-    })
-    useEffect(() => {
-        // Request existing comments
-        commentsMutation.mutate();
-
-        // socket.on('newComment', (data) => {
-        //     console.log("Received new comment:", data);
-        //     setComments((prevComments) => [...prevComments, data.comment]);
-        // });
-
-        // Listen for typing events
-        // socket.on('typing', (data) => {
-        //     console.log("Typing event received:", data);
-        //     setIsTyping(true);
-        // });
-
-        // socket.on('stopTyping', () => {
-        //     console.log("Stop typing event received");
-        //     setIsTyping(false);
-        // });
-
-        // Clean up socket listeners on unmount
-        // return () => {
-        //     socket.off('newComment');
-        //     socket.off('typing');
-        //     socket.off('stopTyping');
-        // };
-
-    }, [taskId]);
+    const { isLoading } = useQuery(
+        ['comments', taskId],
+        () => commentAPI.getComments(taskId),
+        {
+            onSuccess: (res) => {
+                setComments(res.data);
+            },
+            onError: (error) => {
+                console.error("Error fetching comments:", error);
+            },
+            refetchInterval: 2000, // Polling interval in milliseconds (2 seconds)
+        }
+    );
 
     const ReactionPopup: React.FC<ReactionPopupProps> = ({ reactions, onSelectReaction }) => {
         return (
@@ -184,23 +161,27 @@ const Comments = ({ taskId, userId }: CommentsProps) => {
         }
     }
 
+    const addCommentMutation = useMutation(
+        ({ taskId, newComment, userId }: { taskId: string; newComment: string; userId: string }) => commentAPI.addComment(taskId, newComment, userId),
+        {
+            onSuccess: (res) => {
+                setComments([...comments, res.data.comment]);
+                setNewComment("");
+                message.success("Comment added successfully", 1.5);
+            },
+            onError: (error) => {
+                console.error("Error adding comment:", error);
+                message.error("Error adding comment", 1.5);
+            },
+        }
+    );
+
     const handleAddComment = async () => {
         if (newComment.trim() === "") {
             message.error("Comment cannot be empty", 1.5);
             return;
         }
-        try {
-            const response = await commentAPI.addComment(taskId, newComment, userId ?? "");
-            setComments([...comments, response.data.comment]);
-            setNewComment("");
-            message.success("Comment added successfully", 1.5);
-
-            // Emit new comment event
-            // socket.emit('newComment', { comment: response.data.comment });
-        } catch (error) {
-            console.error("Error adding comment:", error);
-            message.error("Error adding comment", 1.5);
-        }
+        addCommentMutation.mutate({ taskId, newComment, userId: userId ?? "" });
     };
 
     // const handleTyping = () => {
@@ -310,14 +291,14 @@ const Comments = ({ taskId, userId }: CommentsProps) => {
                 // onKeyDown={handleTyping}
                 // onBlur={handleStopTyping}
                 />
-                <button onClick={handleAddComment} className="w-[130px] mt-2 my-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 rounded">
+                <button disabled={addCommentMutation.isLoading} onClick={handleAddComment} className="w-[130px] mt-2 my-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 rounded">
                     Add Comment
                 </button>
                 {isTyping && <span className="text-sm text-gray-500">{user?.name} Typing...</span>}
             </div>
 
             {/* mapping over all comments */}
-            <Spin spinning={commentsMutation.isLoading} tip="Loading Comments..." className="mt-4 mb-8">
+            <Spin spinning={isLoading} tip="Loading Comments..." className="mt-4 mb-8">
                 {comments.length > 0 && <div className="border-2 p-4 rounded">
                     {comments.map((comment) => (
                         <div key={comment._id} className="mb-4">
