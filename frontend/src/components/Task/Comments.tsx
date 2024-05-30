@@ -7,7 +7,7 @@ import { commentAPI } from '../../Api'
 import { reactionOptions } from './utils'
 import { useMutation, useQuery } from 'react-query'
 import useAuthStore from '../../Store/authStore'
-// import io from 'socket.io-client'
+import { useInView } from 'react-intersection-observer'
 
 interface CommentsProps {
     taskId: string
@@ -41,17 +41,23 @@ const Comments = ({ taskId, userId }: CommentsProps) => {
     const [showEditReplyInput, setShowEditReplyInput] = useState("");
     const [showReplies, setShowReplies] = useState<String[]>([]);
 
+    const { ref: commentsRef, inView } = useInView({
+        threshold: 0.1, // Adjust the threshold as needed
+        triggerOnce: false, // Keep triggering when the visibility changes
+    });
+
     const { isLoading } = useQuery(
         ['comments', taskId],
         () => commentAPI.getComments(taskId),
         {
+            enabled: inView, // Only fetch when the component is in view
             onSuccess: (res) => {
                 setComments(res.data);
             },
             onError: (error) => {
                 console.error("Error fetching comments:", error);
             },
-            refetchInterval: 2000, // Polling interval in milliseconds (2 seconds)
+            refetchInterval: inView ? 2000 : false, // Poll every 2 seconds only when in view
         }
     );
 
@@ -277,7 +283,7 @@ const Comments = ({ taskId, userId }: CommentsProps) => {
     };
 
     return (
-        <div className="mt-4">
+        <div className="mt-4" ref={commentsRef}>
             <label className="block mb-3 mt-8 font-bold text-gray-700">Comments</label>
 
             {/* Add comment box */}
