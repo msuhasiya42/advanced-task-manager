@@ -7,6 +7,7 @@ import useAuthStore from '../../Store/authStore';
 import { tagAPI, userAPI } from '../../Api';
 import { deleteTagStr, deleteTagTitle } from '../../utils/strings';
 import AddTags from '../AddUpdateTag/AddUpdateTag';
+import { useMutation } from 'react-query';
 
 interface TagListProps {
     setActiveTab: (tab: string) => void;
@@ -35,18 +36,24 @@ const TagList = ({ setActiveTab, activeTab, onChildPopupInteraction }: TagListPr
 
     const userId = useAuthStore((state) => state?.user?._id);
 
-    const handleDeleteTag = (tag: Tag) => {
-        const updatedTags = tags.filter((t: Tag) => t.name !== tag.name);
-        tagAPI
-            .deleteTag(userId as string, tag._id)
-            .then(() => {
-                void message.success("Tag Deleted", 1.5);
+    const deleteTagMutation = useMutation(
+        (tag: Tag) => tagAPI.deleteTag(userId as string, tag._id as string),
+        {
+            onSuccess: (res, variables) => {
+                const { _id } = variables;
+
+                const updatedTags = tags.filter((t: Tag) => t._id !== _id); // Ensure to filter by _id
+                message.success("Tag Deleted", 1.5);
                 updateTags(updatedTags);
-                removeTagFromAllTasks(tag._id);
-            })
-            .catch(() => {
-                void message.error("Error: Tag Not deleted", 2);
-            });
+                removeTagFromAllTasks(_id);
+            },
+            onError: () => {
+                message.error("Error: Tag Not deleted", 2);
+            }
+        }
+    );
+    const handleDeleteTag = (tag: Tag) => {
+        deleteTagMutation.mutate(tag);
     };
 
     const handleEditTag = (tag: Tag) => {
@@ -76,32 +83,39 @@ const TagList = ({ setActiveTab, activeTab, onChildPopupInteraction }: TagListPr
             }
         }];
 
+    const updateTagMutation = useMutation(
+        ({ tagId, userId, tagName, tagColor }: { tagId: string; userId: string; tagName: string; tagColor: string }) => tagAPI.updateTag(tagId, userId, tagName, tagColor),
+        {
+            onSuccess: (res, { tagId, tagName, tagColor }) => {
+                message.success("Tag Updated Successfully");
+                const updatedTags = tags.map((tag) => {
+                    if (tag._id === tagId) {
+                        return {
+                            ...tag,
+                            name: tagName,
+                            color: tagColor,
+                        };
+                    }
+                    return tag;
+                });
+
+                updateTags(updatedTags);
+                updateTagsInTasks(editTag?._id ?? "", res.data);
+                setEditTag(null);
+            },
+            onError: (error, { tagName }) => {
+                console.error("Error updating tag:", error);
+                message.error(`Failed to update tag ${tagName}}`, 1.5);
+            },
+            onSettled: () => {
+                setShowModal(false);
+            }
+        }
+    );
+
     const handleUpdateTag = (tagId: string, tagName: string, tagColor: string) => {
         if (userId) {
-            tagAPI.updateTag(tagId, userId, tagName, tagColor)
-                .then((res) => {
-                    message.success("Tag Updated Successfully");
-                    const updatedTags = tags.map((tag) => {
-                        if (tag._id === tagId) {
-                            return {
-                                ...tag,
-                                name: tagName,
-                                color: tagColor
-                            };
-                        }
-                        return tag;
-                    })
-                    console.log("updatedTag", res.data)
-                    updateTags(updatedTags);
-                    updateTagsInTasks(editTag?._id ?? "", res.data);
-                    setEditTag(null); // Clear the editTag state after successful update
-                })
-                .catch((error) => {
-                    console.error("Error updating tag:", error);
-                    message.error("Failed to update tag");
-                }).finally(() => {
-                    setShowModal(false);
-                })
+            updateTagMutation.mutate({ tagId, userId, tagName, tagColor });
         }
     };
 

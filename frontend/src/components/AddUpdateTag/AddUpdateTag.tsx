@@ -6,6 +6,7 @@ import useTaskStore, { Tag } from "../../Store/taskStore";
 import Title from "antd/es/typography/Title";
 import { TagOutlined } from "@ant-design/icons";
 import { tagAPI } from "../../Api";
+import { useMutation } from "react-query";
 
 interface AddTagsProps {
   showModal: boolean;
@@ -31,6 +32,21 @@ const AddUpdateTag = ({ tagId, showModal, setShowModal, onChildPopupInteraction,
     setShowModal((prev) => !prev);
   };
 
+  const addTagMutation = useMutation(
+    ({ userId, tagName, tagColor }: { userId: string; tagName: string; tagColor: string }) => tagAPI.addTag(userId, tagName, tagColor),
+    {
+      onSuccess: (res) => {
+        const newTag = res.data;
+        message.success("Tag Added.", 1.5);
+        updateTags([...tags, newTag]);
+      },
+      onError: (error) => {
+        message.error("Error adding tag.", 1.5);
+        console.error("Error adding tag:", error);
+      },
+    }
+  );
+
   const handleSubmit = async () => {
     if (checkTagExists(tagName) && !isEditMode) {
       message.error("Tag already exists.", 2);
@@ -47,11 +63,7 @@ const AddUpdateTag = ({ tagId, showModal, setShowModal, onChildPopupInteraction,
         }
 
         else {
-          await tagAPI.addTag(userId ?? "", tagName, tagColor).then((res) => {
-            message.success("Tag Added.", 1.5);
-            const newTag = res.data;
-            updateTags([...tags, newTag]);
-          });
+          addTagMutation.mutate({ userId: userId as string, tagName, tagColor });
         }
         setTagName("");
         setTagColor("#2196F3");

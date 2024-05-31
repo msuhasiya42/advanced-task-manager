@@ -54,6 +54,8 @@ const useAuthStore = create<AuthStoreState>((set) => ({
     set({ user: null });
     localStorage.removeItem("user");
     localStorage.removeItem("allUsers");
+    localStorage.removeItem("token");
+    localStorage.removeItem("filter");
   },
   updateUser: (updates: Partial<User>) => {
     set((state) => {

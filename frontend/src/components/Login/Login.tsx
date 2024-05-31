@@ -1,11 +1,8 @@
 /* eslint-disable react/no-unescaped-entities */
 import React, { useState } from "react";
-import { userAPI } from "../../Api";
-import { useNavigate } from "react-router-dom";
-import useAuthStore from "../../Store/authStore";
-import useTaskStore from "../../Store/taskStore";
 import { GoogleLogin } from "@react-oauth/google";
-import { AuthData, ErrorResponse } from "./types";
+import useLogin from "../../hooks/useLogin";
+import LoadingPage from "../Loading/LoadingPage";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -13,34 +10,21 @@ const Login = () => {
   const [errMsg, setErrMsg] = useState("Invalid Credentials");
   const [showErrMsg, setShowErrMsg] = useState(false);
 
-  const navigate = useNavigate();
-  const { login, addListOfUser } = useAuthStore();
-  const { setTags, updateFilter } = useTaskStore();
+  const { loginMutation, googleLoginMutation } = useLogin()
 
   const handleShowPasswordToggle = () => {
     setShowPassword(!showPassword);
   };
-
-  const processLogin = (data: AuthData) => {
-    const { tags, filter } = data;
-
-    login(data);
-    userAPI.getAllUsers().then((response) => {
-      addListOfUser(response.data);
-    });
-    if (tags) setTags(tags);
-    if (filter) updateFilter(JSON.parse(filter));
-    navigate("/user-dashboard");
-  };
-
-  const handleLoginError = (err: ErrorResponse) => {
+  const handleLoginError = (err: any) => {
     console.error("Login error:", err);
     let message = "An Error Occurred";
 
-    if (err.code === "ERR_NETWORK") {
+    if (err.response?.status === 401) {
+      message = "Invalid Credentials";
+    } else if (err.message === "Network Error") {
       message =
         "There was a problem connecting to the server. Please check your internet connection and try again.";
-    } else if (err.code === "ERR_BAD_RESPONSE") {
+    } else if (err.response?.status >= 500) {
       message = "Internal Server Error";
     }
 
@@ -48,27 +32,30 @@ const Login = () => {
     setShowErrMsg(true);
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = (e: any) => {
     e.preventDefault();
-    userAPI
-      .login(email, password)
-      .then((response) => processLogin(response.data))
-      .catch(handleLoginError);
+    loginMutation.mutate(
+      { email, password },
+      {
+        onError: handleLoginError,
+      }
+    );
   };
 
-  // login with google
   const loginGoogle = (response: any) => {
     const { credential } = response;
-    userAPI
-      .googleLogin(credential)
-      .then((res) => processLogin(res.data))
-      .catch(handleLoginError);
+    googleLoginMutation.mutate(
+      { credential },
+      {
+        onError: handleLoginError,
+      }
+    );
   };
 
   return (
     <div className="flex h-full justify-center items-center bg-gray-900 flex-col">
       <div className="flex justify-center items-center bg-gray-900 " >
-        <div className="w-full max-w-xs">
+        {loginMutation.isLoading || googleLoginMutation.isLoading ? <LoadingPage message="Logging In..." /> : <div className="w-full max-w-xs">
           <a
             href="/login"
             className="flex justify-center items-center mb-6 text-2xl font-semibold text-white"
@@ -188,7 +175,7 @@ const Login = () => {
               </div>
             </form>
           </div>
-        </div>
+        </div>}
       </div >
       {/* <Footer /> */}
     </div >

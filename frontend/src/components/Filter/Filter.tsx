@@ -7,6 +7,7 @@ import {
   Select,
   SelectProps,
   Space,
+  Tooltip,
   message,
 } from "antd";
 import { dateOptions, priorityOptions, statusOptions } from "../Task/utils";
@@ -24,6 +25,7 @@ import { CheckboxValueType } from "antd/es/checkbox/Group";
 import dayjs from "dayjs";
 import { userAPI } from "../../Api";
 import useAuthStore from "../../Store/authStore";
+import { useMutation } from "react-query";
 
 interface FilterProps {
   setShowFilter: React.Dispatch<React.SetStateAction<boolean>>;
@@ -112,18 +114,22 @@ const Filter: React.FC<FilterProps> = ({ setShowFilter }) => {
     }));
   };
 
-  const saveFilter = async () => {
-    try {
-      // Make API call to save filter
-      await userAPI.updateFilter(userId ?? "", JSON.stringify(filterValues));
-      // Show success message
-      message.success("Filter saved");
-    } catch (error) {
-      // Handle error
-      message.error("Failed to save filter. Please try again.");
-    } finally {
-      setShowFilter(false);
+  const saveFilterMutation = useMutation(
+    () => userAPI.updateFilter(userId ?? "", JSON.stringify(filterValues)),
+    {
+      onSuccess: () => {
+        message.success("Filter saved");
+        setShowFilter(false);
+      },
+      onError: () => {
+        message.error("Failed to save filter. Please try again.");
+        setShowFilter(false);
+      }
     }
+  );
+
+  const saveFilter = () => {
+    saveFilterMutation.mutate();
   };
 
   const resetFilter = () => {
@@ -212,15 +218,17 @@ const Filter: React.FC<FilterProps> = ({ setShowFilter }) => {
 
       <div className="flex justify-between mt-4 gap-2">
         <div>
-          <Button
-            shape="circle"
-            disabled={
-              JSON.stringify(filterValues) ===
-              JSON.stringify(initialFilterValue)
-            }
-            icon={<UndoOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />}
-            onClick={resetFilter}
-          ></Button>
+          <Tooltip title="Reset Filter">
+            <Button
+              shape="circle"
+              disabled={
+                JSON.stringify(filterValues) ===
+                JSON.stringify(initialFilterValue)
+              }
+              icon={<UndoOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />}
+              onClick={resetFilter}
+            ></Button>
+          </Tooltip>
         </div>
         <div className="flex gap-2">
           <Button icon={<CheckOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />} onClick={saveFilter}></Button>
