@@ -158,12 +158,12 @@ const EditTaskModal = (props: EditTaskModalProps) => {
           <div className="hidden sm:block">
             <label className="block mb-3 font-bold text-gray-700">
               Created at :<span className="text-gray-500"> {createdAt}</span>
-              {createdBy && <span className="text-gray-500"> {task.createdBy}</span>}
+              {createdBy && <span className="text-gray-500">, Created by: <span className="text-cyan-500">{createdBy}</span></span>}
             </label>
             <label className="block mb-3 font-bold text-gray-700">
               Last updated at :
               <span className="text-gray-500"> {updatedAt}</span>
-              {updatedBy && <span className="text-gray-500"> {task.createdBy}</span>}
+              {updatedBy && <span className="text-gray-500">, Last updated by: <span className="text-cyan-500">{updatedBy}</span></span>}
             </label>
           </div>
         </div>

@@ -7,6 +7,8 @@ import useAuthStore from "../../Store/authStore";
 import { TaskCategory, TaskType } from "./Types/types";
 import { DragDropContext } from "react-beautiful-dnd";
 import AddNewTask from "./AddNewTask";
+import { useQuery } from "react-query";
+import { COMPLETED, INPROGRESS, TODO } from "../../utils/strings";
 
 
 export const filterTasksByStatus = (tasks: TaskType[], status: string) => {
@@ -14,7 +16,6 @@ export const filterTasksByStatus = (tasks: TaskType[], status: string) => {
 };
 
 const TaskManager = () => {
-  const [loading, setLoading] = useState(false);
   const { user } = useAuthStore();
 
   const {
@@ -26,36 +27,24 @@ const TaskManager = () => {
     updateFilter,
   } = useTaskStore();
 
-  const fetchAndProcessTasks = async (userId: string) => {
-    try {
-      setLoading(true);
-      const response = await taskAPI.fetchTask(userId);
-      const fetchedTasks = response.data.tasks;
+  const { isLoading, isError } = useQuery("tasks", () => taskAPI.fetchTask(user?._id ?? ""), {
+    enabled: !!user?._id,
+    onSuccess: (res) => {
+      const allTasks = res.data.tasks;
+      setAllTasks(allTasks);
 
-      setAllTasks(fetchedTasks);
+      const todos = filterTasksByStatus(allTasks, TODO);
+      const inprogress = filterTasksByStatus(allTasks, INPROGRESS);
+      const completed = filterTasksByStatus(allTasks, COMPLETED);
 
-      const todos = filterTasksByStatus(fetchedTasks, "todo");
-      const inprogress = filterTasksByStatus(fetchedTasks, "inProgress");
-      const completed = filterTasksByStatus(fetchedTasks, "completed");
-
-      setTasksDataByCategory("todo", todos);
-      setTasksDataByCategory("inProgress", inprogress);
-      setTasksDataByCategory("completed", completed);
+      setTasksDataByCategory(TODO, todos);
+      setTasksDataByCategory(INPROGRESS, inprogress);
+      setTasksDataByCategory(COMPLETED, completed);
 
       copyTasks();
       updateFilter(filter);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
     }
-  };
-
-  useEffect(() => {
-    if (user?._id) {
-      fetchAndProcessTasks(user._id);
-    }
-  }, [user]);
+  });
 
   const handleDragEnd = (result: any) => {
     const { destination, source } = result;
@@ -103,9 +92,11 @@ const TaskManager = () => {
 
   const noTasks = filteredTasks.todo.length === 0 && filteredTasks.inProgress.length === 0 && filteredTasks.completed.length === 0
 
+  if (isError) return <p className="flex h-full w-full justify-center items-center text-red-500">Error while fetching tasks</p>
+
   return (
     <>
-      {loading ? (
+      {isLoading ? (
         <LoadingPage message="Fetching tasks..." />
       ) : (
         noTasks ?

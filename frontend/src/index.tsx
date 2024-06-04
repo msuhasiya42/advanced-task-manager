@@ -3,7 +3,8 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import "../public/common.css";
 import App from "./App";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider, } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { ThemeProvider } from "./components/theme-provider";
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -19,6 +20,7 @@ root.render(
     <GoogleOAuthProvider clientId="1032180948351-qcskgfti1iibbdhq4tavjmjuq3kl3b0k.apps.googleusercontent.com">
       <QueryClientProvider client={queryClient}>
         <App />
+        <ReactQueryDevtools />
       </QueryClientProvider>
     </GoogleOAuthProvider>
   </ThemeProvider>
