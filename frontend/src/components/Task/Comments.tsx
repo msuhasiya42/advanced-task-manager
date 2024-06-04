@@ -19,7 +19,6 @@ interface ReactionPopupProps {
     onSelectReaction: (emoji: string) => void;
 }
 
-// const socket = io(API_BASE_URL); // Ensure this URL matches your server URL
 
 const Comments = ({ taskId, userId }: CommentsProps) => {
 
@@ -77,95 +76,129 @@ const Comments = ({ taskId, userId }: CommentsProps) => {
         );
     };
 
+
+    const deleteCommentMutation = useMutation(
+        (commentId: string) => commentAPI.deleteComment(commentId),
+        {
+            onSuccess: (data, commentId) => {
+                setComments((prevComments) =>
+                    prevComments.filter((comment) => comment._id !== commentId)
+                );
+                void message.success("Comment deleted successfully", 1.5);
+            },
+            onError: (error) => {
+                console.error("Error deleting comment:", error);
+                void message.error("Error deleting comment", 1.5);
+            },
+        }
+    );
+
     const handleDeleteComment = async (commentId: string) => {
-        try {
-            await commentAPI.deleteComment(commentId);
-            setComments((prevComments) =>
-                prevComments.filter((comment) => comment._id !== commentId)
-            );
-            void message.success("Comment deleted successfully", 1.5);
-        } catch (error) {
-            console.error("Error deleting comment:", error);
-            void message.error("Error deleting comment", 1.5);
-        }
+        deleteCommentMutation.mutate(commentId);
     };
 
-    const handleEditComment = async (commentId: string, newContent: string) => {
-        try {
-            await commentAPI.editComment(commentId, newContent);
-            setComments((prevComments) =>
-                prevComments.map((comment) => {
-                    if (comment._id === commentId) {
-                        return {
-                            ...comment,
-                            content: newContent,
-                        };
-                    }
-                    return comment;
-                })
-            );
-            setEditCommentValue("");
-            setShowEditCommentInput("");
-            void message.success("Comment edited successfully", 1.5);
-        } catch (error) {
-            console.error("Error editing comment:", error);
-            void message.error("Error editing comment", 1.5);
+    const editCommentMutation = useMutation(
+        ({ commentId, newContent }: { commentId: string; newContent: string }) => commentAPI.editComment(commentId, newContent),
+        {
+            onSuccess: (data, { commentId, newContent }) => {
+                setComments((prevComments) =>
+                    prevComments.map((comment) => {
+                        if (comment._id === commentId) {
+                            return {
+                                ...comment,
+                                content: newContent,
+                            };
+                        }
+                        return comment;
+                    })
+                );
+                void message.success("Comment edited successfully", 1.5);
+            },
+            onError: (error) => {
+                console.error("Error editing comment:", error);
+                void message.error("Error editing comment", 1.5);
+            },
+            onSettled: () => {
+                setEditCommentValue("");
+                setShowEditCommentInput("");
+            }
         }
+    );
+
+    const handleEditComment = (commentId: string, newContent: string) => {
+        editCommentMutation.mutate({ commentId, newContent });
     };
 
-    const handleEditReply = async (commentId: string, replyId: string, newContent: string) => {
-        try {
-            await commentAPI.editReply(replyId, newContent);
-            setComments((prevComments) =>
-                prevComments.map((comment) => {
-                    if (comment._id === commentId) {
-                        return {
-                            ...comment,
-                            replies: comment.replies.map((reply) => {
-                                if (reply._id === replyId) {
-                                    return {
-                                        ...reply,
-                                        content: newContent,
-                                    };
-                                }
-                                return reply;
-                            }),
-                        };
-                    }
-                    return comment;
-                })
-            );
-            setEditReplyValue("");
-            setShowEditReplyInput("");
-            void message.success("Reply edited successfully", 1.5);
-        } catch (error) {
-            console.error("Error editing reply:", error);
-            void message.error("Error editing reply", 1.5);
+    const editReplyMutation = useMutation(
+        ({ commentId, replyId, newContent }: { commentId: string; replyId: string; newContent: string }) =>
+            commentAPI.editReply(replyId, newContent),
+        {
+            onSuccess: (data, { commentId, replyId, newContent }) => {
+                setComments((prevComments) =>
+                    prevComments.map((comment) => {
+                        if (comment._id === commentId) {
+                            return {
+                                ...comment,
+                                replies: comment.replies.map((reply) => {
+                                    if (reply._id === replyId) {
+                                        return {
+                                            ...reply,
+                                            content: newContent,
+                                        };
+                                    }
+                                    return reply;
+                                }),
+                            };
+                        }
+                        return comment;
+                    })
+                );
+                void message.success("Reply edited successfully", 1.5);
+            },
+            onError: (error) => {
+                console.error("Error editing reply:", error);
+                void message.error("Error editing reply", 1.5);
+            },
+            onSettled: () => {
+                setEditReplyValue("");
+                setShowEditReplyInput("");
+            }
         }
-    }
+    );
 
-    const handleDeleteReply = async (commentId: string, replyId: string) => {
-        try {
-            await commentAPI.deleteReply(replyId);
-            setComments((prevComments) =>
-                prevComments.map((comment) => {
-                    if (comment._id === commentId) {
-                        return {
-                            ...comment,
-                            replies: comment.replies.filter(
-                                (reply) => reply._id !== replyId
-                            ),
-                        };
-                    }
-                    return comment;
-                })
-            );
-            void message.success("Reply deleted successfully", 1.5);
-        } catch (error) {
-            console.error("Error deleting reply:", error);
-            void message.error("Error deleting reply", 1.5);
+    const handleEditReply = (commentId: string, replyId: string, newContent: string) => {
+        editReplyMutation.mutate({ commentId, replyId, newContent });
+    };
+
+    const deleteReplyMutation = useMutation(
+        ({ commentId, replyId }: { commentId: string; replyId: string }) => commentAPI.deleteReply(replyId),
+        {
+            onSuccess: (data, { commentId, replyId }) => {
+                setComments((prevComments) =>
+                    prevComments.map((comment) => {
+                        if (comment._id === commentId) {
+                            return {
+                                ...comment,
+                                replies: comment.replies.filter(
+                                    (reply) => reply._id !== replyId
+                                ),
+                            };
+                        }
+                        return comment;
+                    })
+                );
+                void message.success("Reply deleted successfully", 1.5);
+            },
+            onError: (error) => {
+                console.error("Error deleting reply:", error);
+                void message.error("Error deleting reply", 1.5);
+            }
         }
-    }
+    );
+
+    const handleDeleteReply = (commentId: string, replyId: string) => {
+        deleteReplyMutation.mutate({ commentId, replyId });
+    };
 
     const addCommentMutation = useMutation(
         ({ taskId, newComment, userId }: { taskId: string; newComment: string; userId: string }) => commentAPI.addComment(taskId, newComment, userId),
@@ -190,87 +223,93 @@ const Comments = ({ taskId, userId }: CommentsProps) => {
         addCommentMutation.mutate({ taskId, newComment, userId: userId ?? "" });
     };
 
-    // const handleTyping = () => {
-    //     socket.emit('typing', { userId, taskId });
-    // };
+    const addReplyMutation = useMutation(
+        ({ commentId, content, userId }: { commentId: string; content: string; userId: string }) =>
+            commentAPI.addReply(commentId, content, userId),
+        {
+            onSuccess: (data, { commentId }) => {
+                setComments((prevComments) =>
+                    prevComments.map((comment) =>
+                        comment._id === commentId
+                            ? { ...comment, replies: [...comment.replies, data.data.reply] }
+                            : comment
+                    )
+                );
+                setShowReplies((prevShowReplies) => [...prevShowReplies, commentId]);
+                void message.success("Reply added successfully", 1.5);
+            },
+            onError: (error) => {
+                console.error("Error adding reply:", error);
+                void message.error("Error adding reply", 1.5);
+            },
+            onSettled: () => {
+                setNewReply("");
+                setShowReplyInput("");
+            }
+        }
+    );
 
-    // const handleStopTyping = () => {
-    //     socket.emit('stopTyping', { userId, taskId });
-    // };
-
-    const handleAddReply = async (commentId: string, content: string) => {
-        setShowReplies((prevShowReplies) => [...prevShowReplies, commentId]);
-        setShowReplyInput("")
+    const handleAddReply = (commentId: string, content: string) => {
         if (content.trim() === "") {
             void message.error("Reply cannot be empty", 1.5);
             return;
         }
-        try {
-            const response = await commentAPI.addReply(
-                commentId,
-                content,
-                userId
-            );
-            setComments((prevComments) =>
-                prevComments.map((comment) =>
-                    comment._id === commentId
-                        ? { ...comment, replies: [...comment.replies, response.data.reply] }
-                        : comment
-                )
-            );
-            setNewReply("");
-            void message.success("Reply added successfully", 1.5);
-        } catch (error) {
-            console.error("Error adding reply:", error);
-            void message.error("Error adding reply", 1.5);
-        }
+        addReplyMutation.mutate({ commentId, content, userId });
     };
 
-    const handleReaction = async (commentId: string, emoji: string, isReply = false, parentId?: string) => {
-        try {
-            await commentAPI.addReaction(commentId, emoji, userId ?? "");
+    const addReactionMutation = useMutation(
+        ({ commentId, emoji, isReply, parentId }: { commentId: string; emoji: string; isReply?: boolean; parentId?: string }) =>
+            commentAPI.addReaction(commentId, emoji, userId),
+        {
+            onSuccess: (data, { commentId, emoji, isReply, parentId }) => {
+                setComments((prevComments) =>
+                    prevComments.map((comment) => {
+                        if (comment._id === (isReply ? parentId : commentId)) {
+                            const updateReactions = (reactions: ReactionType[]) => {
+                                const normalizedReactions = reactions.map(reaction => ({
+                                    ...reaction,
+                                    user: typeof reaction.user === 'string' ? reaction.user : reaction.user._id,
+                                }));
 
-            setComments((prevComments) =>
-                prevComments.map((comment) => {
-                    if (comment._id === (isReply ? parentId : commentId)) {
-                        const updateReactions = (reactions: ReactionType[]) => {
-                            const normalizedReactions = reactions.map(reaction => ({
-                                ...reaction,
-                                user: typeof reaction.user === 'string' ? reaction.user : reaction.user._id,
-                            }));
-
-                            return normalizedReactions.some(
-                                (reaction) => reaction.user === userId && reaction.emoji === emoji
-                            )
-                                ? normalizedReactions.filter(
-                                    (reaction) => !(reaction.user === userId && reaction.emoji === emoji)
+                                return normalizedReactions.some(
+                                    (reaction) => reaction.user === userId && reaction.emoji === emoji
                                 )
-                                : [...normalizedReactions, { emoji, user: userId }];
-                        };
+                                    ? normalizedReactions.filter(
+                                        (reaction) => !(reaction.user === userId && reaction.emoji === emoji)
+                                    )
+                                    : [...normalizedReactions, { emoji, user: userId }];
+                            };
 
-                        if (isReply) {
-                            return {
-                                ...comment,
-                                replies: comment.replies.map((reply) =>
-                                    reply._id === commentId
-                                        ? { ...reply, reactions: updateReactions(reply.reactions) }
-                                        : reply
-                                ),
-                            };
-                        } else {
-                            return {
-                                ...comment,
-                                reactions: updateReactions(comment.reactions),
-                            };
+                            if (isReply) {
+                                return {
+                                    ...comment,
+                                    replies: comment.replies.map((reply) =>
+                                        reply._id === commentId
+                                            ? { ...reply, reactions: updateReactions(reply.reactions) }
+                                            : reply
+                                    ),
+                                };
+                            } else {
+                                return {
+                                    ...comment,
+                                    reactions: updateReactions(comment.reactions),
+                                };
+                            }
                         }
-                    }
-                    return comment;
-                })
-            );
-        } catch (error) {
-            console.error("Error adding reaction:", error);
-            void message.error("Error adding reaction", 1.5);
+                        return comment;
+                    })
+                );
+                void message.success("Reaction added successfully", 1.5);
+            },
+            onError: (error) => {
+                console.error("Error adding reaction:", error);
+                void message.error("Error adding reaction", 1.5);
+            }
         }
+    );
+
+    const handleReaction = (commentId: string, emoji: string, isReply?: boolean, parentId?: string) => {
+        addReactionMutation.mutate({ commentId, emoji, isReply, parentId });
     };
 
 
