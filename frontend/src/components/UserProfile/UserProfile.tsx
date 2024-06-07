@@ -8,17 +8,16 @@ import ChooseAvatarModal from "./ChooseAvatarModal";
 import { Button, Popconfirm } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { deleteAccountDesc, deleteAccountText } from "../../utils/strings";
+import { useQueryClient, useMutation } from "react-query";
 
 const UserProfile = () => {
   const { user, updateUser } = useAuthStore();
   const [userPhoto, setUserPhoto] = useState(user?.picture); // default image
   const [isModalOpen, setIsModalOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const queryClient = useQueryClient();
 
   const handleImageClick = () => {
-    // if (fileInputRef.current) {
-    //   fileInputRef.current.click();
-    // }
     setIsModalOpen(true);
   };
 
@@ -37,6 +36,23 @@ const UserProfile = () => {
     });
   };
 
+  const updatePhotoMutation = useMutation(
+    async (photoData: string) => {
+      await userAPI.updatePhoto(user?._id ?? "", photoData);
+    },
+    {
+      onSuccess: (data: any, photoData: string) => {
+        updateUser({ picture: photoData });
+        setUserPhoto(photoData);
+        console.log("User photo updated successfully:", data);
+        queryClient.invalidateQueries(['user']);
+      },
+      onError: () => {
+        console.error("Failed to update user photo.");
+      }
+    }
+  );
+
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -46,14 +62,9 @@ const UserProfile = () => {
         maxHeight: 1920,
         success: async (compressedResult) => {
           try {
-            // Ensure the compressed image is under 500KB
             if (compressedResult.size <= 500 * 1024) {
               const photoData = await fileToBase64(compressedResult);
-              setUserPhoto(photoData);
-
-              // Assuming you have userId available in this scope or as a prop
-              await userAPI.updatePhoto(user?._id ?? "", photoData);
-              updateUser({ picture: photoData });
+              updatePhotoMutation.mutate(photoData);
             } else {
               console.error("Failed to compress the image under 500KB");
             }
@@ -68,6 +79,22 @@ const UserProfile = () => {
     }
   };
 
+  const deleteUserMutation = useMutation(
+    async () => {
+      await userAPI.deleteUser(user?._id ?? "");
+    },
+    {
+      onSuccess: () => {
+        updateUser({});
+        logout();
+        queryClient.invalidateQueries(['user']);
+      },
+      onError: () => {
+        console.error("Failed to delete user.");
+      }
+    }
+  );
+
   if (!user) {
     return (
       <div>
@@ -80,10 +107,7 @@ const UserProfile = () => {
   const { logout } = useAuthStore();
 
   const handleDeleteUser = () => {
-    userAPI.deleteUser(user?._id).then(() => {
-      updateUser({});
-    });
-    logout();
+    deleteUserMutation.mutate();
   };
 
   return (
@@ -148,7 +172,8 @@ const UserProfile = () => {
           <Popconfirm
             title={deleteAccountText}
             description={deleteAccountDesc}
-            okText={<span className="bg-blue-500 px-3 rounded-sm ">Yes</span>}
+            okText="Yes"
+            cancelText="No"
             onConfirm={(e) => {
               e?.stopPropagation();
               handleDeleteUser();
@@ -156,11 +181,11 @@ const UserProfile = () => {
             onCancel={(e) => {
               e?.stopPropagation();
             }}
-            cancelText="No"
+            okButtonProps={{ type: "primary", danger: true }}
           >
             <Button
               className="mt-6"
-              icon={<DeleteOutlined onClick={(e) => e.stopPropagation()} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />}
+              icon={<DeleteOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />}
               type="primary"
               danger
             >
@@ -168,8 +193,6 @@ const UserProfile = () => {
             </Button>
           </Popconfirm>
         </div>
-        {/* take location from user or remove this field */}
-        {/* <p className="text-sm text-gray-500">New York, USA</p> */}
       </div>
     </div>
   );
