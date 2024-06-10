@@ -41,7 +41,7 @@ const TasksList = ({ tasks, taskType }: taskListProps) => {
         <div className="inline-block w-[350px]">
           <div className="max-h-[500px] sm:max-h-[600px] flex flex-col w-full p-3 bg-black rounded-2xl">
             <div className="mb-2 text-center text-lg text-white sticky top-0">
-              {taskNameMap[taskType]}
+              {taskNameMap[taskType]} <span className="text-md text-gray-400"> ({tasks.length})</span>
             </div>
             <Droppable droppableId={taskType}>
               {(provided) => (
