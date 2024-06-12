@@ -9,7 +9,7 @@ import {
   FilterOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import { Badge, Button, Popover } from "antd";
+import { Badge, Button, Popover, Switch } from "antd";
 import useTaskStore from "../../Store/taskStore";
 import Filter, { initialFilterValue } from "../Filter/Filter";
 import AddTaskModal from "../AddTaskModal/AddTaskModal";
@@ -80,7 +80,7 @@ const UserDashboard = () => {
     return <Filter setShowFilter={setShowFilter} />;
   };
 
-  const { filter } = useTaskStore();
+  const { filter, setView, view } = useTaskStore();
 
   const filterNotEmpty =
     JSON.stringify(filter) !== JSON.stringify(initialFilterValue);
@@ -88,6 +88,10 @@ const UserDashboard = () => {
   const handleChildPopupInteraction = (active: boolean) => {
     // Update state to indicate whether a child popup is active
     setIsChildPopupActive(active);
+  };
+
+  const toggleTaskView = () => {
+    setView(view === "cardView" ? "listView" : "cardView");
   };
 
   return (
@@ -138,7 +142,7 @@ const UserDashboard = () => {
               )
             }
             onClick={toggleFilter}
-            className=" fixed bottom-14 right-4 bg-blue-500 text-white rounded-full shadow-md z-50"
+            className=" fixed bottom-24 right-4 bg-blue-500 text-white rounded-full shadow-md z-50"
           ></Button>
         </Popover>
       </Badge>
@@ -151,8 +155,9 @@ const UserDashboard = () => {
           )
         }
         onClick={toggleAddTaskFunc}
-        className="fixed bottom-4 right-4 bg-blue-500 text-white rounded-full shadow-md z-50"
+        className="fixed bottom-14 right-4 bg-blue-500 text-white rounded-full shadow-md z-50"
       ></Button>
+      <Switch className="fixed bottom-4 right-4 te bg-gray-700 xt-white ml-4 mt-5" checkedChildren="Card" unCheckedChildren="List" onClick={toggleTaskView} />
     </div>
   );
 };

@@ -47,6 +47,10 @@ export type TaskStoreState = {
   filter: FilterType;
   updateFilter: (filter: FilterType) => void;
   clearFilter: () => void;
+
+  // view
+  view: string;
+  setView: (view: string) => void;
 };
 
 const useTaskStore = create<TaskStoreState>((set, get) => {
@@ -79,6 +83,9 @@ const useTaskStore = create<TaskStoreState>((set, get) => {
 
   // filter
   filter: initialFilter,
+
+  // view
+  view: "cardView",
 
   setAllTasks: (tasks: TaskType[]) => set({ allTasks: tasks }),
 
@@ -393,6 +400,13 @@ const useTaskStore = create<TaskStoreState>((set, get) => {
       },
     }));
   },
+
+  // setView
+  setView: (view: string) => {
+    set(() => ({
+      view: view
+    }));
+  }
   }
 });
 

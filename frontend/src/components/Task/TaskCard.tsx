@@ -52,7 +52,7 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
   const dateColor = task.done ? "green" : redOrYellow();
   const classNameDueDate = `text-xs ml-1 w-18 text-black font-medium inline-flex items-center px-2.5 py-0.5 rounded bg-${dateColor}-400 text-white border border-white-600  `;
 
-  const { updateTaskDataStore, updateTaskFilteredTasksStore } = useTaskStore();
+  const { view, updateTaskDataStore, updateTaskFilteredTasksStore } = useTaskStore();
   const { user } = useAuthStore()
 
   const toggleTaskDone = () => {
@@ -128,7 +128,7 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
           e.stopPropagation(), setShowModal(true);
         }}
       >
-        <div className="font-thin w-full mb-2 overflow-hidden rounded-lg shadow-lg bg-gray-800 border hover:border-cyan-400 border-solid border-transparent transition duration-300 ease-in-out ">
+        <div className="p-1 font-thin w-full mb-2 overflow-hidden rounded-lg shadow-lg bg-gray-800 border hover:border-cyan-400 border-solid border-transparent transition duration-300 ease-in-out ">
           {/* <img
             className="w-full h-48 mt-2"
             src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=320&q=80"
@@ -137,7 +137,7 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
           <div className="ml-2">
             <div className="flex justify-between">
               <div className="w-30">
-                <div className="mb-3 flex flex-wrap">
+                {view === "cardView" && <div className="mb-3 flex flex-wrap">
                   {tags &&
                     tags?.length !== 0 &&
                     tags?.map((tag) => (
@@ -149,31 +149,31 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
                         {tag?.name}
                       </span>
                     ))}
-                </div>
+                </div>}
                 {/* task title */}
                 <h1 className="text-sm font-extralight text-gray-300">
                   {title}
                 </h1>
               </div>
-              <div onClick={(e) => e.stopPropagation()}>
+              {view === "cardView" && <div onClick={(e) => e.stopPropagation()}>
                 <Dropdown menu={priorityOptions} disabled={!editAccessToCurrentUser}>
                   <Button style={{ border: "none" }}>
                     {getPriorityIcon(priority)}
                   </Button>
                 </Dropdown>
-              </div>
+              </div>}
             </div>
 
-            <div className="mt-1 text-sm text-gray-400">
+            {view === "cardView" && <div className="mt-1 text-sm text-gray-400">
               {description && description?.replace(/<[^>]*>/g, "") !== "" && (
                 <Popover content={content} trigger="hover">
                   <AlignLeftOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
                 </Popover>
               )}
-            </div>
+            </div>}
           </div>
 
-          <div className="flex items-center justify-between ml-1 py-2 bg-transparent">
+          {view === "cardView" && <div className="flex items-center justify-between ml-1 py-2 bg-transparent">
             {/* Due Date */}
             <Tooltip title={!editAccessToCurrentUser ? "Read Only: You don't have access to edit" : ""}>
               <button
@@ -226,7 +226,7 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
                 className="mr-4"
                 onClick={(e) => e.stopPropagation()} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />}
             </Popconfirm>
-          </div>
+          </div>}
         </div>
       </div>
       <EditTaskModal
