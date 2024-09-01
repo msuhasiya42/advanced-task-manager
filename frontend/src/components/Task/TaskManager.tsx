@@ -92,7 +92,7 @@ const TaskManager = () => {
 
   const noTasks = filteredTasks.todo.length === 0 && filteredTasks.inProgress.length === 0 && filteredTasks.completed.length === 0
 
-  if (isError) return <p className="flex h-full w-full justify-center items-center text-red-500">Error while fetching tasks</p>
+  if (isError) return <p className="flex w-full justify-center items-center text-red-500">Error while fetching tasks</p>
 
   return (
     <>
@@ -101,7 +101,7 @@ const TaskManager = () => {
       ) : (
         noTasks ?
           <div className="flex items-center w-full bg-gray-900 justify-center"><AddNewTask status="todo" /></div>
-          : (<div className="flex p-8 h-full w-full bg-gray-900 justify-center sm:justify-start sm:pl-12">
+          : (<div className="flex p-8 bg-gray-900 justify-center sm:justify-start sm:pl-12">
             <DragDropContext onDragEnd={handleDragEnd}>
               <div className="flex flex-col sm:flex-row gap-8">
                 {Object.entries(filteredTasks).map(([taskType, tasks]) => (

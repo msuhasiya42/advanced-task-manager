@@ -95,7 +95,7 @@ const UserDashboard = () => {
   };
 
   return (
-    <div className="flex h-full w-full">
+    <div className="flex w-full">
       {/* Render Sidebar based on showSidebar state */}
       {showSidebar && (
         <div ref={sideBarRef} className="flex h-full z-20">

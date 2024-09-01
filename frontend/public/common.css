@@ -12,29 +12,6 @@
 }
 
 
-/* Css for scroll bar */
-/* Track */
-/* ::-webkit-scrollbar { */
-  /* width: px; Width of the scrollbar */
-/* } */
-
-/* Thumb */
-/* ::-webkit-scrollbar-thumb { */
-  /* background-color: #6761d8; */
-  /* border:px solid black ; */
-  /* border-radius: 10px;Color of the thumb */
-/* } */
-
-/* Track on hover */
-
-
-/* Thumb on hover */
-/* ::-webkit-scrollbar-thumb:hover { */
-  /* background-color: #908ae9; Color of the thumb on hover */
-/* } */
-
-
-
 /* extra small text */
 .text-xxs
 {

@@ -37,7 +37,7 @@ const Home = () => {
   ];
 
   return (
-    <div className="flex justify-center items-center h-full bg-gray-900">
+    <div className="flex justify-center items-center bg-gray-900">
       <div className="text-center p-5">
         <h1 className="text-white text-4xl font-bold mb-4">
           Welcome to Your Advance Task Manager
