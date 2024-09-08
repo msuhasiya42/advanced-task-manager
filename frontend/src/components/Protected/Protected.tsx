@@ -1,16 +1,17 @@
 import React, { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
-import useAuthStore from "../../Store/authStore";
 import useUserData from "../../hooks/useUserData";
 import LoadingPage from "../Loading/LoadingPage";
 import ErrorPage from "../ErrorPage/ErrorPage";
+import { useSelector } from "react-redux";
+import { RootState } from "../../Store/store";
 
 interface ChildrenProp {
   children?: ReactNode;
 }
 
 const ProtectedRoute = ({ children }: ChildrenProp) => {
-  const user = useAuthStore((state) => state.user);
+  const { user } = useSelector((state: RootState) => state.auth);
   const { isLoading, error } = useUserData();
 
   if (isLoading) {

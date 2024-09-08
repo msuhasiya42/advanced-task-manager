@@ -1,22 +1,21 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { userAPI } from "../Api";
-import useAuthStore from "../Store/authStore";
 import useTaskStore from "../Store/taskStore";
-import { boolean } from "zod";
-import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { addListOfUser, login } from "../Store/reducers/authSlice";
 
 const useLogin = () => {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
-    const { login, addListOfUser } = useAuthStore();
     const { setTags, updateFilter } = useTaskStore();
+    const dispatch = useDispatch();
 
     const loginMutation = useMutation(({ email, password }: { email: string, password: string }) => userAPI.login(email, password), {
         onSuccess: (res) => {
             const { tags, filter } = res.data;
 
-            login(res.data);
+            dispatch(login(res.data));
             queryClient.invalidateQueries("users");
 
             if (tags) setTags(tags);
@@ -46,7 +45,7 @@ const useLogin = () => {
 
     const fetchUsers = async () => {
         await userAPI.getAllUsers().then((res) => {
-            addListOfUser(res.data);
+            dispatch(addListOfUser(res.data));
         }).catch((err) => {
             console.log(err);
         });

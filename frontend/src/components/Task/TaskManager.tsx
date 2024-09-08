@@ -3,12 +3,13 @@ import TasksList from "./TasksList";
 import { taskAPI } from "../../Api";
 import LoadingPage from "../Loading/LoadingPage";
 import useTaskStore from "../../Store/taskStore";
-import useAuthStore from "../../Store/authStore";
 import { TaskCategory, TaskType } from "./Types/types";
 import { DragDropContext } from "react-beautiful-dnd";
 import AddNewTask from "./AddNewTask";
 import { useQuery } from "react-query";
 import { COMPLETED, INPROGRESS, TODO } from "../../utils/strings";
+import { useSelector } from "react-redux";
+import { RootState } from "../../Store/store";
 
 
 export const filterTasksByStatus = (tasks: TaskType[], status: string) => {
@@ -16,7 +17,7 @@ export const filterTasksByStatus = (tasks: TaskType[], status: string) => {
 };
 
 const TaskManager = () => {
-  const { user } = useAuthStore();
+  const { user } = useSelector((state: RootState) => state.auth);
 
   const {
     setAllTasks,

@@ -1,8 +1,9 @@
 import React from "react";
 import { Select, Row, Col, Avatar } from "antd";
-import useAuthStore from "../../Store/authStore";
 import { Collaborator } from "./Types/types";
 import { lightColors } from "./utils";
+import { useSelector } from "react-redux";
+import { RootState } from "../../Store/store";
 
 const { Option } = Select;
 
@@ -13,7 +14,7 @@ interface CollaboratorsSelectorProps {
 }
 
 const CollaboratorsSelector = ({ collaborators, setCollaborators, canEdit }: CollaboratorsSelectorProps) => {
-  const { allUsers, user } = useAuthStore();
+  const { allUsers, user } = useSelector((state: RootState) => state.auth);
 
   const handleUserChange = (selectedUsers: string[]) => {
     const newCollaborators = selectedUsers.map(userId => {

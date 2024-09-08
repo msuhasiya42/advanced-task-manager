@@ -24,8 +24,9 @@ import {
 import { CheckboxValueType } from "antd/es/checkbox/Group";
 import dayjs from "dayjs";
 import { userAPI } from "../../Api";
-import useAuthStore from "../../Store/authStore";
 import { useMutation } from "react-query";
+import { useSelector } from "react-redux";
+import { RootState } from "../../Store/store";
 
 interface FilterProps {
   setShowFilter: React.Dispatch<React.SetStateAction<boolean>>;
@@ -43,7 +44,7 @@ const Filter: React.FC<FilterProps> = ({ setShowFilter }) => {
   const tags = useTaskStore((state) => state.tags);
 
   const { updateFilter, filter } = useTaskStore();
-  const userId = useAuthStore((state) => state?.user?._id);
+  const userId = useSelector((state: RootState) => state.auth.user?._id);
 
   // here first check value from store backend if be null/store null then take initial value
   const [filterValues, setFilterValues] = React.useState<FilterType>(

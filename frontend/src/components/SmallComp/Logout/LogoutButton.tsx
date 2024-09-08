@@ -1,12 +1,14 @@
 import React from "react";
-import useAuthStore from "../../../Store/authStore";
 import { LogoutOutlined } from "@ant-design/icons";
+import { logout } from "../../../Store/reducers/authSlice";
+import { useDispatch } from "react-redux";
 
 const LogoutButton = () => {
-  const { logout } = useAuthStore();
+
+  const dispatch = useDispatch();
 
   const logoutUser = () => {
-    logout();
+    dispatch(logout());
   };
 
   return (

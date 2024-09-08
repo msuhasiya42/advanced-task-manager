@@ -3,7 +3,8 @@ import ProfileButton from "../SmallComp/ProfileButton/ProfileButton";
 import Theme from "../SmallComp/Theme/Theme";
 import LogoutButton from "../SmallComp/Logout/LogoutButton";
 import { useLocation } from "react-router-dom";
-import useAuthStore from "../../Store/authStore";
+import { useSelector } from "react-redux";
+import { RootState } from "../../Store/store";
 
 const HeaderPage = () => {
   const location = useLocation();
@@ -12,7 +13,7 @@ const HeaderPage = () => {
     return location.pathname === path;
   };
 
-  const user = useAuthStore((state) => state.user);
+  const { user } = useSelector((state: RootState) => state.auth);
 
   return (
     <div className="fixed z-50 justify-center w-full border-b-2 py-2 px-2 flex flex-wrap sm:justify-between mx-auto bg-gray-900 border-gray-700">

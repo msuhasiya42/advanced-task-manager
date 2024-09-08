@@ -3,11 +3,11 @@ import { Menu, Dropdown, Popconfirm, message } from 'antd';
 import { EllipsisOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import useTaskStore, { Tag } from '../../Store/taskStore';
 import { taskTypes } from './SideBar';
-import useAuthStore from '../../Store/authStore';
 import { tagAPI, userAPI } from '../../Api';
 import { deleteTagStr, deleteTagTitle } from '../../utils/strings';
 import AddTags from '../AddUpdateTag/AddUpdateTag';
 import { useMutation } from 'react-query';
+import { useSelector } from 'react-redux';
 
 interface TagListProps {
     setActiveTab: (tab: string) => void;
@@ -34,7 +34,7 @@ const TagList = ({ setActiveTab, activeTab, onChildPopupInteraction }: TagListPr
         taskTypes.forEach((category) => filterTasksByTag(category, tagId));
     };
 
-    const userId = useAuthStore((state) => state?.user?._id);
+    const userId = useSelector((state: any) => state.auth.user?._id);
 
     const deleteTagMutation = useMutation(
         (tag: Tag) => tagAPI.deleteTag(userId as string, tag._id as string),

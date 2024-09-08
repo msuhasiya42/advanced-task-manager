@@ -2,7 +2,9 @@ import { Avatar, Modal, Tabs } from "antd";
 import React, { useEffect, useState } from "react";
 import { avatarStyles, getAvatar, getCategory } from "./avatarCategories";
 import { userAPI } from "../../Api";
-import useAuthStore from "../../Store/authStore";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../Store/store";
+import { updateUser } from "../../Store/reducers/authSlice";
 
 interface AvatarModalProps {
   isModalOpen: boolean;
@@ -18,7 +20,8 @@ const ChooseAvatarModal = ({
   const avatarCount = 10;
 
   const [selectedCategory, setSelectedCategory] = useState("");
-  const { user, updateUser } = useAuthStore();
+  const { user } = useSelector((state: RootState) => state.auth);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setSelectedCategory("lorelei");
@@ -35,7 +38,7 @@ const ChooseAvatarModal = ({
 
     // Assuming you have userId available in this scope or as a prop
     userAPI.updatePhoto(user?._id ?? "", selectedAvatar);
-    updateUser({ picture: selectedAvatar });
+    dispatch(updateUser({ picture: selectedAvatar }));
 
     // Close the modal after selecting an avatar
     setIsModalOpen(false);

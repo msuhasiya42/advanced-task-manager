@@ -7,9 +7,10 @@ import DatePicker from "react-datepicker";
 import { taskPriorities } from "./utils";
 import Editor from "./Editor";
 import DOMPurify from "dompurify";
-import useAuthStore from "../../Store/authStore";
 import Comments from "./Comments";
 import CollaboratorsSelector from "./CollaboratorsSelector";
+import { useSelector } from "react-redux";
+import { RootState } from "../../Store/store";
 
 
 interface EditTaskModalProps {
@@ -26,56 +27,56 @@ const EditTaskModal = (props: EditTaskModalProps) => {
     description: DOMPurify.sanitize(task.description),
   };
 
-  const [modalData, setModalData] = useState<TaskType>(sanitizedTask);
+  const [taskData, setTaskData] = useState<TaskType>(sanitizedTask);
   const { tags, updateTaskDataStore, updateTaskFilteredTasksStore } = useTaskStore();
-  const { user, allUsers } = useAuthStore();
+  const { user, allUsers } = useSelector((state: RootState) => state.auth);
 
   const handleInputChange = (e: { target: { name: string; value: any } }) => {
     const { name, value } = e.target;
-    setModalData((prevData) => ({ ...prevData, [name]: value }));
+    setTaskData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const handleTagsChange = (selectedTags: string[]) => {
     const newTags = tags.filter((tag) => selectedTags.includes(tag.name));
-    setModalData((prevData) => ({ ...prevData, tags: newTags }));
+    setTaskData((prevData) => ({ ...prevData, tags: newTags }));
   };
 
   const handleDescChange = (value: string) => {
-    setModalData((prevData) => ({
+    setTaskData((prevData) => ({
       ...prevData,
       description: value,
     }));
   };
 
   const handleDate = (date: Date) => {
-    setModalData((prevData) => ({ ...prevData, dueDate: date.toString() }));
+    setTaskData((prevData) => ({ ...prevData, dueDate: date.toString() }));
   };
 
   const handleFormSubmit = () => {
-    const trimmedTitle = modalData.title?.trim();
-    const trimmedDescription = modalData.description?.trim();
+    const trimmedTitle = taskData.title?.trim();
+    const trimmedDescription = taskData.description?.trim();
 
     if (trimmedTitle === "") {
       void message.error("Title cannot be empty", 1.5);
       return;
     }
 
-    const updatedModalData = {
-      ...modalData,
+    const updatedTaskData = {
+      ...taskData,
       title: trimmedTitle,
       description: trimmedDescription,
       updatedAt: new Date().toString(),
     };
 
-    setModalData(updatedModalData);
+    setTaskData(updatedTaskData);
 
     taskAPI
-      .updateTask(task._id, updatedModalData)
+      .updateTask(task._id, updatedTaskData)
       .then(() => {
         void message.success("Task updated successfully", 1.5);
-        const { status, _id } = updatedModalData;
-        updateTaskDataStore(status, _id, updatedModalData);
-        updateTaskFilteredTasksStore(status, _id, updatedModalData);
+        const { status, _id } = updatedTaskData;
+        updateTaskDataStore(status, _id, updatedTaskData);
+        updateTaskFilteredTasksStore(status, _id, updatedTaskData);
         setShowModal(false);
       })
       .catch((err) => void message.error("Error in updating task:", err));
@@ -130,7 +131,7 @@ const EditTaskModal = (props: EditTaskModalProps) => {
       open={showModal}
       onCancel={() => {
         setShowModal(false);
-        setModalData(task);
+        setTaskData(task);
       }}
       onOk={handleFormSubmit}
       okText="Save"
@@ -144,7 +145,7 @@ const EditTaskModal = (props: EditTaskModalProps) => {
               required
               addonBefore="Title"
               name="title"
-              value={modalData.title}
+              value={taskData.title}
               onChange={handleInputChange}
               placeholder="Enter title"
               disabled={!canEditTask}
@@ -153,7 +154,7 @@ const EditTaskModal = (props: EditTaskModalProps) => {
 
           <div className="max-w-[350px] sm:max-w-[480px] sm:w-[480px] mt-4">
             <label className="block mb-3 font-bold text-gray-700">Description</label>
-            <Editor canEdit={canEditTask} description={modalData.description} handleDescChange={handleDescChange} />
+            <Editor canEdit={canEditTask} description={taskData.description} handleDescChange={handleDescChange} />
           </div>
           <div className="hidden sm:block">
             <label className="block mb-3 font-bold text-gray-700">
@@ -176,7 +177,7 @@ const EditTaskModal = (props: EditTaskModalProps) => {
                 name="status"
                 className="block w-full xt-select rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
                 aria-label="Select"
-                value={modalData.status}
+                value={taskData.status}
                 onChange={handleInputChange}
                 disabled={!canEditTask}
               >
@@ -192,7 +193,7 @@ const EditTaskModal = (props: EditTaskModalProps) => {
                 name="priority"
                 className="block w-full xt-select rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
                 aria-label="Select"
-                value={modalData.priority}
+                value={taskData.priority}
                 onChange={handleInputChange}
                 disabled={!canEditTask}
               >
@@ -211,7 +212,7 @@ const EditTaskModal = (props: EditTaskModalProps) => {
               mode="multiple"
               allowClear
               placeholder="Select tags"
-              value={modalData.tags.map((tag) => tag.name)}
+              value={taskData.tags.map((tag) => tag.name)}
               onChange={handleTagsChange}
               style={{ width: "100%" }}
               options={tagOptions}
@@ -223,7 +224,7 @@ const EditTaskModal = (props: EditTaskModalProps) => {
             <label className="block mb-3 font-bold text-gray-700">Due Date</label>
             <DatePicker
               disabled={!canEditTask}
-              selected={new Date(modalData.dueDate)}
+              selected={new Date(taskData.dueDate)}
               onChange={(date: Date) => handleDate(date)}
               className="block w-full xt-select rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
             />
@@ -232,9 +233,9 @@ const EditTaskModal = (props: EditTaskModalProps) => {
           <div>
             <label className="block mb-3 font-bold text-gray-700">Collaborators</label>
             <CollaboratorsSelector
-              collaborators={modalData.collaborators}
+              collaborators={taskData.collaborators}
               setCollaborators={(newCollaborators: Collaborator[]) =>
-                setModalData(prevData => ({ ...prevData, collaborators: newCollaborators }))
+                setTaskData(prevData => ({ ...prevData, collaborators: newCollaborators }))
               }
               canEdit={canEditTask}
             />

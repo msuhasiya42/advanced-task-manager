@@ -1,9 +1,9 @@
 import React from "react";
-import useAuthStore from "../../../Store/authStore";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../Store/store";
 
 const ProfileButton = () => {
-  const user = useAuthStore((state) => state.user);
-
+  const { user } = useSelector((state: RootState) => state.auth);
   if (!user) {
     // Handle the case where the user is null
     return null; // or handle it accordingly

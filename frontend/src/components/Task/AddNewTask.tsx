@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { taskAPI } from "../../Api";
 import useTaskStore from "../../Store/taskStore";
-import useAuthStore from "../../Store/authStore";
 import { TaskCategory } from "./Types/types";
 import { Input, InputRef, message } from "antd";
 import { CloseOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
+import { useSelector } from "react-redux";
+import { RootState } from "../../Store/store";
 
 interface StatusType {
   status: TaskCategory;
@@ -13,7 +14,7 @@ interface StatusType {
 const AddNewTask = ({ status }: StatusType) => {
   const [showTextArea, setShowTextArea] = useState(false);
   const [task, setTask] = useState("");
-  const user = useAuthStore((state) => state.user?._id);
+  const userId = useSelector((state: RootState) => state.auth.user?._id);
   const { addTaskDataStore, addTaskFilteredTasksStore } = useTaskStore();
   const textRef = React.useRef<InputRef>(null);
 
@@ -22,13 +23,13 @@ const AddNewTask = ({ status }: StatusType) => {
   const onSaveTask = (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (user) {
+    if (userId) {
       if (task.trim() === "") {
         void message.error("Empty Title", 1.5);
         return;
       }
       taskAPI
-        .createTask({ title: task, status, user })
+        .createTask({ title: task, status, user: userId })
         .then((response) => {
           const newTask = response.data.task;
           addTaskDataStore(status, newTask);

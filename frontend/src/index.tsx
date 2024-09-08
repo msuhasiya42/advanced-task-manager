@@ -7,6 +7,8 @@ import { QueryClient, QueryClientProvider, } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { ThemeProvider } from "./components/theme-provider";
+import { store } from "./Store/store";
+import { Provider } from 'react-redux';
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const rootType = document.getElementById("root")!;
 const root = ReactDOM.createRoot(rootType);
@@ -18,10 +20,12 @@ root.render(
   // <React.StrictMode>
   <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
     <GoogleOAuthProvider clientId="1032180948351-qcskgfti1iibbdhq4tavjmjuq3kl3b0k.apps.googleusercontent.com">
-      <QueryClientProvider client={queryClient}>
-        <App />
-        <ReactQueryDevtools />
-      </QueryClientProvider>
+      <Provider store={store}>
+        <QueryClientProvider client={queryClient}>
+          <App />
+          <ReactQueryDevtools />
+        </QueryClientProvider>
+      </Provider>
     </GoogleOAuthProvider>
   </ThemeProvider>
 

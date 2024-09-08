@@ -1,9 +1,10 @@
 import React from "react";
 import { Navigate, Link } from "react-router-dom";
-import useAuthStore from "../../Store/authStore";
+import { RootState } from "../../Store/store";
+import { useSelector } from "react-redux";
 
 const Home = () => {
-  const { user } = useAuthStore();
+  const { user } = useSelector((state: RootState) => state.auth);
   if (user) {
     return <Navigate to="/user-dashboard" replace />;
   }

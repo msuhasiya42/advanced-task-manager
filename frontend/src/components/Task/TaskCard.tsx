@@ -22,7 +22,8 @@ import {
 } from "@ant-design/icons";
 import { convertToIndianTime, getPriorityIcon, taskPriorities } from "./utils";
 import { deleteDesc, deleteText } from "../../utils/strings";
-import useAuthStore from "../../Store/authStore";
+import { useSelector } from "react-redux";
+import { RootState } from "../../Store/store";
 
 const TaskCard = ({ task, handleDelete }: TasksProps) => {
   const {
@@ -53,7 +54,7 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
   const classNameDueDate = `text-xs ml-1 w-18 text-black font-medium inline-flex items-center px-2.5 py-0.5 rounded bg-${dateColor}-400 text-white border border-white-600  `;
 
   const { view, updateTaskDataStore, updateTaskFilteredTasksStore } = useTaskStore();
-  const { user } = useAuthStore()
+  const { user } = useSelector((state: RootState) => state.auth)
 
   const toggleTaskDone = () => {
     task.done = !done;

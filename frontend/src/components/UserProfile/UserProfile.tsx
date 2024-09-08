@@ -1,7 +1,5 @@
 import React, { useState, useRef } from "react";
-import LogoutButton from "../SmallComp/Logout/LogoutButton";
 import LoadingPage from "../Loading/LoadingPage";
-import useAuthStore from "../../Store/authStore";
 import { userAPI } from "../../Api";
 import ImageCompressor from "image-compressor.js";
 import ChooseAvatarModal from "./ChooseAvatarModal";
@@ -9,13 +7,17 @@ import { Button, Popconfirm } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { deleteAccountDesc, deleteAccountText } from "../../utils/strings";
 import { useQueryClient, useMutation } from "react-query";
+import { useDispatch, useSelector } from "react-redux";
+import { logout, updateUser } from "../../Store/reducers/authSlice";
+import { RootState } from "../../Store/store";
 
 const UserProfile = () => {
-  const { user, updateUser } = useAuthStore();
+  const { user } = useSelector((state: RootState) => state.auth);
   const [userPhoto, setUserPhoto] = useState(user?.picture); // default image
   const [isModalOpen, setIsModalOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
+  const dispatch = useDispatch();
 
   const handleImageClick = () => {
     setIsModalOpen(true);
@@ -86,7 +88,7 @@ const UserProfile = () => {
     {
       onSuccess: () => {
         updateUser({});
-        logout();
+        dispatch(logout());
         queryClient.invalidateQueries(['user']);
       },
       onError: () => {
@@ -104,7 +106,6 @@ const UserProfile = () => {
   }
 
   const userName = user.name.charAt(0).toUpperCase() + user.name.slice(1);
-  const { logout } = useAuthStore();
 
   const handleDeleteUser = () => {
     deleteUserMutation.mutate();

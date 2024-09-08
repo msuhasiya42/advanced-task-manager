@@ -2,8 +2,9 @@ import { Button, Input, InputRef, Modal, message } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 import { taskAPI } from '../../Api';
 import useTaskStore from '../../Store/taskStore';
-import useAuthStore from '../../Store/authStore';
 import { TaskCategory } from '../Task/Types/types';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../Store/store';
 
 
 interface AddTaskModalProps {
@@ -22,7 +23,7 @@ const AddTaskModal = ({ showAddTaskModal, setShowAddTaskModal }: AddTaskModalPro
     });
 
     const inputRef = useRef<InputRef>(null);
-    const user = useAuthStore((state) => state.user?._id);
+    const userId = useSelector((state: RootState) => state.auth.user?._id);
     const { addTaskDataStore, addTaskFilteredTasksStore } =
         useTaskStore();
 
@@ -34,13 +35,13 @@ const AddTaskModal = ({ showAddTaskModal, setShowAddTaskModal }: AddTaskModalPro
         const { title, status } = task;
         event.preventDefault();
 
-        if (user) {
+        if (userId) {
             if (title.trim() === "") {
                 setShowAddTaskModal(false);
                 return;
             }
             taskAPI
-                .createTask({ title, status, user })
+                .createTask({ title, status, user: userId })
                 .then((response) => {
                     console.log("Response", response.data.task);
                     const newTask = response.data.task;

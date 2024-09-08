@@ -6,8 +6,9 @@ import { CommentType, ReactionType } from './Types/types'
 import { commentAPI } from '../../Api'
 import { reactionOptions } from './utils'
 import { useMutation, useQuery } from 'react-query'
-import useAuthStore from '../../Store/authStore'
 import { useInView } from 'react-intersection-observer'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../Store/store'
 
 interface CommentsProps {
     taskId: string
@@ -29,7 +30,7 @@ const Comments = ({ taskId, userId }: CommentsProps) => {
     const [showEditCommentInput, setShowEditCommentInput] = useState("");
     const [isTyping, setIsTyping] = useState(false);
 
-    const user = useAuthStore((state) => state.user)
+    const { user } = useSelector((state: RootState) => state.auth)
 
 
     // for replies

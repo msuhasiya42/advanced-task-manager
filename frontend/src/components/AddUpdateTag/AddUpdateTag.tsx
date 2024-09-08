@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { Modal, Input, message, Button } from "antd";
 import { CompactPicker } from "react-color";
-import useAuthStore from "../../Store/authStore";
 import useTaskStore, { Tag } from "../../Store/taskStore";
 import Title from "antd/es/typography/Title";
 import { TagOutlined } from "@ant-design/icons";
 import { tagAPI } from "../../Api";
 import { useMutation } from "react-query";
+import { useSelector } from "react-redux";
+import { RootState } from "../../Store/store";
 
 interface AddTagsProps {
   showModal: boolean;
@@ -22,7 +23,7 @@ const AddUpdateTag = ({ tagId, showModal, setShowModal, onChildPopupInteraction,
   const [tagName, setTagName] = useState(initialTagName ?? "");
   const [tagColor, setTagColor] = useState(initialTagColor ?? "#2196F3");
 
-  const userId = useAuthStore((state) => state?.user?._id);
+  const userId = useSelector((state: RootState) => state.auth.user?._id);
   const { updateTags, checkTagExists, tags } = useTaskStore();
 
   const isEditMode = !!initialTagName; // Check if component is in edit mode
