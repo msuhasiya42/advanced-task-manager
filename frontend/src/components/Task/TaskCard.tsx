@@ -23,7 +23,7 @@ import { convertToIndianTime, getPriorityIcon, taskPriorities } from "./utils";
 import { deleteDesc, deleteText } from "../../utils/strings";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Store/store";
-import { updateTaskDataStore, updateTaskFilteredTasksStore } from "../../Store/reducers/taskSlice";
+import { updateTaskInStore } from "../../Store/reducers/taskSlice";
 
 const TaskCard = ({ task, handleDelete }: TasksProps) => {
   const {
@@ -67,8 +67,7 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
     taskAPI
       .updateTask(_id, task)
       .then(() => {
-        dispatch(updateTaskDataStore({ category: status, taskId: _id, updatedTask: task }));
-        dispatch(updateTaskFilteredTasksStore({ category: status, taskId: _id, updatedTask: task }));
+        dispatch(updateTaskInStore({ category: status, taskId: _id, updatedTask: task }));
       })
       .catch((err) => {
         void message.error("Err in changing priority: ", err);
@@ -95,8 +94,7 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
         updatedTask.done
           ? void message.success("Task set to done.")
           : void message.warning("Task set to undone.");
-        dispatch(updateTaskDataStore({ category: status, taskId: id, updatedTask }));
-        dispatch(updateTaskFilteredTasksStore({ category: status, taskId: id, updatedTask }));
+        dispatch(updateTaskInStore({ category: status, taskId: id, updatedTask }));
       })
       .catch((err) => {
         console.log("err in updating to done:", err);

@@ -1,8 +1,8 @@
 // src/features/auth/authSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AuthData, otherUser } from "../../components/Login/types";
-import { Tag } from "../taskStore";
 import { RootState } from "../store";
+import { Tag } from "./taskSlice";
 
 export interface User {
   _id: string;

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import AddTags from "../AddUpdateTag/AddUpdateTag";
 import { TaskCategory } from "../Task/Types/types";
 import {
-  BellOutlined,
   CalendarOutlined,
   HomeOutlined,
   SnippetsOutlined,
@@ -10,7 +9,7 @@ import {
 import ProfileButton from "../SmallComp/ProfileButton/ProfileButton";
 import LogoutButton from "../SmallComp/Logout/LogoutButton";
 import TagList from "./TagList";
-import { copyTasks, setTodaysTasks, setUpcomingTasks } from "../../Store/reducers/taskSlice";
+import { setFilteredTasks, setTodaysTasks, setUpcomingTasks } from "../../Store/reducers/taskSlice";
 import { useDispatch } from "react-redux";
 interface Props {
   onChildPopupInteraction: (active: boolean) => void;
@@ -24,12 +23,12 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
   const dispatch = useDispatch();
 
   const handleAllTasks = () => {
-    dispatch(copyTasks());
+    dispatch(setFilteredTasks());
     setActiveTab("all");
   };
 
   const handleFilter = (handler: any) => {
-    copyTasks();
+    setFilteredTasks();
     taskTypes.forEach((type) => dispatch(handler(type)));
   };
 

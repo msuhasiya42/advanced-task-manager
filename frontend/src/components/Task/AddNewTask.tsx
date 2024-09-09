@@ -5,7 +5,7 @@ import { Input, InputRef, message } from "antd";
 import { CloseOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Store/store";
-import { addTaskDataStore, addTaskFilteredTasksStore } from "../../Store/reducers/taskSlice";
+import { addNewTask } from "../../Store/reducers/taskSlice";
 
 interface StatusType {
   status: TaskCategory;
@@ -32,8 +32,7 @@ const AddNewTask = ({ status }: StatusType) => {
         .createTask({ title: task, status, user: userId })
         .then((response) => {
           const newTask = response.data.task;
-          dispatch(addTaskDataStore({ category: status, task: newTask }));
-          dispatch(addTaskFilteredTasksStore({ category: status, task: newTask }));
+          dispatch(addNewTask({ category: status, task: newTask }));
           void message.success("Task Added", 1.5);
         })
         .catch((error) => {

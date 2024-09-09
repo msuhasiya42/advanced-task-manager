@@ -10,7 +10,7 @@ import Comments from "./Comments";
 import CollaboratorsSelector from "./CollaboratorsSelector";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Store/store";
-import { updateTaskDataStore, updateTaskFilteredTasksStore } from "../../Store/reducers/taskSlice";
+import { updateTaskInStore } from "../../Store/reducers/taskSlice";
 
 
 interface EditTaskModalProps {
@@ -76,8 +76,7 @@ const EditTaskModal = (props: EditTaskModalProps) => {
       .then(() => {
         void message.success("Task updated successfully", 1.5);
         const { status, _id } = updatedTaskData;
-        dispatch(updateTaskDataStore({ category: status, taskId: _id, updatedTask: updatedTaskData }));
-        dispatch(updateTaskFilteredTasksStore({ category: status, taskId: _id, updatedTask: updatedTaskData }));
+        dispatch(updateTaskInStore({ category: status, taskId: _id, updatedTask: updatedTaskData }));
         setShowModal(false);
       })
       .catch((err) => void message.error("Error in updating task:", err));

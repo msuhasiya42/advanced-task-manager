@@ -4,7 +4,7 @@ import { taskAPI } from '../../Api';
 import { TaskCategory } from '../Task/Types/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../Store/store';
-import { addTaskDataStore, addTaskFilteredTasksStore } from '../../Store/reducers/taskSlice';
+import { addNewTask } from '../../Store/reducers/taskSlice';
 
 
 interface AddTaskModalProps {
@@ -44,8 +44,7 @@ const AddTaskModal = ({ showAddTaskModal, setShowAddTaskModal }: AddTaskModalPro
                 .then((response) => {
                     console.log("Response", response.data.task);
                     const newTask = response.data.task;
-                    dispatch(addTaskDataStore({ category: status, task: newTask }));
-                    dispatch(addTaskFilteredTasksStore({ category: status, task: newTask }));
+                    dispatch(addNewTask({ category: status, task: newTask }));
                     void message.success("Task Added", 1.5);
                 })
                 .catch((error) => {

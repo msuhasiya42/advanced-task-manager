@@ -8,7 +8,7 @@ import AddTags from '../AddUpdateTag/AddUpdateTag';
 import { useMutation } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../Store/store';
-import { Tag, filterTasksByTag, updateTags, removeTagFromAllTasks, updateTagsInTasks, copyTasks } from '../../Store/reducers/taskSlice';
+import { Tag, filterTasksByTag, updateTags, removeTagFromAllTasks, updateTagsInTasks, setFilteredTasks } from '../../Store/reducers/taskSlice';
 
 interface TagListProps {
     setActiveTab: (tab: string) => void;
@@ -25,7 +25,7 @@ const TagList = ({ setActiveTab, activeTab, onChildPopupInteraction }: TagListPr
     const dispatch = useDispatch();
 
     const filterTaskByTagName = (tagId: string) => {
-        dispatch(copyTasks());
+        dispatch(setFilteredTasks());
         taskTypes.forEach((category) => dispatch(filterTasksByTag({ category, tagId })));
     };
 

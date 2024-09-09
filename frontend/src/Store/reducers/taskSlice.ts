@@ -50,31 +50,27 @@ const taskSlice = createSlice({
     setAllTasks(state, action: PayloadAction<TaskType[]>) {
       state.allTasks = action.payload;
     },
-    setTasksDataByCategory(
+    setTasksByCategory(
       state,
       action: PayloadAction<{ category: TaskCategory; newTasks: TaskType[] }>
     ) {
       state.tasksDataByCategory[action.payload.category] =
         action.payload.newTasks;
     },
-    copyTasks(state) {
+    setFilteredTasks(state) {
       state.filteredTasks = { ...state.tasksDataByCategory };
     },
-    addTaskDataStore(
+    addNewTask(
       state,
       action: PayloadAction<{ category: TaskCategory; task: TaskType }>
     ) {
       state.tasksDataByCategory[action.payload.category].push(
         action.payload.task
       );
-    },
-    addTaskFilteredTasksStore(
-      state,
-      action: PayloadAction<{ category: TaskCategory; task: TaskType }>
-    ) {
+
       state.filteredTasks[action.payload.category].push(action.payload.task);
     },
-    updateTaskDataStore(
+    updateTaskInStore(
       state,
       action: PayloadAction<{
         category: TaskCategory;
@@ -86,22 +82,14 @@ const taskSlice = createSlice({
         state.tasksDataByCategory[action.payload.category].map((task) =>
           task._id === action.payload.taskId ? action.payload.updatedTask : task
         );
-    },
-    updateTaskFilteredTasksStore(
-      state,
-      action: PayloadAction<{
-        category: TaskCategory;
-        taskId: string;
-        updatedTask: TaskType;
-      }>
-    ) {
+
       state.filteredTasks[action.payload.category] = state.filteredTasks[
         action.payload.category
       ].map((task) =>
         task._id === action.payload.taskId ? action.payload.updatedTask : task
       );
     },
-    deleteTaskFromDataStore(
+    deleteTaskFromInStore(
       state,
       action: PayloadAction<{ category: TaskCategory; taskId: string }>
     ) {
@@ -109,11 +97,7 @@ const taskSlice = createSlice({
         state.tasksDataByCategory[action.payload.category].filter(
           (task) => task._id !== action.payload.taskId
         );
-    },
-    deleteTaskFilteredTasksStore(
-      state,
-      action: PayloadAction<{ category: TaskCategory; taskId: string }>
-    ) {
+
       state.filteredTasks[action.payload.category] = state.filteredTasks[
         action.payload.category
       ].filter((task) => task._id !== action.payload.taskId);
@@ -333,14 +317,11 @@ const taskSlice = createSlice({
 
 export const {
   setAllTasks,
-  setTasksDataByCategory,
-  copyTasks,
-  addTaskDataStore,
-  addTaskFilteredTasksStore,
-  updateTaskDataStore,
-  updateTaskFilteredTasksStore,
-  deleteTaskFromDataStore,
-  deleteTaskFilteredTasksStore,
+  setTasksByCategory,
+  setFilteredTasks,
+  addNewTask,
+  updateTaskInStore,
+  deleteTaskFromInStore,
   setTodaysTasks,
   setUpcomingTasks,
   filterTasksByTag,

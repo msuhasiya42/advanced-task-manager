@@ -7,7 +7,7 @@ import { message } from "antd";
 import AddNewTask from "./AddNewTask";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import { taskNameMap } from "./utils";
-import { deleteTaskFilteredTasksStore, deleteTaskFromDataStore } from "../../Store/reducers/taskSlice";
+import { deleteTaskFromInStore } from "../../Store/reducers/taskSlice";
 import { useDispatch } from "react-redux";
 
 interface taskListProps {
@@ -24,8 +24,7 @@ const TasksList = ({ tasks, taskType }: taskListProps) => {
       .deleteTask(task._id)
       .then(() => {
         const { _id, status } = task;
-        dispatch(deleteTaskFromDataStore({ category: status, taskId: _id }));
-        dispatch(deleteTaskFilteredTasksStore({ category: status, taskId: _id }));
+        dispatch(deleteTaskFromInStore({ category: status, taskId: _id }));
         void message.success("Task Deleted Successfully");
       })
       .catch((err) => {

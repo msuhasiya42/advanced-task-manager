@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import TasksList from "./TasksList";
 import { taskAPI } from "../../Api";
 import LoadingPage from "../Loading/LoadingPage";
@@ -6,10 +6,10 @@ import { TaskCategory, TaskType } from "./Types/types";
 import { DragDropContext } from "react-beautiful-dnd";
 import AddNewTask from "./AddNewTask";
 import { useQuery } from "react-query";
-import { COMPLETED, INPROGRESS, TODO } from "../../utils/strings";
+import { TaskCategories } from "../../utils/strings";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Store/store";
-import { copyTasks, setAllTasks, setTasksDataByCategory, updateFilter } from "../../Store/reducers/taskSlice";
+import { setFilteredTasks, setAllTasks, setTasksByCategory, updateFilter } from "../../Store/reducers/taskSlice";
 
 
 export const filterTasksByStatus = (tasks: TaskType[], status: string) => {
@@ -28,18 +28,19 @@ const TaskManager = () => {
   const { isLoading, isError } = useQuery("tasks", () => taskAPI.fetchTask(user?._id ?? ""), {
     enabled: !!user?._id,
     onSuccess: (res) => {
-      const allTasks = res.data.tasks;
+      const allTasks = res.data.tasks ?? [];
+      const [todo, inProgress, completed] = TaskCategories.map((category) => filterTasksByStatus(allTasks, category));
+
+      const tasksMap: Record<TaskCategory, TaskType[]> = {
+        todo,
+        inProgress,
+        completed
+      };
+
+      TaskCategories.map((category) => dispatch(setTasksByCategory({ category, newTasks: tasksMap[category] })));
       dispatch(setAllTasks(allTasks));
-
-      const todos = filterTasksByStatus(allTasks, TODO);
-      const inprogress = filterTasksByStatus(allTasks, INPROGRESS);
-      const completed = filterTasksByStatus(allTasks, COMPLETED);
-
-      dispatch(setTasksDataByCategory({ category: TODO, newTasks: todos }));
-      dispatch(setTasksDataByCategory({ category: INPROGRESS, newTasks: inprogress }));
-      dispatch(setTasksDataByCategory({ category: COMPLETED, newTasks: completed }));
-      dispatch(copyTasks());
-      updateFilter(filter);
+      dispatch(setFilteredTasks());
+      dispatch(updateFilter(filter));
     }
   });
 
@@ -74,20 +75,22 @@ const TaskManager = () => {
         removed.status = to;
         // api call to change status of task when drag and drop
         taskAPI.updateTask(removed._id, removed);
-        dispatch(setTasksDataByCategory({ category: from, newTasks: sourceTasks }));
+        dispatch(setTasksByCategory({ category: from, newTasks: sourceTasks }));
       }
 
       const destinationTasks =
         from !== to ? Array.from(tasksMap[to]) : sourceTasks;
       destinationTasks.splice(destination.index, 0, removed);
-      dispatch(setTasksDataByCategory({ category: to, newTasks: destinationTasks }));
+      dispatch(setTasksByCategory({ category: to, newTasks: destinationTasks }));
     };
 
     updateTasks(source.droppableId, destination.droppableId);
-    dispatch(copyTasks());
+    dispatch(setFilteredTasks());
   };
 
-  const noTasks = filteredTasks.todo.length === 0 && filteredTasks.inProgress.length === 0 && filteredTasks.completed.length === 0
+  const noTasks = useMemo(() => {
+    return TaskCategories.every((category) => filteredTasks[category].length === 0);
+  }, [filteredTasks]);
 
   if (isError) return <p className="flex w-full justify-center items-center text-red-500">Error while fetching tasks</p>
 
