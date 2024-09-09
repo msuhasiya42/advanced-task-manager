@@ -10,9 +10,11 @@ import {
   PlusOutlined,
 } from "@ant-design/icons";
 import { Badge, Button, Popover, Switch } from "antd";
-import useTaskStore from "../../Store/taskStore";
 import Filter, { initialFilterValue } from "../Filter/Filter";
 import AddTaskModal from "../AddTaskModal/AddTaskModal";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../Store/store";
+import { updateView } from "../../Store/reducers/taskSlice";
 
 const UserDashboard = () => {
   const [showSidebar, setShowSidebar] = useState(true); // Set to true by default
@@ -20,6 +22,7 @@ const UserDashboard = () => {
   const [showFilter, setShowFilter] = useState(false);
   const [isChildPopupActive, setIsChildPopupActive] = useState(false);
   const sideBarRef = useRef<HTMLDivElement>(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     // Check screen size on component mount
@@ -80,7 +83,7 @@ const UserDashboard = () => {
     return <Filter setShowFilter={setShowFilter} />;
   };
 
-  const { filter, setView, view } = useTaskStore();
+  const { filter, view } = useSelector((state: RootState) => state.tasks);
 
   const filterNotEmpty =
     JSON.stringify(filter) !== JSON.stringify(initialFilterValue);
@@ -91,7 +94,8 @@ const UserDashboard = () => {
   };
 
   const toggleTaskView = () => {
-    setView(view === "cardView" ? "listView" : "cardView");
+    const newView = view === "cardView" ? "listView" : "cardView";
+    dispatch(updateView(newView));
   };
 
   return (

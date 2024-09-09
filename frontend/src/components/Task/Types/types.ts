@@ -1,20 +1,19 @@
 import { CheckboxValueType } from "antd/es/checkbox/Group";
-import { Tag } from "../../../Store/taskStore";
-import { User } from "../../../Store/authStore";
+import { User } from "../../../Store/reducers/authSlice";
+import { Tag } from "../../../Store/reducers/taskSlice";
 
 export type TaskCategory = "todo" | "inProgress" | "completed";
 
 export interface CollabUser {
-   _id: string,
-   picture?: string
-   name?: string
+  _id: string;
+  picture?: string;
+  name?: string;
 }
 
 export interface Collaborator {
   user: CollabUser;
-  permissionType: 'read' | 'edit' | 'admin';
+  permissionType: "read" | "edit" | "admin";
 }
-
 
 export interface TaskType {
   _id: string;
@@ -52,13 +51,13 @@ export interface FilterType {
   dueDate: string;
   tags: string[];
   priority: string;
-  status: string[]
+  status: string[];
 }
 
 export interface ReactionType {
   _id?: string;
   emoji: string;
-  user: string | User; 
+  user: string | User;
 }
 
 export interface ReplyType {
@@ -87,4 +86,3 @@ export interface CommentType {
   reactions: ReactionType[];
   replies: ReplyType[];
 }
-

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import useTaskStore from "../../Store/taskStore";
 import AddTags from "../AddUpdateTag/AddUpdateTag";
 import { TaskCategory } from "../Task/Types/types";
 import {
@@ -11,6 +10,8 @@ import {
 import ProfileButton from "../SmallComp/ProfileButton/ProfileButton";
 import LogoutButton from "../SmallComp/Logout/LogoutButton";
 import TagList from "./TagList";
+import { copyTasks, setTodaysTasks, setUpcomingTasks } from "../../Store/reducers/taskSlice";
+import { useDispatch } from "react-redux";
 interface Props {
   onChildPopupInteraction: (active: boolean) => void;
 }
@@ -20,21 +21,16 @@ export const taskTypes: TaskCategory[] = ["todo", "inProgress", "completed"];
 const SideBar = ({ onChildPopupInteraction }: Props) => {
   const [activeTab, setActiveTab] = useState("all");
   const [showModal, setShowModal] = useState(false);
-
-  const {
-    copyTasks,
-    setTodaysTasks,
-    setUpcomingTasks
-  } = useTaskStore();
+  const dispatch = useDispatch();
 
   const handleAllTasks = () => {
-    copyTasks();
+    dispatch(copyTasks());
     setActiveTab("all");
   };
 
   const handleFilter = (handler: any) => {
     copyTasks();
-    taskTypes.forEach(handler);
+    taskTypes.forEach((type) => dispatch(handler(type)));
   };
 
   const handleTemp = () => {

@@ -1,13 +1,14 @@
 import React from "react";
 import TaskCard from "./TaskCard";
 import { taskAPI } from "../../Api";
-import useTaskStore from "../../Store/taskStore";
 import { TaskCategory, TaskType } from "./Types/types";
 import "react-datepicker/dist/react-datepicker.css";
 import { message } from "antd";
 import AddNewTask from "./AddNewTask";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import { taskNameMap } from "./utils";
+import { deleteTaskFilteredTasksStore, deleteTaskFromDataStore } from "../../Store/reducers/taskSlice";
+import { useDispatch } from "react-redux";
 
 interface taskListProps {
   tasks: TaskType[];
@@ -15,19 +16,16 @@ interface taskListProps {
 }
 
 const TasksList = ({ tasks, taskType }: taskListProps) => {
-  // store
-  const {
-    deleteTaskFromDataStore,
-    deleteTaskFilteredTasksStore,
-  } = useTaskStore();
+
+  const dispatch = useDispatch();
 
   const handleDelete = (task: TaskType) => {
     taskAPI
       .deleteTask(task._id)
       .then(() => {
         const { _id, status } = task;
-        deleteTaskFromDataStore(status, _id);
-        deleteTaskFilteredTasksStore(status, _id);
+        dispatch(deleteTaskFromDataStore({ category: status, taskId: _id }));
+        dispatch(deleteTaskFilteredTasksStore({ category: status, taskId: _id }));
         void message.success("Task Deleted Successfully");
       })
       .catch((err) => {

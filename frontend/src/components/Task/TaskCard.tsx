@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { TaskType, TasksProps } from "./Types/types";
 import { taskAPI } from "../../Api";
-import useTaskStore from "../../Store/taskStore";
 import {
   Button,
   Card,
@@ -22,8 +21,9 @@ import {
 } from "@ant-design/icons";
 import { convertToIndianTime, getPriorityIcon, taskPriorities } from "./utils";
 import { deleteDesc, deleteText } from "../../utils/strings";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Store/store";
+import { updateTaskDataStore, updateTaskFilteredTasksStore } from "../../Store/reducers/taskSlice";
 
 const TaskCard = ({ task, handleDelete }: TasksProps) => {
   const {
@@ -53,8 +53,9 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
   const dateColor = task.done ? "green" : redOrYellow();
   const classNameDueDate = `text-xs ml-1 w-18 text-black font-medium inline-flex items-center px-2.5 py-0.5 rounded bg-${dateColor}-400 text-white border border-white-600  `;
 
-  const { view, updateTaskDataStore, updateTaskFilteredTasksStore } = useTaskStore();
+  const { view } = useSelector((state: RootState) => state.tasks);
   const { user } = useSelector((state: RootState) => state.auth)
+  const dispatch = useDispatch();
 
   const toggleTaskDone = () => {
     task.done = !done;
@@ -66,8 +67,8 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
     taskAPI
       .updateTask(_id, task)
       .then(() => {
-        updateTaskDataStore(status, _id, task);
-        updateTaskFilteredTasksStore(status, _id, task);
+        dispatch(updateTaskDataStore({ category: status, taskId: _id, updatedTask: task }));
+        dispatch(updateTaskFilteredTasksStore({ category: status, taskId: _id, updatedTask: task }));
       })
       .catch((err) => {
         void message.error("Err in changing priority: ", err);
@@ -94,8 +95,8 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
         updatedTask.done
           ? void message.success("Task set to done.")
           : void message.warning("Task set to undone.");
-        updateTaskDataStore(status, id, updatedTask);
-        updateTaskFilteredTasksStore(status, id, updatedTask);
+        dispatch(updateTaskDataStore({ category: status, taskId: id, updatedTask }));
+        dispatch(updateTaskFilteredTasksStore({ category: status, taskId: id, updatedTask }));
       })
       .catch((err) => {
         console.log("err in updating to done:", err);

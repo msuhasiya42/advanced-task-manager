@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import useTaskStore from "../../Store/taskStore";
 import {
   Button,
   Checkbox,
@@ -25,8 +24,9 @@ import { CheckboxValueType } from "antd/es/checkbox/Group";
 import dayjs from "dayjs";
 import { userAPI } from "../../Api";
 import { useMutation } from "react-query";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Store/store";
+import { updateFilter } from "../../Store/reducers/taskSlice";
 
 interface FilterProps {
   setShowFilter: React.Dispatch<React.SetStateAction<boolean>>;
@@ -41,18 +41,18 @@ export const initialFilterValue: FilterType = {
 };
 
 const Filter: React.FC<FilterProps> = ({ setShowFilter }) => {
-  const tags = useTaskStore((state) => state.tags);
+  const tags = useSelector((state: RootState) => state.tasks.tags);
 
-  const { updateFilter, filter } = useTaskStore();
+  const { filter } = useSelector((state: RootState) => state.tasks);
   const userId = useSelector((state: RootState) => state.auth.user?._id);
-
+  const dispatch = useDispatch();
   // here first check value from store backend if be null/store null then take initial value
   const [filterValues, setFilterValues] = React.useState<FilterType>(
     filter ?? initialFilterValue
   );
 
   useEffect(() => {
-    updateFilter(filterValues);
+    dispatch(updateFilter(filterValues));
   }, [filterValues]);
 
   const tagOptions: SelectProps["options"] = tags

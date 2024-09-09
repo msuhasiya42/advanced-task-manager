@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import { Collaborator, TaskType } from "./Types/types";
 import { Input, Modal, Select, SelectProps, message } from "antd";
 import { taskAPI } from "../../Api";
-import useTaskStore from "../../Store/taskStore";
 import DatePicker from "react-datepicker";
 import { taskPriorities } from "./utils";
 import Editor from "./Editor";
 import DOMPurify from "dompurify";
 import Comments from "./Comments";
 import CollaboratorsSelector from "./CollaboratorsSelector";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Store/store";
+import { updateTaskDataStore, updateTaskFilteredTasksStore } from "../../Store/reducers/taskSlice";
 
 
 interface EditTaskModalProps {
@@ -21,6 +21,7 @@ interface EditTaskModalProps {
 
 const EditTaskModal = (props: EditTaskModalProps) => {
   const { task, setShowModal, showModal } = props;
+  const dispatch = useDispatch();
 
   const sanitizedTask = {
     ...task,
@@ -28,7 +29,7 @@ const EditTaskModal = (props: EditTaskModalProps) => {
   };
 
   const [taskData, setTaskData] = useState<TaskType>(sanitizedTask);
-  const { tags, updateTaskDataStore, updateTaskFilteredTasksStore } = useTaskStore();
+  const { tags } = useSelector((state: RootState) => state.tasks);
   const { user, allUsers } = useSelector((state: RootState) => state.auth);
 
   const handleInputChange = (e: { target: { name: string; value: any } }) => {
@@ -75,8 +76,8 @@ const EditTaskModal = (props: EditTaskModalProps) => {
       .then(() => {
         void message.success("Task updated successfully", 1.5);
         const { status, _id } = updatedTaskData;
-        updateTaskDataStore(status, _id, updatedTaskData);
-        updateTaskFilteredTasksStore(status, _id, updatedTaskData);
+        dispatch(updateTaskDataStore({ category: status, taskId: _id, updatedTask: updatedTaskData }));
+        dispatch(updateTaskFilteredTasksStore({ category: status, taskId: _id, updatedTask: updatedTaskData }));
         setShowModal(false);
       })
       .catch((err) => void message.error("Error in updating task:", err));

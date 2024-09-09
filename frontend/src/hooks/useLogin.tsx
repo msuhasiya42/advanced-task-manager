@@ -1,14 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { userAPI } from "../Api";
-import useTaskStore from "../Store/taskStore";
 import { useDispatch } from "react-redux";
 import { addListOfUser, login } from "../Store/reducers/authSlice";
+import { setTags, updateFilter } from "../Store/reducers/taskSlice";
 
 const useLogin = () => {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
-    const { setTags, updateFilter } = useTaskStore();
     const dispatch = useDispatch();
 
     const loginMutation = useMutation(({ email, password }: { email: string, password: string }) => userAPI.login(email, password), {
@@ -18,8 +17,8 @@ const useLogin = () => {
             dispatch(login(res.data));
             queryClient.invalidateQueries("users");
 
-            if (tags) setTags(tags);
-            if (filter) updateFilter(JSON.parse(filter));
+            if (tags) dispatch(setTags(tags));
+            if (filter) dispatch(updateFilter(JSON.parse(filter)));
 
             // Call fetchUsers after successful login
             fetchUsers();

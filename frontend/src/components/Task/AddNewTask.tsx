@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { taskAPI } from "../../Api";
-import useTaskStore from "../../Store/taskStore";
 import { TaskCategory } from "./Types/types";
 import { Input, InputRef, message } from "antd";
 import { CloseOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Store/store";
+import { addTaskDataStore, addTaskFilteredTasksStore } from "../../Store/reducers/taskSlice";
 
 interface StatusType {
   status: TaskCategory;
@@ -15,8 +15,8 @@ const AddNewTask = ({ status }: StatusType) => {
   const [showTextArea, setShowTextArea] = useState(false);
   const [task, setTask] = useState("");
   const userId = useSelector((state: RootState) => state.auth.user?._id);
-  const { addTaskDataStore, addTaskFilteredTasksStore } = useTaskStore();
   const textRef = React.useRef<InputRef>(null);
+  const dispatch = useDispatch();
 
   const handleClick = () => setShowTextArea((prev) => !prev);
 
@@ -32,8 +32,8 @@ const AddNewTask = ({ status }: StatusType) => {
         .createTask({ title: task, status, user: userId })
         .then((response) => {
           const newTask = response.data.task;
-          addTaskDataStore(status, newTask);
-          addTaskFilteredTasksStore(status, newTask);
+          dispatch(addTaskDataStore({ category: status, task: newTask }));
+          dispatch(addTaskFilteredTasksStore({ category: status, task: newTask }));
           void message.success("Task Added", 1.5);
         })
         .catch((error) => {

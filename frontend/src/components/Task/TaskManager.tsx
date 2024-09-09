@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import TasksList from "./TasksList";
 import { taskAPI } from "../../Api";
 import LoadingPage from "../Loading/LoadingPage";
-import useTaskStore from "../../Store/taskStore";
 import { TaskCategory, TaskType } from "./Types/types";
 import { DragDropContext } from "react-beautiful-dnd";
 import AddNewTask from "./AddNewTask";
 import { useQuery } from "react-query";
 import { COMPLETED, INPROGRESS, TODO } from "../../utils/strings";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Store/store";
+import { copyTasks, setAllTasks, setTasksDataByCategory, updateFilter } from "../../Store/reducers/taskSlice";
 
 
 export const filterTasksByStatus = (tasks: TaskType[], status: string) => {
@@ -20,29 +20,25 @@ const TaskManager = () => {
   const { user } = useSelector((state: RootState) => state.auth);
 
   const {
-    setAllTasks,
-    setTasksDataByCategory,
-    copyTasks,
     filteredTasks,
     filter,
-    updateFilter,
-  } = useTaskStore();
+  } = useSelector((state: RootState) => state.tasks);
+  const dispatch = useDispatch();
 
   const { isLoading, isError } = useQuery("tasks", () => taskAPI.fetchTask(user?._id ?? ""), {
     enabled: !!user?._id,
     onSuccess: (res) => {
       const allTasks = res.data.tasks;
-      setAllTasks(allTasks);
+      dispatch(setAllTasks(allTasks));
 
       const todos = filterTasksByStatus(allTasks, TODO);
       const inprogress = filterTasksByStatus(allTasks, INPROGRESS);
       const completed = filterTasksByStatus(allTasks, COMPLETED);
 
-      setTasksDataByCategory(TODO, todos);
-      setTasksDataByCategory(INPROGRESS, inprogress);
-      setTasksDataByCategory(COMPLETED, completed);
-
-      copyTasks();
+      dispatch(setTasksDataByCategory({ category: TODO, newTasks: todos }));
+      dispatch(setTasksDataByCategory({ category: INPROGRESS, newTasks: inprogress }));
+      dispatch(setTasksDataByCategory({ category: COMPLETED, newTasks: completed }));
+      dispatch(copyTasks());
       updateFilter(filter);
     }
   });
@@ -78,17 +74,17 @@ const TaskManager = () => {
         removed.status = to;
         // api call to change status of task when drag and drop
         taskAPI.updateTask(removed._id, removed);
-        setTasksDataByCategory(from, sourceTasks);
+        dispatch(setTasksDataByCategory({ category: from, newTasks: sourceTasks }));
       }
 
       const destinationTasks =
         from !== to ? Array.from(tasksMap[to]) : sourceTasks;
       destinationTasks.splice(destination.index, 0, removed);
-      setTasksDataByCategory(to, destinationTasks);
+      dispatch(setTasksDataByCategory({ category: to, newTasks: destinationTasks }));
     };
 
     updateTasks(source.droppableId, destination.droppableId);
-    copyTasks();
+    dispatch(copyTasks());
   };
 
   const noTasks = filteredTasks.todo.length === 0 && filteredTasks.inProgress.length === 0 && filteredTasks.completed.length === 0

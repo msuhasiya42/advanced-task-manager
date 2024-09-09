@@ -1,10 +1,10 @@
 import { Button, Input, InputRef, Modal, message } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 import { taskAPI } from '../../Api';
-import useTaskStore from '../../Store/taskStore';
 import { TaskCategory } from '../Task/Types/types';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../Store/store';
+import { addTaskDataStore, addTaskFilteredTasksStore } from '../../Store/reducers/taskSlice';
 
 
 interface AddTaskModalProps {
@@ -24,8 +24,7 @@ const AddTaskModal = ({ showAddTaskModal, setShowAddTaskModal }: AddTaskModalPro
 
     const inputRef = useRef<InputRef>(null);
     const userId = useSelector((state: RootState) => state.auth.user?._id);
-    const { addTaskDataStore, addTaskFilteredTasksStore } =
-        useTaskStore();
+    const dispatch = useDispatch();
 
     const handleInputChange = (e: { target: { name: string; value: any } }) => {
         const { name, value } = e.target;
@@ -45,8 +44,8 @@ const AddTaskModal = ({ showAddTaskModal, setShowAddTaskModal }: AddTaskModalPro
                 .then((response) => {
                     console.log("Response", response.data.task);
                     const newTask = response.data.task;
-                    addTaskDataStore(status, newTask);
-                    addTaskFilteredTasksStore(status, newTask);
+                    dispatch(addTaskDataStore({ category: status, task: newTask }));
+                    dispatch(addTaskFilteredTasksStore({ category: status, task: newTask }));
                     void message.success("Task Added", 1.5);
                 })
                 .catch((error) => {

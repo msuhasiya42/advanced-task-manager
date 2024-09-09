@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { Menu, Dropdown, Popconfirm, message } from 'antd';
+import { Dropdown, Popconfirm, message } from 'antd';
 import { EllipsisOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import useTaskStore, { Tag } from '../../Store/taskStore';
 import { taskTypes } from './SideBar';
-import { tagAPI, userAPI } from '../../Api';
+import { tagAPI } from '../../Api';
 import { deleteTagStr, deleteTagTitle } from '../../utils/strings';
 import AddTags from '../AddUpdateTag/AddUpdateTag';
 import { useMutation } from 'react-query';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../Store/store';
+import { Tag, filterTasksByTag, updateTags, removeTagFromAllTasks, updateTagsInTasks, copyTasks } from '../../Store/reducers/taskSlice';
 
 interface TagListProps {
     setActiveTab: (tab: string) => void;
@@ -20,18 +21,12 @@ const TagList = ({ setActiveTab, activeTab, onChildPopupInteraction }: TagListPr
     const [editTag, setEditTag] = useState<Tag | null>(null);
     const [showModal, setShowModal] = useState(false);
 
-    const {
-        tags,
-        updateTags,
-        copyTasks,
-        filterTasksByTag,
-        removeTagFromAllTasks,
-        updateTagsInTasks
-    } = useTaskStore();
+    const { tags } = useSelector((state: RootState) => state.tasks);
+    const dispatch = useDispatch();
 
     const filterTaskByTagName = (tagId: string) => {
-        copyTasks();
-        taskTypes.forEach((category) => filterTasksByTag(category, tagId));
+        dispatch(copyTasks());
+        taskTypes.forEach((category) => dispatch(filterTasksByTag({ category, tagId })));
     };
 
     const userId = useSelector((state: any) => state.auth.user?._id);
@@ -100,7 +95,7 @@ const TagList = ({ setActiveTab, activeTab, onChildPopupInteraction }: TagListPr
                 });
 
                 updateTags(updatedTags);
-                updateTagsInTasks(editTag?._id ?? "", res.data);
+                dispatch(updateTagsInTasks({ tagId: editTag?._id ?? "", updatedTag: res.data }));
                 setEditTag(null);
             },
             onError: (error, { tagName }) => {

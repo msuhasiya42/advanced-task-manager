@@ -63,16 +63,16 @@ export const getPriorityIcon = (priority: string): React.JSX.Element => {
 
   switch (priority) {
     case "Urgent":
-      icon = <ArrowUpOutlined className="text-red-700 text-xl" />;
+      icon = <ArrowUpOutlined className="text-red-700 text-xl" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />;
       break;
     case "High":
-      icon = <ArrowUpOutlined className="text-red-400 text-xl" />;
+      icon = <ArrowUpOutlined className="text-red-400 text-xl" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />;
       break;
     case "Medium":
-      icon = <PauseOutlined className="text-yellow-500 text-xl rotate-90" />;
+      icon = <PauseOutlined className="text-yellow-500 text-xl rotate-90" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />;
       break;
     default:
-      icon = <ArrowDownOutlined className="text-blue-400 text-xl" />;
+      icon = <ArrowDownOutlined className="text-blue-400 text-xl" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />;
       break;
   }
   return icon;
