@@ -36,88 +36,105 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
     setActiveTab("reminders");
   };
   return (
-    <div className="fixed h-full sm:static text-gray-400 flex-col w-72 px-5  border-r bg-gray-900 border-gray-700">
-      <div className="mt-4 flex flex-row sm:hidden ">
+    <div className="fixed h-screen top-0 sm:top-auto sm:h-full sm:static flex flex-col w-72 bg-gradient-to-b from-gray-900 to-gray-800 text-gray-300 border-r-2 border-r-indigo-500/30 shadow-lg shadow-indigo-500/10 overflow-hidden">
+      {/* App title/logo area */}
+      <div className="px-5 py-6 border-b border-gray-700/50 mt-16 sm:mt-0">
+        <h1 className="text-lg text-gray-400 mt-1">Organize your workday</h1>
+      </div>
+
+      {/* Mobile profile buttons - Top */}
+      <div className="mt-4 flex flex-row sm:hidden px-5">
         <ProfileButton />
-        <div className="ml-24">
+        <div className="ml-auto">
           <LogoutButton />
         </div>
       </div>
-      <hr className="border-t sm:hidden border-gray-300 my-4" />
-      <nav className="flex-1 space-y-3 ">
-        <ul className="menu text-base-content bg-gray-900 sm:mt-8">
-          {/* Sidebar content here */}
-          <li>
-            <button
-              onClick={handleAllTasks}
-              className={`bold flex items-center w-full p-2 transition duration-75 rounded-lg group 
-          ${activeTab === "all" ? "bg-gray-700 text-white" : "text-gray-300"}
-          hover:bg-gray-400 hover:text-white 
-          focus:bg-gray-600 focus:text-white outline-none
-          active:bg-gray-700 active:text-white`}
-            >
-              <HomeOutlined className="text-lg" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
-              <span className="ml-3">All Tasks</span>
-            </button>
-          </li>
+      <hr className="border-t sm:hidden border-gray-700/30 my-4 mx-5" />
 
-          <li>
-            <button
-              onClick={() => {
-                handleFilter(setTodaysTasks);
-                setActiveTab("todays");
-              }}
-              className={`bold flex items-center w-full p-2 transition duration-75 rounded-lg group 
-          ${activeTab === "todays" ? "bg-gray-700 text-white" : "text-gray-300"}
-          hover:bg-gray-400 hover:text-white 
-          focus:bg-gray-600 focus:text-white outline-none
-          active:bg-gray-700 active:text-white`}
-            >
-              <SnippetsOutlined className="text-lg" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
-              <span className="flex-1 ml-3 whitespace-nowrap">
-                Todays Tasks
-              </span>
-            </button>
-          </li>
+      {/* Navigation */}
+      <nav className="flex-1 px-3 py-4 space-y-6 overflow-y-auto">
+        <div>
+          <h2 className="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Tasks</h2>
+          <ul className="space-y-2">
+            {/* Sidebar content here */}
+            <li>
+              <button
+                onClick={handleAllTasks}
+                className={`flex items-center w-full p-3 transition-all duration-200 rounded-lg group
+            ${activeTab === "all"
+                    ? "bg-indigo-600 text-white font-medium shadow-md"
+                    : "text-gray-300 hover:bg-gray-700/70 hover:text-white"}
+            focus:outline-none focus:ring-1 focus:ring-indigo-400`}
+              >
+                <HomeOutlined className={`text-lg ${activeTab === "all" ? "text-white" : "text-gray-400 group-hover:text-white"}`} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
+                <span className="ml-3">All Tasks</span>
+              </button>
+            </li>
 
-          {/* upcoming tasks */}
-          <li>
-            <button
-              onClick={() => {
-                handleFilter(setUpcomingTasks);
-                setActiveTab("upcomingTasks");
-              }}
-              className={`bold flex items-center w-full p-2 transition duration-75 rounded-lg group 
-          ${activeTab === "upcomingTasks" ? "bg-gray-700 text-white" : "text-gray-300"}
-          hover:bg-gray-400 hover:text-white 
-          focus:bg-gray-600 focus:text-white outline-none
-          active:bg-gray-700 active:text-white`}
-            >
-              <CalendarOutlined className="text-lg" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
-              <span className="flex-1 ml-3 whitespace-nowrap">
-                Upcoming Tasks
-              </span>
-            </button>
-          </li>
+            <li>
+              <button
+                onClick={() => {
+                  handleFilter(setTodaysTasks);
+                  setActiveTab("todays");
+                }}
+                className={`flex items-center w-full p-3 transition-all duration-200 rounded-lg group
+            ${activeTab === "todays"
+                    ? "bg-indigo-600 text-white font-medium shadow-md"
+                    : "text-gray-300 hover:bg-gray-700/70 hover:text-white"}
+            focus:outline-none focus:ring-1 focus:ring-indigo-400`}
+              >
+                <SnippetsOutlined className={`text-lg ${activeTab === "todays" ? "text-white" : "text-gray-400 group-hover:text-white"}`} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
+                <span className="ml-3 whitespace-nowrap">
+                  Today's Tasks
+                </span>
+              </button>
+            </li>
 
-          {/* Reminders */}
-          {/* <li>
-            <button
-              onClick={handleTemp}
-              className={`bold flex items-center w-full p-2 ${activeTab === "reminders" ? "bg-gray-700" : ""
-                } transition duration-75 rounded-lg  group text-gray-300 hover:bg-gray-700 hover:text-white`}
-            >
-              <BellOutlined className="text-lg" />
-              <span className="flex-1 ml-3 whitespace-nowrap">Reminders</span>
-            </button>
-          </li> */}
-        </ul>
-        <TagList activeTab={activeTab} setActiveTab={setActiveTab} onChildPopupInteraction={onChildPopupInteraction} />
+            {/* upcoming tasks */}
+            <li>
+              <button
+                onClick={() => {
+                  handleFilter(setUpcomingTasks);
+                  setActiveTab("upcomingTasks");
+                }}
+                className={`flex items-center w-full p-3 transition-all duration-200 rounded-lg group
+            ${activeTab === "upcomingTasks"
+                    ? "bg-indigo-600 text-white font-medium shadow-md"
+                    : "text-gray-300 hover:bg-gray-700/70 hover:text-white"}
+            focus:outline-none focus:ring-1 focus:ring-indigo-400`}
+              >
+                <CalendarOutlined className={`text-lg ${activeTab === "upcomingTasks" ? "text-white" : "text-gray-400 group-hover:text-white"}`} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
+                <span className="ml-3 whitespace-nowrap">
+                  Upcoming Tasks
+                </span>
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        {/* Tag section with divider */}
+        <div className="pt-2">
+          <div className="relative flex items-center py-2">
+            <div className="flex-grow border-t border-gray-700/40"></div>
+            <span className="flex-shrink mx-3 text-xs font-medium text-gray-400">TAGS</span>
+            <div className="flex-grow border-t border-gray-700/40"></div>
+          </div>
+          <TagList activeTab={activeTab} setActiveTab={setActiveTab} onChildPopupInteraction={onChildPopupInteraction} />
+        </div>
+
         {/* Add tag button */}
-        <div className="flex justify-center">
+        <div className="flex justify-center pt-2">
           <AddTags showModal={showModal} setShowModal={setShowModal} onChildPopupInteraction={onChildPopupInteraction} />
         </div>
       </nav>
+
+      {/* Mobile Footer area - visible only on small screens */}
+      <div className="px-5 py-4 mt-auto border-t border-gray-700/30 sm:hidden">
+        <div className="flex items-center justify-between">
+          <ProfileButton />
+          <LogoutButton />
+        </div>
+      </div>
     </div>
   );
 };

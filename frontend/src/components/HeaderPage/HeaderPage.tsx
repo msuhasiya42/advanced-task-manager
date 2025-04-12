@@ -26,9 +26,9 @@ const HeaderPage = () => {
 
   return (
     <div
-      className={`fixed z-50 w-full backdrop-blur-md py-3 px-3 flex flex-wrap sm:justify-between mx-auto transition-all duration-300 ${scrolled
-        ? "bg-gray-900/95 shadow-lg shadow-blue-900/20 border-b border-blue-900/30"
-        : "bg-gray-900/80"
+      className={`fixed z-50 w-full backdrop-blur-md py-3 px-3 flex flex-wrap sm:justify-between mx-auto transition-all duration-300 border-b ${scrolled
+        ? "bg-gray-900/95 shadow-lg shadow-blue-900/20 border-blue-900/30"
+        : "bg-gray-900/80 border-gray-700/40"
         }`}
     >
       <a href="/user-dashboard" className="flex items-center group">

@@ -99,15 +99,15 @@ const UserDashboard = () => {
   };
 
   return (
-    <div className="flex w-full">
+    <div className="flex w-full h-full">
       {/* Render Sidebar based on showSidebar state */}
       {showSidebar && (
-        <div ref={sideBarRef} className="flex z-20">
+        <div ref={sideBarRef} className="flex z-20 sidebar-container">
           <SideBar onChildPopupInteraction={handleChildPopupInteraction} />
         </div>
       )}
 
-      <div className="flex border-gray-900 border-dashed rounded-lg w-full">
+      <div className={`flex-1 flex flex-col overflow-auto ${showSidebar ? 'sm:main-content' : ''}`}>
         <TaskManager />
       </div>
       {/* Conditionally render button only on small screens */}

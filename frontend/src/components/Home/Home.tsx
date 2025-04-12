@@ -77,9 +77,9 @@ const Home = () => {
           <h1 className="text-white text-5xl font-bold mb-2 leading-tight">
             Welcome to Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Advanced Task Manager</span>
           </h1>
-          <p className="text-xl mb-12 text-gray-300 max-w-2xl mx-auto">
+          <h1 className="text-xl mb-12 text-gray-300 max-w-2xl mx-auto">
             Organize your tasks efficiently and boost your productivity with our powerful yet intuitive task management system.
-          </p>
+          </h1>
         </div>
 
         <div className="flex justify-center flex-wrap mt-8">

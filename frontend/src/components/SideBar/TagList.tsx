@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Dropdown, Popconfirm, message } from 'antd';
-import { EllipsisOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { EllipsisOutlined, DeleteOutlined, EditOutlined, TagOutlined } from '@ant-design/icons';
 import { taskTypes } from './SideBar';
 import { tagAPI } from '../../Api';
 import { deleteTagStr, deleteTagTitle } from '../../utils/strings';
@@ -115,56 +115,76 @@ const TagList = ({ setActiveTab, activeTab, onChildPopupInteraction }: TagListPr
     };
 
     return (
-        <div className="border border-gray-500 max-h-[500px] bg-gray-800 rounded-lg overflow-y-auto">
-            {tags?.map((tag, index) => (
-                <div className="flex flex-row items-center justify-between mx-2 my-1" key={index}>
-                    <div
-                        onClick={() => {
-                            filterTaskByTagName(tag._id);
-                            setActiveTab(`${index}-${tag}`);
-                        }}
-                        className={`flex items-center h-10 cursor-pointer ${activeTab === `${index}-${tag}` ? "text-blue-500" : "text-gray-300"} transition duration-75 rounded-lg group hover:text-white`}
-                    >
-                        <span
+        <div className="overflow-y-auto max-h-[240px] pr-1 custom-scrollbar">
+            {tags && tags.length > 0 ? (
+                tags.map((tag, index) => (
+                    <div key={index} className="group mb-1.5 tag-item">
+                        <button
+                            onClick={() => {
+                                filterTaskByTagName(tag._id);
+                                setActiveTab(`${index}-${tag}`);
+                            }}
+                            className={`flex items-center w-full p-2.5 transition-all duration-200 rounded-lg group
+                                ${activeTab === `${index}-${tag}`
+                                    ? "bg-opacity-20 text-white shadow-sm"
+                                    : "text-gray-300 hover:bg-gray-700/50 hover:text-white"}
+                                focus:outline-none focus:ring-1 focus:ring-opacity-30 relative overflow-hidden`}
                             style={{
-                                display: "inline-block",
-                                width: "12px",
-                                height: "12px",
-                                backgroundColor: tag.color,
-                                marginRight: "8px",
+                                backgroundColor: activeTab === `${index}-${tag}` ? `${tag.color}20` : '',
+                                boxShadow: activeTab === `${index}-${tag}` ? `0 1px 3px 0 ${tag.color}30` : ''
                             }}
-                        />
-                        {tag.name}
+                        >
+                            <div className="flex items-center w-full">
+                                <div
+                                    className={`w-3 h-3 rounded-full mr-2.5 transition-transform ${activeTab === `${index}-${tag}` ? 'scale-110 active-tag-dot' : ''}`}
+                                    style={{ backgroundColor: tag.color }}
+                                ></div>
+                                <span className="text-sm font-medium truncate">{tag.name}</span>
+                            </div>
+
+                            <div className={`absolute right-2 ${activeTab === `${index}-${tag}` ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity duration-200`}>
+                                <Dropdown menu={{ items: menuItems(tag) }} trigger={['click']} placement="bottomRight">
+                                    <button
+                                        onClick={(e) => e.stopPropagation()}
+                                        className="p-1 rounded-full hover:bg-gray-700/70 transition-colors"
+                                    >
+                                        <EllipsisOutlined className="text-gray-400 hover:text-white" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
+                                    </button>
+                                </Dropdown>
+                            </div>
+                        </button>
+
+                        {visibleTag === tag.name && (
+                            <Popconfirm
+                                placement="topRight"
+                                title={deleteTagTitle}
+                                description={deleteTagStr}
+                                okText={<span className="bg-blue-500 rounded-sm w-12">Yes</span>}
+                                onConfirm={(e) => {
+                                    onChildPopupInteraction(false);
+                                    handleDeleteTag(tag);
+                                    e?.stopPropagation();
+                                }}
+                                onCancel={(e) => {
+                                    onChildPopupInteraction(false);
+                                    e?.stopPropagation();
+                                }}
+                                cancelText="No"
+                                style={{ height: "200px" }}
+                                overlayStyle={{ width: "250px" }}
+                                open={true}
+                                onOpenChange={(visible) => !visible && setVisibleTag(null)}
+                            />
+                        )}
                     </div>
-                    <div>
-                        <Dropdown menu={{ items: menuItems(tag) }} trigger={['click']}>
-                            <EllipsisOutlined className="text-white hover:text-gray-500 cursor-pointer" onClick={(e) => e.stopPropagation()} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
-                        </Dropdown>
-                    </div>
-                    {visibleTag === tag.name && (
-                        <Popconfirm
-                            placement="top"
-                            title={deleteTagTitle}
-                            description={deleteTagStr}
-                            okText={<span className="bg-blue-500 rounded-sm w-12">Yes</span>}
-                            onConfirm={(e) => {
-                                onChildPopupInteraction(false);
-                                handleDeleteTag(tag);
-                                e?.stopPropagation();
-                            }}
-                            onCancel={(e) => {
-                                onChildPopupInteraction(false);
-                                e?.stopPropagation();
-                            }}
-                            cancelText="No"
-                            style={{ height: "200px" }}
-                            overlayStyle={{ width: "250px" }}
-                            open={true}
-                            onOpenChange={(visible) => !visible && setVisibleTag(null)}
-                        />
-                    )}
+                ))
+            ) : (
+                <div className="flex flex-col items-center justify-center py-4 text-gray-500 text-sm">
+                    <TagOutlined className="text-xl mb-2" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
+                    <p>No tags created yet</p>
                 </div>
-            ))}
+            )}
+
             {/* Render AddTags component for editing */}
             {editTag && (
                 <AddTags

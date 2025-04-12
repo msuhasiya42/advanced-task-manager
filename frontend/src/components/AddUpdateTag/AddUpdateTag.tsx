@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Modal, Input, message, Button } from "antd";
 import { CompactPicker } from "react-color";
 import Title from "antd/es/typography/Title";
-import { TagOutlined } from "@ant-design/icons";
+import { TagOutlined, PlusOutlined } from "@ant-design/icons";
 import { tagAPI } from "../../Api";
 import { useMutation } from "react-query";
 import { useSelector } from "react-redux";
@@ -85,52 +85,74 @@ const AddUpdateTag = ({ tagId, showModal, setShowModal, onChildPopupInteraction,
 
   return (
     <>
-      {!isEditMode && <button
-        onClick={handleToggle}
-        className="px-5 py-1 w-32 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
-      >
-        Add Tag
-      </button>}
+      {!isEditMode &&
+        <button
+          onClick={handleToggle}
+          className="flex items-center justify-center px-4 py-2 gap-2 w-full text-sm font-medium text-gray-300 transition-all duration-200 bg-gray-700/50 hover:bg-indigo-600/80 rounded-lg shadow-sm hover:shadow-indigo-500/20 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:ring-opacity-50"
+        >
+          <PlusOutlined className="text-xs" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
+          <span>Add New Tag</span>
+        </button>
+      }
       <Modal
         open={showModal}
-        title={<div className="flex text-lg justify-start"><TagOutlined className="mr-2" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />{isEditMode ? "Update Tag" : "Add Tag"}</div>}
+        title={
+          <div className="flex items-center text-lg text-gray-100 bg-gray-800 py-1 px-1 -mt-4 -mx-6 rounded-t-lg border-b border-gray-700">
+            <TagOutlined className="mr-2 text-indigo-400" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
+            <span>{isEditMode ? "Update Tag" : "Add Tag"}</span>
+          </div>
+        }
         centered
         onCancel={handleToggle}
-        width={330}
+        width={350}
+        className="tag-modal"
+        style={{ top: 20 }}
+        bodyStyle={{ backgroundColor: '#1f2937', padding: '20px' }}
         footer={[
           <Button
             key="cancel"
-            className="font-medium"
+            className="bg-gray-700 text-gray-200 border-gray-600 hover:bg-gray-600 hover:text-white hover:border-gray-500"
             onClick={handleToggle}
           >
             Cancel
           </Button>,
-          <button
-            key="add"
-            className="text-gray-900 border ml-2 px-5 py-1 border-blue-300 focus:outline-none hover:bg-blue-400 focus:ring-4 focus:ring-blue-200 font-medium rounded-lg text-sm mr-2 mb-2 bg-blue-500 text-white border-blue-600 hover:bg-blue-700 hover:border-blue-600 focus:ring-blue-700"
+          <Button
+            key="submit"
+            className="bg-indigo-600 text-white border-indigo-700 hover:bg-indigo-500 hover:border-indigo-600 shadow-sm"
             onClick={handleSubmit}
           >
-            {isEditMode ? "Update" : "Add"} {/* Change button label based on mode */}
-          </button>,
+            {isEditMode ? "Update" : "Add"}
+          </Button>,
         ]}
+        maskStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.7)' }}
       >
-        <div className="">
-          <Title level={5}>Tag name</Title>
+        <div className="text-gray-200">
+          <Title level={5} className="text-gray-300 mb-2">Tag name</Title>
           <Input
             value={tagName}
             onChange={(e) => setTagName(e.target.value)}
             id="tagName"
             type="text"
-            className="block w-full text-gray-800 mb-4 focus:ring-0"
+            className="mb-5 bg-gray-700 border-gray-600 text-gray-200 focus:border-indigo-500"
+            placeholder="Enter tag name"
             required
           />
-          <Title level={5}>Tag color</Title>
-          <div className="flex justify-center">
+          <Title level={5} className="text-gray-300 mb-2">Tag color</Title>
+          <div className="flex justify-center bg-gray-800 p-3 rounded-lg shadow-inner">
             <CompactPicker
-              className="justify-center"
               color={tagColor}
               onChangeComplete={(color) => setTagColor(color.hex)}
             />
+          </div>
+          <div className="mt-4 flex items-center">
+            <div className="flex-1 border-t border-gray-700"></div>
+            <div
+              className="mx-4 w-8 h-8 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: tagColor }}
+            >
+              <TagOutlined className="text-white" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
+            </div>
+            <div className="flex-1 border-t border-gray-700"></div>
           </div>
         </div>
       </Modal>

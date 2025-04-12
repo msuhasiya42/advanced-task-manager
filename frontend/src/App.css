@@ -4,7 +4,23 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  @apply bg-gray-900 text-gray-100;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -23,4 +39,100 @@ body {
   min-height: 100px;
   width: 100%;
   color: black;
+}
+
+/* Sidebar and layout related styles */
+.sidebar-container {
+  height: calc(100vh - 4rem);
+  overflow-y: auto;
+  z-index: 30;
+}
+
+@media (max-width: 640px) {
+  .sidebar-container {
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+}
+
+@media (min-width: 640px) {
+  .main-content {
+    margin-left: 18rem; /* Width of sidebar */
+  }
+}
+
+/* Custom scrollbar styling */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(31, 41, 55, 0.5);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(107, 114, 128, 0.5);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.6);
+}
+
+/* Tag modal styling */
+.ant-modal-content {
+  background-color: #1f2937 !important;
+  border-radius: 12px !important;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+}
+
+.tag-modal .ant-modal-close {
+  color: rgb(156, 163, 175) !important;
+}
+
+.tag-modal .ant-modal-close:hover {
+  color: white !important;
+}
+
+.ant-modal-header {
+  background: transparent !important;
+  border-bottom: none !important;
+}
+
+/* Color picker customizations */
+.circle-picker, .compact-picker {
+  background: transparent !important;
+}
+
+/* Tag Hover Effects */
+.tag-item {
+  transition: transform 0.2s ease-in-out;
+}
+
+.tag-item:hover {
+  transform: translateX(2px);
+}
+
+/* Tag color dot pulse animation for active tag */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.active-tag-dot {
+  animation: pulse 2s infinite;
 }

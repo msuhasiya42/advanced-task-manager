@@ -100,10 +100,10 @@ const TaskManager = () => {
         <LoadingPage message="Fetching tasks..." />
       ) : (
         noTasks ?
-          <div className="flex items-center w-full bg-gray-900 justify-center"><AddNewTask status="todo" /></div>
-          : (<div className="flex p-2 mt-4 bg-gray-900 justify-center sm:justify-start sm:pl-12">
+          <div className="flex items-center w-full h-full bg-gray-900 justify-center"><AddNewTask status="todo" /></div>
+          : (<div className="flex p-2 w-full h-full bg-gray-900 justify-center sm:justify-start sm:pl-6 overflow-auto">
             <DragDropContext onDragEnd={handleDragEnd}>
-              <div className="flex flex-col sm:flex-row gap-8">
+              <div className="flex flex-col sm:flex-row gap-8 py-4">
                 {Object.entries(filteredTasks).map(([taskType, tasks]) => (
                   <TasksList
                     key={taskType}
@@ -115,7 +115,7 @@ const TaskManager = () => {
             </DragDropContext>
           </div>)
       )}
-    </ >
+    </>
   );
 };
 

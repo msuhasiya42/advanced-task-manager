@@ -13,13 +13,11 @@ import HeaderPage from "./components/HeaderPage/HeaderPage";
 import AboutMe from "./components/AboutMe/AboutMe";
 
 function App() {
-
-
   return (
     <Router>
-      <div className="flex h-full">
+      <div className="flex flex-col min-h-screen">
         <HeaderPage />
-        <div className="flex-1 w-screen mt-12">
+        <div className="flex flex-1 pt-16">
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
