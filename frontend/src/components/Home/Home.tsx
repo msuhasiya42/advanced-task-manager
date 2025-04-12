@@ -71,8 +71,8 @@ const Home = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-gray-900 to-black py-10">
-      <div className="max-w-5xl mx-auto text-center p-5">
+    <div className="flex flex-col justify-center items-center min-h-screen bg-gradient-to-b from-gray-900 to-black py-10 w-full">
+      <div className="max-w-5xl w-full mx-auto text-center px-5">
         <div className={`transition-all duration-1000 ease-out transform ${headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'}`}>
           <h1 className="text-white text-5xl font-bold mb-2 leading-tight">
             Welcome to Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Advanced Task Manager</span>
@@ -82,7 +82,7 @@ const Home = () => {
           </h1>
         </div>
 
-        <div className="flex justify-center flex-wrap mt-8">
+        <div className="flex justify-center flex-wrap mt-8 w-full">
           {features.map((feature, idx) => (
             <FeatureCard key={idx} feature={feature} index={idx} />
           ))}

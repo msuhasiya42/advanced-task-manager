@@ -55,11 +55,11 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800 px-4 py-12">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800 px-4 py-12 w-full">
       {loginMutation.isLoading || googleLoginMutation.isLoading ? (
         <LoadingPage message="Logging In..." />
       ) : (
-        <div className="w-full max-w-md">
+        <div className="w-full max-w-md mx-auto">
           <div className="text-center mb-10">
             <h1 className="text-3xl font-bold text-white mb-2">Welcome Back</h1>
             <p className="text-gray-400">Sign in to your account to continue</p>

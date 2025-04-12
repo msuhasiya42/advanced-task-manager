@@ -100,11 +100,10 @@ const SignUp = () => {
   const handleCheckbox = () => setIsSubscribed((prev) => !prev);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800 px-4 py-12">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800 px-4 py-12 w-full">
+      <div className="w-full max-w-md mx-auto">
         <div className="text-center mb-10">
           <h1 className="text-3xl font-bold text-white mb-2">Create Account</h1>
-          <p className="text-gray-400">Sign up to get started with our service</p>
         </div>
 
         <div className="bg-gray-800 shadow-2xl rounded-xl overflow-hidden border border-gray-700 backdrop-blur-sm transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
