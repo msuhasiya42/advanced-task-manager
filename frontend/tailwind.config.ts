@@ -18,6 +18,15 @@ module.exports = {
           900: "#1e3a8a",
         },
       },
+      animation: {
+        fadeIn: "fadeIn 0.5s ease-in-out",
+      },
+      keyframes: {
+        fadeIn: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+      },
     },
   },
   plugins: [require("daisyui")],
