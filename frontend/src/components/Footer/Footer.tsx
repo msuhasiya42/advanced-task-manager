@@ -7,7 +7,7 @@ const Footer = () => {
   return (
     <footer className="bg-gradient-to-b from-gray-900 to-gray-800 text-gray-300 border-t border-indigo-500/30 shadow-inner shadow-indigo-500/10">
       {/* Main Footer Content */}
-      <div className="container mx-auto py-8">
+      <div className="container mx-auto px-3 py-8">
         <div className="flex flex-col md:flex-row justify-between">
 
           {/* About/Description Section */}
