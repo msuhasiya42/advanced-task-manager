@@ -43,12 +43,6 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
       </div>
 
       {/* Mobile profile buttons - Top */}
-      <div className="mt-4 flex flex-row sm:hidden px-5">
-        <ProfileButton />
-        <div className="ml-auto">
-          <LogoutButton />
-        </div>
-      </div>
       <hr className="border-t sm:hidden border-gray-700/30 my-4 mx-5" />
 
       {/* Navigation */}
@@ -126,15 +120,11 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
         <div className="flex justify-center pt-2">
           <AddTags showModal={showModal} setShowModal={setShowModal} onChildPopupInteraction={onChildPopupInteraction} />
         </div>
-      </nav>
-
-      {/* Mobile Footer area - visible only on small screens */}
-      <div className="px-5 py-4 mt-auto border-t border-gray-700/30 sm:hidden">
-        <div className="flex items-center justify-between">
+        <div className="mt-4 flex flex-row sm:hidden px-3 justify-between">
           <ProfileButton />
           <LogoutButton />
         </div>
-      </div>
+      </nav>
     </div>
   );
 };

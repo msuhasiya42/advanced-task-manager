@@ -71,6 +71,7 @@ const AddTaskModal = ({ showAddTaskModal, setShowAddTaskModal }: AddTaskModalPro
         <Modal
             open={showAddTaskModal}
             onCancel={() => setShowAddTaskModal(false)}
+            style={{ backgroundColor: "white" }}
             closable
             width={350}
             centered

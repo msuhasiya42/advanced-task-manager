@@ -93,6 +93,8 @@ html, body {
     position: fixed;
     top: 0;
     left: 0;
+    z-index: 40;
+    width: 18rem;
   }
 }
 

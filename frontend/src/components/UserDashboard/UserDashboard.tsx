@@ -102,7 +102,7 @@ const UserDashboard = () => {
     <div className="flex w-full h-full dashboard-bg">
       {/* Render Sidebar based on showSidebar state */}
       {showSidebar && (
-        <div ref={sideBarRef} className="flex z-20 sidebar-container">
+        <div ref={sideBarRef} className="flex z-40 sidebar-container">
           <SideBar onChildPopupInteraction={handleChildPopupInteraction} />
         </div>
       )}
