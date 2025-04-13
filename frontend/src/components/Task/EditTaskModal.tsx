@@ -1,6 +1,17 @@
 import React, { useState } from "react";
 import { Collaborator, TaskType } from "./Types/types";
-import { Input, Modal, Select, SelectProps, message } from "antd";
+import { Input, Modal, Select, SelectProps, message, Tabs, Space } from "antd";
+import {
+  CalendarOutlined,
+  TagsOutlined,
+  FieldTimeOutlined,
+  InfoCircleOutlined,
+  TeamOutlined,
+  CommentOutlined,
+  EditOutlined,
+  CheckSquareOutlined,
+  FlagOutlined
+} from '@ant-design/icons';
 import { taskAPI } from "../../Api";
 import DatePicker from "react-datepicker";
 import { taskPriorities } from "./utils";
@@ -127,122 +138,221 @@ const EditTaskModal = (props: EditTaskModalProps) => {
   return (
     <Modal
       centered
-      title={<div className="text-lg text-center mb-6">{"Edit Task"}</div>}
+      title={<div className="text-xl font-bold text-center mb-4 text-gray-800">Edit Task</div>}
       open={showModal}
       onCancel={() => {
         setShowModal(false);
         setTaskData(task);
       }}
       onOk={handleFormSubmit}
-      okText="Save"
-      width={750}
-      okButtonProps={{ style: { backgroundColor: "#1890ff", color: "#fff" }, disabled: !canEditTask }}
+      okText="Save Changes"
+      width={800}
+      okButtonProps={{
+        style: {
+          backgroundColor: "#4f46e5",
+          color: "#fff",
+          borderRadius: "6px",
+          fontSize: "14px",
+          padding: "6px 16px",
+          height: "auto",
+          fontWeight: 500,
+          boxShadow: "0 2px 5px rgba(79, 70, 229, 0.3)"
+        },
+        disabled: !canEditTask
+      }}
+      cancelButtonProps={{
+        style: {
+          borderRadius: "6px",
+          fontSize: "14px",
+          padding: "6px 16px",
+          height: "auto"
+        }
+      }}
+      style={{ backgroundColor: "white" }}
+      bodyStyle={{ padding: "24px", backgroundColor: "white" }}
+      className="task-edit-modal"
     >
-      <div className="flex flex-col gap-4 sm:flex-row sm:gap-8">
-        <div>
-          <div className="w-full">
-            <Input
-              required
-              addonBefore="Title"
-              name="title"
-              value={taskData.title}
-              onChange={handleInputChange}
-              placeholder="Enter title"
-              disabled={!canEditTask}
-            />
-          </div>
-
-          <div className="max-w-[350px] sm:max-w-[480px] sm:w-[480px] mt-4">
-            <label className="block mb-3 font-bold text-gray-700">Description</label>
-            <Editor canEdit={canEditTask} description={taskData.description} handleDescChange={handleDescChange} />
-          </div>
-          <div className="hidden sm:block">
-            <label className="block mb-3 font-bold text-gray-700">
-              Created at :<span className="text-gray-500"> {createdAt}</span>
-              {createdBy && <span className="text-gray-500">, Created by: <span className="text-cyan-500">{createdBy}</span></span>}
-            </label>
-            <label className="block mb-3 font-bold text-gray-700">
-              Last updated at :
-              <span className="text-gray-500"> {updatedAt}</span>
-              {updatedBy && <span className="text-gray-500">, Last updated by: <span className="text-cyan-500">{updatedBy}</span></span>}
-            </label>
-          </div>
-        </div>
-        <div className="flex flex-col md:flex-col  gap-4">
-          <div className="flex gap-4 sm:block">
-            <div className="w-full">
-              <label className="block mb-3 font-bold text-gray-700">Status</label>
-              <select
-                id="status"
-                name="status"
-                className="block w-full xt-select rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
-                aria-label="Select"
-                value={taskData.status}
-                onChange={handleInputChange}
-                disabled={!canEditTask}
-              >
-                <option value="todo">To do</option>
-                <option value="inProgress">In Progress</option>
-                <option value="completed">Completed</option>
-              </select>
-            </div>
-            <div className="w-full">
-              <label className="block mb-3 font-bold text-gray-700">Priority</label>
-              <select
-                id="priority"
-                name="priority"
-                className="block w-full xt-select rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
-                aria-label="Select"
-                value={taskData.priority}
-                onChange={handleInputChange}
-                disabled={!canEditTask}
-              >
-                {taskPriorities.map((priority) => (
-                  <option key={priority} value={priority}>
-                    {priority}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div className="w-full">
-            <label className="block mb-3 font-bold text-gray-700">Tags</label>
-            <Select
-              mode="multiple"
-              allowClear
-              placeholder="Select tags"
-              value={taskData.tags.map((tag) => tag.name)}
-              onChange={handleTagsChange}
-              style={{ width: "100%" }}
-              options={tagOptions}
-              disabled={!canEditTask}
-            />
-          </div>
-
-          <div className="w-full">
-            <label className="block mb-3 font-bold text-gray-700">Due Date</label>
-            <DatePicker
-              disabled={!canEditTask}
-              selected={new Date(taskData.dueDate)}
-              onChange={(date: Date) => handleDate(date)}
-              className="block w-full xt-select rounded-md py-2.5 px-3.5 text-gray-900 placeholder-black placeholder-opacity-75 bg-gray-100 transition focus:bg-gray-200 focus:outline-none"
-            />
-          </div>
-
-          <div>
-            <label className="block mb-3 font-bold text-gray-700">Collaborators</label>
-            <CollaboratorsSelector
-              collaborators={taskData.collaborators}
-              setCollaborators={(newCollaborators: Collaborator[]) =>
-                setTaskData(prevData => ({ ...prevData, collaborators: newCollaborators }))
-              }
-              canEdit={canEditTask}
-            />
-          </div>
+      <div className="mb-6">
+        <div className="w-full">
+          <label className="block mb-2 font-bold text-gray-700 flex items-center">
+            <span className="mr-2">✏️</span>
+            Task Title
+          </label>
+          <Input
+            required
+            name="title"
+            value={taskData.title}
+            onChange={handleInputChange}
+            placeholder="Enter title"
+            disabled={!canEditTask}
+            className="py-2 rounded-md"
+            style={{ fontSize: "15px" }}
+          />
         </div>
       </div>
-      <Comments taskId={task._id} userId={user?._id ?? ""} />
+
+      <div className="grid grid-cols-2 gap-4 mb-4">
+        <div>
+          <label className="block mb-2 font-bold text-gray-700 flex items-center">
+            <span className="mr-2">✅</span>
+            Status
+          </label>
+          <select
+            id="status"
+            name="status"
+            className="block w-full rounded-md py-2.5 px-3.5 text-gray-900 border border-gray-200 bg-white shadow-sm focus:ring-2 focus:ring-indigo-200 focus:outline-none transition"
+            aria-label="Select"
+            value={taskData.status}
+            onChange={handleInputChange}
+            disabled={!canEditTask}
+          >
+            <option value="todo">To do</option>
+            <option value="inProgress">In Progress</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block mb-2 font-bold text-gray-700 flex items-center">
+            <span className="mr-2">🚩</span>
+            Priority
+          </label>
+          <select
+            id="priority"
+            name="priority"
+            className="block w-full rounded-md py-2.5 px-3.5 text-gray-900 border border-gray-200 bg-white shadow-sm focus:ring-2 focus:ring-indigo-200 focus:outline-none transition"
+            aria-label="Select"
+            value={taskData.priority}
+            onChange={handleInputChange}
+            disabled={!canEditTask}
+          >
+            {taskPriorities.map((priority) => (
+              <option key={priority} value={priority}>
+                {priority}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <Tabs
+        defaultActiveKey="details"
+        items={[
+          {
+            key: 'details',
+            label: (
+              <span className="font-medium flex items-center">
+                <span className="mr-1">📋</span>
+                Details & Description
+              </span>
+            ),
+            children: (
+              <div className="mb-6">
+                <label className="block mb-3 font-bold text-gray-700 flex items-center">
+                  <span className="mr-2">📝</span>
+                  Description
+                </label>
+                <div className="border border-gray-200 rounded-md overflow-hidden bg-white p-1 mb-6">
+                  <Editor canEdit={canEditTask} description={taskData.description} handleDescChange={handleDescChange} />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                  <div>
+                    <div className="mb-6">
+                      <label className="block mb-2 font-bold text-gray-700 flex items-center">
+                        <span className="mr-2">📅</span>
+                        Due Date
+                      </label>
+                      <DatePicker
+                        disabled={!canEditTask}
+                        selected={new Date(taskData.dueDate)}
+                        onChange={(date: Date) => handleDate(date)}
+                        className="block w-full rounded-md py-2.5 px-3.5 text-gray-900 border border-gray-200 bg-white shadow-sm focus:ring-2 focus:ring-indigo-200 focus:outline-none transition"
+                      />
+                    </div>
+
+                    <div className="mb-4">
+                      <label className="block mb-2 font-bold text-gray-700 flex items-center">
+                        <span className="mr-2">🏷️</span>
+                        Tags
+                      </label>
+                      <Select
+                        mode="multiple"
+                        allowClear
+                        placeholder="Select tags"
+                        value={taskData.tags.map((tag) => tag.name)}
+                        onChange={handleTagsChange}
+                        style={{ width: "100%" }}
+                        options={tagOptions}
+                        disabled={!canEditTask}
+                        className="rounded-md"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="p-4 bg-gray-50 rounded-lg mb-4">
+                      <h4 className="font-semibold text-gray-600 mb-2 text-sm uppercase tracking-wide flex items-center">
+                        <span className="mr-2">ℹ️</span>
+                        Task Information
+                      </h4>
+                      <div className="grid grid-cols-1 gap-2">
+                        <div className="flex items-start">
+                          <span className="font-medium text-gray-600 min-w-[100px]">Created:</span>
+                          <span className="text-gray-600">{createdAt}
+                            {createdBy && <span>, by <span className="text-indigo-600 font-medium">{createdBy}</span></span>}
+                          </span>
+                        </div>
+                        <div className="flex items-start">
+                          <span className="font-medium text-gray-600 min-w-[100px]">Updated:</span>
+                          <span className="text-gray-600">{updatedAt}
+                            {updatedBy && <span>, by <span className="text-indigo-600 font-medium">{updatedBy}</span></span>}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ),
+          },
+          {
+            key: 'collaborators',
+            label: (
+              <span className="font-medium flex items-center">
+                <span className="mr-1">👥</span>
+                Collaborators
+              </span>
+            ),
+            children: (
+              <div className="border border-gray-100 rounded-md p-4 bg-white">
+                <CollaboratorsSelector
+                  collaborators={taskData.collaborators}
+                  setCollaborators={(newCollaborators: Collaborator[]) =>
+                    setTaskData(prevData => ({ ...prevData, collaborators: newCollaborators }))
+                  }
+                  canEdit={canEditTask}
+                />
+              </div>
+            ),
+          },
+          {
+            key: 'comments',
+            label: (
+              <span className="font-medium flex items-center">
+                <span className="mr-1">💬</span>
+                Comments
+              </span>
+            ),
+            children: (
+              <div className="border border-gray-100 rounded-md p-4 bg-white">
+                <Comments taskId={task._id} userId={user?._id ?? ""} />
+              </div>
+            ),
+          },
+        ]}
+        className="mt-2"
+      />
     </Modal >
   );
 };
