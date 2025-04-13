@@ -66,12 +66,6 @@ const AboutMe = () => (
             <SiMongodb className="text-4xl text-green-500 mb-2" />
             <span>MongoDB</span>
           </div>
-
-          {/* AI */}
-          <div className="flex flex-col items-center p-4 bg-gray-800 rounded-lg hover:bg-gray-700 transition-all duration-300 transform hover:scale-105">
-            <SiOpenai className="text-4xl text-teal-500 mb-2" />
-            <span>ChatGPT</span>
-          </div>
         </div>
       </div>
 
@@ -87,18 +81,18 @@ const AboutMe = () => (
       </div>
 
       {/* Portfolio Button */}
-      <div className="mt-6">
+      {/* <div className="mt-6">
         <a
           href="https://mayursuhasiya.com"
           target="_blank"
           rel="noopener noreferrer"
           className="group relative inline-block px-10 py-5 overflow-hidden border-2 border-blue-400 rounded-full transition-all duration-500 hover:scale-105"
-        >
-          {/* Background Animation */}
-          <span className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-700 ease-in-out"></span>
+        > */}
+      {/* Background Animation */}
+      {/* <span className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-700 ease-in-out"></span> */}
 
-          {/* Button Text */}
-          <span className="relative flex items-center justify-center text-xl font-semibold text-white z-10">
+      {/* Button Text */}
+      {/* <span className="relative flex items-center justify-center text-xl font-semibold text-white z-10">
             Checkout My Portfolio
             <svg
               className="w-6 h-6 ml-2 transform group-hover:translate-x-1 transition-transform duration-300"
@@ -116,7 +110,7 @@ const AboutMe = () => (
             </svg>
           </span>
         </a>
-      </div>
+      </div> */}
     </main>
   </div>
 );
