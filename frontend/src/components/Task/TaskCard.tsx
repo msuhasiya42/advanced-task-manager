@@ -113,7 +113,6 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
       .updateTask(_id, updatedTask)
       .then(() => {
         // Update the local task object
-        task.done = newDoneState;
         void message.success(newDoneState ? "Task marked as done" : "Task marked as incomplete");
       })
       .catch((err) => {
@@ -161,8 +160,6 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
         // Clear loading message
         hideLoading();
 
-        // Update the local task object (for future operations)
-        task.priority = newPriority;
         void message.success(`Priority set to ${newPriority}`);
       })
       .catch((err) => {
@@ -226,8 +223,6 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
           // Clear loading message
           hideLoading();
 
-          // Update the local task reference (for future operations)
-          task.dueDate = newDate;
           void message.success("Due date updated successfully");
         })
         .catch((err) => {
@@ -428,7 +423,7 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
               <Popover content={content} trigger="hover" placement="right">
                 <div className="flex items-center cursor-pointer hover:text-gray-200">
                   <AlignLeftOutlined className="mr-1" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
-                  <span>View details</span>
+                  <span>View description</span>
                 </div>
               </Popover>
             </div>
