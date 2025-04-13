@@ -127,7 +127,7 @@ const UserProfile = () => {
 
           {/* Profile picture - centered over the banner */}
           <div className="absolute left-1/2 transform -translate-x-1/2 -bottom-16">
-            <div className="relative group" onClick={handleImageClick}>
+            <div className="relative group cursor-pointer" onClick={handleImageClick}>
               <img
                 src={
                   !user.picture

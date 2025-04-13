@@ -120,13 +120,8 @@ const AddNewTask = ({ status }: StatusType) => {
                   onChange={updateTitle}
                   onKeyPress={handleKeyPress}
                   autoFocus
-                  className="bg-gray-700 text-white border-gray-600 hover:border-gray-500 focus:border-blue-500"
+                  className=" text-white border-gray-600 hover:border-gray-500 focus:border-blue-500"
                   disabled={isSubmitting}
-                  style={{
-                    backgroundColor: '#374151',
-                    color: 'white',
-                    borderColor: '#4B5563'
-                  }}
                 />
               </div>
             </div>

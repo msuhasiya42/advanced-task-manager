@@ -1,26 +1,12 @@
-// Avatar categories for avatar-placeholder API
-// API documentation: https://avatar-placeholder.iran.liara.run/
+// Avatar categories for DiceBear API
+// API documentation: https://www.dicebear.com/
 
-export const avatarStyles = [
-  "public", // Random avatars
-  "boy", // Male avatars
-  "girl", // Female avatars
-];
+// We'll only use the Lorelei style as specified
+export const avatarStyles = ["lorelei"];
 
-// Get the base URL for the avatar API
-const baseUrl = "https://avatar.iran.liara.run";
-
-// Generate a URL for a random avatar based on the selected category
-export function getAvatarUrl(category: string): string {
-  switch (category) {
-    case "boy":
-      return `${baseUrl}/public/boy`;
-    case "girl":
-      return `${baseUrl}/public/girl`;
-    case "public":
-    default:
-      return `${baseUrl}/public`;
-  }
+// Generate a URL for a DiceBear avatar with Lorelei style
+export function getAvatarUrl(): string {
+  return "https://api.dicebear.com/7.x/lorelei/svg";
 }
 
 // Fetch an image and convert it to base64
@@ -46,19 +32,22 @@ export async function fetchImageAsBase64(url: string): Promise<string> {
   }
 }
 
-// Generate random avatar URLs for preview
-export function getRandomAvatarUrl(category: string): string {
-  const randomParam = Math.floor(Math.random() * 1000);
-  return `${getAvatarUrl(category)}?r=${randomParam}`;
+// Generate random avatar URL with a seed for Lorelei style
+export function getRandomAvatarUrl(): string {
+  const randomSeed = Math.random().toString(36).substring(2, 15);
+  return `${getAvatarUrl()}?seed=${randomSeed}`;
 }
 
-// Generate multiple different avatar URLs for the same category
+// Generate multiple different avatar URLs with different seeds
 export const getAvatarUrls = (category: string, count: number): string[] => {
   const avatarUrls: string[] = [];
 
   for (let i = 0; i < count; i++) {
-    const randomParam = Math.floor(Math.random() * 1000);
-    avatarUrls.push(`${getAvatarUrl(category)}?r=${randomParam}`);
+    const randomSeed = Math.random().toString(36).substring(2, 15);
+    // Add some options for the Lorelei style
+    avatarUrls.push(
+      `${getAvatarUrl()}?seed=${randomSeed}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`
+    );
   }
 
   return avatarUrls;

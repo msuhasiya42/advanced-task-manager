@@ -37,13 +37,13 @@ const TasksList = ({ tasks, taskType }: taskListProps) => {
   const getColumnColor = () => {
     switch (taskType) {
       case "todo":
-        return "from-blue-800 to-blue-700";
+        return "from-blue-900 to-blue-800";
       case "inProgress":
-        return "from-indigo-800 to-indigo-700";
+        return "from-indigo-900 to-indigo-800";
       case "completed":
-        return "from-emerald-800 to-emerald-700";
+        return "from-emerald-900 to-emerald-800";
       default:
-        return "from-gray-800 to-gray-700";
+        return "from-gray-900 to-gray-800";
     }
   };
 
