@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Modal, Input, message, Button } from "antd";
 import { CompactPicker } from "react-color";
 import Title from "antd/es/typography/Title";
-import { TagOutlined, PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, TagOutlined } from "@ant-design/icons";
 import { tagAPI } from "../../Api";
 import { useMutation } from "react-query";
 import { useSelector } from "react-redux";
@@ -96,63 +96,46 @@ const AddUpdateTag = ({ tagId, showModal, setShowModal, onChildPopupInteraction,
       }
       <Modal
         open={showModal}
-        title={
-          <div className="flex items-center text-lg text-gray-100 bg-gray-800 py-1 px-1 -mt-4 -mx-6 rounded-t-lg border-b border-gray-700">
-            <TagOutlined className="mr-2 text-indigo-400" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
-            <span>{isEditMode ? "Update Tag" : "Add Tag"}</span>
-          </div>
-        }
+        title={<div className="flex text-lg justify-start"><TagOutlined className="mr-2" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />{isEditMode ? "Update Tag" : "Add Tag"}</div>}
         centered
         onCancel={handleToggle}
-        width={350}
-        className="tag-modal"
-        style={{ top: 20 }}
-        bodyStyle={{ backgroundColor: '#1f2937', padding: '20px' }}
+        width={330}
         footer={[
           <Button
             key="cancel"
-            className="bg-gray-700 text-gray-200 border-gray-600 hover:bg-gray-600 hover:text-white hover:border-gray-500"
+            className="font-medium"
             onClick={handleToggle}
           >
             Cancel
           </Button>,
-          <Button
-            key="submit"
-            className="bg-indigo-600 text-white border-indigo-700 hover:bg-indigo-500 hover:border-indigo-600 shadow-sm"
+          <button
+            key="add"
+            className="text-gray-900 border ml-2 px-5 py-1 border-blue-300 focus:outline-none hover:bg-blue-400 focus:ring-4 focus:ring-blue-200 font-medium rounded-lg text-sm mr-2 mb-2 bg-blue-500 text-white border-blue-600 hover:bg-blue-700 hover:border-blue-600 focus:ring-blue-700"
             onClick={handleSubmit}
           >
-            {isEditMode ? "Update" : "Add"}
-          </Button>,
+            {isEditMode ? "Update" : "Add"} {/* Change button label based on mode */}
+          </button>,
         ]}
-        maskStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.7)' }}
+        style={{ backgroundColor: "white" }}
+        bodyStyle={{ padding: "24px", backgroundColor: "white" }}
       >
-        <div className="text-gray-200">
-          <Title level={5} className="text-gray-300 mb-2">Tag name</Title>
+        <div className="">
+          <Title level={5}>Tag name</Title>
           <Input
             value={tagName}
             onChange={(e) => setTagName(e.target.value)}
             id="tagName"
             type="text"
-            className="mb-5 bg-gray-700 border-gray-600 text-gray-200 focus:border-indigo-500"
-            placeholder="Enter tag name"
+            className="block w-full text-gray-800 mb-4 focus:ring-0"
             required
           />
-          <Title level={5} className="text-gray-300 mb-2">Tag color</Title>
-          <div className="flex justify-center bg-gray-800 p-3 rounded-lg shadow-inner">
+          <Title level={5}>Tag color</Title>
+          <div className="flex justify-center">
             <CompactPicker
+              className="justify-center"
               color={tagColor}
               onChangeComplete={(color) => setTagColor(color.hex)}
             />
-          </div>
-          <div className="mt-4 flex items-center">
-            <div className="flex-1 border-t border-gray-700"></div>
-            <div
-              className="mx-4 w-8 h-8 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: tagColor }}
-            >
-              <TagOutlined className="text-white" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
-            </div>
-            <div className="flex-1 border-t border-gray-700"></div>
           </div>
         </div>
       </Modal>
