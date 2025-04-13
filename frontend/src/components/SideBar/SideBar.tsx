@@ -36,10 +36,10 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
     setActiveTab("reminders");
   };
   return (
-    <div className="fixed h-screen top-0 sm:top-auto sm:h-full sm:static flex flex-col w-72 bg-gradient-to-b from-gray-900 to-gray-800 text-gray-300 border-r-2 border-r-indigo-500/30 shadow-lg shadow-indigo-500/10 overflow-hidden">
+    <div className="fixed h-screen top-0 sm:top-auto sm:h-full sm:static flex flex-col w-72 sidebar-container text-gray-300 shadow-lg shadow-indigo-500/10 overflow-hidden">
       {/* App title/logo area */}
-      <div className="px-5 py-6 border-b border-gray-700/50 mt-16 sm:mt-0">
-        <h1 className="text-lg text-gray-400 mt-1">Organize your workday</h1>
+      <div className="px-5 py-4 border-b border-indigo-500/20 mt-16 sm:mt-0 bg-gradient-to-r from-gray-900 to-gray-800">
+        <h1 className="text-lg text-gray-300 mt-1 font-medium">Organize your day</h1>
       </div>
 
       {/* Mobile profile buttons - Top */}
@@ -62,7 +62,7 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
                 onClick={handleAllTasks}
                 className={`flex items-center w-full p-3 transition-all duration-200 rounded-lg group
             ${activeTab === "all"
-                    ? "bg-indigo-600 text-white font-medium shadow-md"
+                    ? "bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-medium shadow-md"
                     : "text-gray-300 hover:bg-gray-700/70 hover:text-white"}
             focus:outline-none focus:ring-1 focus:ring-indigo-400`}
               >
@@ -79,7 +79,7 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
                 }}
                 className={`flex items-center w-full p-3 transition-all duration-200 rounded-lg group
             ${activeTab === "todays"
-                    ? "bg-indigo-600 text-white font-medium shadow-md"
+                    ? "bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-medium shadow-md"
                     : "text-gray-300 hover:bg-gray-700/70 hover:text-white"}
             focus:outline-none focus:ring-1 focus:ring-indigo-400`}
               >
@@ -99,7 +99,7 @@ const SideBar = ({ onChildPopupInteraction }: Props) => {
                 }}
                 className={`flex items-center w-full p-3 transition-all duration-200 rounded-lg group
             ${activeTab === "upcomingTasks"
-                    ? "bg-indigo-600 text-white font-medium shadow-md"
+                    ? "bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-medium shadow-md"
                     : "text-gray-300 hover:bg-gray-700/70 hover:text-white"}
             focus:outline-none focus:ring-1 focus:ring-indigo-400`}
               >

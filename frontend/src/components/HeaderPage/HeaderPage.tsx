@@ -26,9 +26,9 @@ const HeaderPage = () => {
 
   return (
     <div
-      className={`fixed z-50 w-full backdrop-blur-md py-3 px-3 flex flex-wrap sm:justify-between mx-auto transition-all duration-300 border-b ${scrolled
-        ? "bg-gray-900/95 shadow-lg shadow-blue-900/20 border-blue-900/30"
-        : "bg-gray-900/80 border-gray-700/40"
+      className={`fixed z-50 w-full backdrop-blur-md py-3 px-3 flex flex-wrap sm:justify-between mx-auto transition-all duration-300 ${scrolled
+        ? "bg-gray-900/95 border-b border-indigo-500/30 shadow-md"
+        : "bg-gray-900/80 border-b border-indigo-500/20"
         }`}
     >
       <a href="/user-dashboard" className="flex items-center group">
@@ -44,11 +44,9 @@ const HeaderPage = () => {
 
       {user ? (
         <div className="hidden md:flex flex-grow justify-end items-center">
-          <div className="flex space-x-4 items-center bg-gray-800/50 px-4 py-2 rounded-full backdrop-blur-sm border border-gray-700/30 shadow-md">
-            <ProfileButton />
-            <Theme />
-            <LogoutButton />
-          </div>
+          <ProfileButton />
+          <Theme />
+          <LogoutButton />
         </div>
       ) : (
         <div className="hidden w-full md:block md:w-auto">

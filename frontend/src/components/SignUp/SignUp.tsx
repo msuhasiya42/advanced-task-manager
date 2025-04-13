@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { userAPI } from "../../Api";
-import { getAvatar } from "../UserProfile/avatarCategories";
-import { lorelei } from "@dicebear/collection";
+import { getAvatarUrl, fetchImageAsBase64 } from "../UserProfile/avatarCategories";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
 
@@ -72,21 +71,31 @@ const SignUp = () => {
 
     if (!isValidForm()) return;
 
-    const picture = getAvatar(lorelei);
-    userAPI
-      .createUser(userData.name, userData.email, userData.password, picture)
-      .then((response) => {
-        if (response.status === 200) {
-          void message.success("User created successfully", 1.5);
-          navigate("/login");
-          setUserData((prevState) => ({
-            ...prevState,
-            success: true,
-            showErrMsg: false,
-          }));
-        }
-      })
-      .catch(handleApiError);
+    try {
+      // Get a random avatar URL
+      const avatarUrl = getAvatarUrl("public") + "?r=" + Math.floor(Math.random() * 1000);
+
+      // Fetch the actual image data as base64
+      const picture = await fetchImageAsBase64(avatarUrl);
+
+      userAPI
+        .createUser(userData.name, userData.email, userData.password, picture)
+        .then((response) => {
+          if (response.status === 200) {
+            void message.success("User created successfully", 1.5);
+            navigate("/login");
+            setUserData((prevState) => ({
+              ...prevState,
+              success: true,
+              showErrMsg: false,
+            }));
+          }
+        })
+        .catch(handleApiError);
+    } catch (error) {
+      console.error("Error fetching avatar image:", error);
+      handleApiError(error);
+    }
   };
 
   const handleChange = (e: any) => {

@@ -1,6 +1,6 @@
-import { Avatar, Modal, Tabs } from "antd";
+import { Avatar, Modal, Tabs, Spin, Button } from "antd";
 import React, { useEffect, useState } from "react";
-import { avatarStyles, getAvatar, getCategory } from "./avatarCategories";
+import { avatarStyles, getAvatarUrls, fetchImageAsBase64 } from "./avatarCategories";
 import { userAPI } from "../../Api";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Store/store";
@@ -17,63 +17,124 @@ const ChooseAvatarModal = ({
   setIsModalOpen,
   setUserPhoto,
 }: AvatarModalProps) => {
-  const avatarCount = 10;
+  const avatarCount = 12;
 
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [avatarUrls, setAvatarUrls] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const { user } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setSelectedCategory("lorelei");
+    setSelectedCategory("public");
   }, []);
 
-  // Generate an array of dynamic avatars using DiceBear
-  const avatars = Array.from({ length: avatarCount }).map(() => {
-    const currCategory = getCategory(selectedCategory);
-    return getAvatar(currCategory);
-  });
+  useEffect(() => {
+    if (selectedCategory) {
+      // Generate new avatars when category changes
+      refreshAvatars();
+    }
+  }, [selectedCategory]);
 
-  const handleAvatarSelection = (selectedAvatar: string) => {
-    setUserPhoto(selectedAvatar);
+  const handleAvatarSelection = async (selectedAvatarUrl: string) => {
+    try {
+      setIsLoading(true);
 
-    // Assuming you have userId available in this scope or as a prop
-    userAPI.updatePhoto(user?._id ?? "", selectedAvatar);
-    dispatch(updateUser({ picture: selectedAvatar }));
+      // Fetch the actual image data as base64
+      const base64Image = await fetchImageAsBase64(selectedAvatarUrl);
 
-    // Close the modal after selecting an avatar
-    setIsModalOpen(false);
+      // Save the base64 image data instead of the URL
+      setUserPhoto(base64Image);
+
+      // Update the user's avatar in the database with the base64 image data
+      userAPI.updatePhoto(user?._id ?? "", base64Image);
+      dispatch(updateUser({ picture: base64Image }));
+
+      // Close the modal after selecting an avatar
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Error fetching avatar image:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const items = avatarStyles.map((style) => ({
-    label: style.slice(0, 1).toUpperCase() + style.slice(1),
-    key: style,
-    children: (
-      <div>
-        {avatars.map((avatar, index) => (
-          <Avatar
-            key={index}
-            src={avatar}
-            size={60}
-            alt={`Avatar ${index + 1}`}
-            shape="square"
-            style={{
-              cursor: "pointer",
-              border: "1px solid gray",
-              boxShadow: "0 0 5px rgba(0, 0, 0, 0.6)",
-              margin: "22px",
-            }}
-            onClick={() => {
-              handleAvatarSelection(avatar);
-            }}
-          />
-        ))}
-      </div>
-    ),
-  }));
+  // Generate a new set of avatar URLs for the current category
+  const refreshAvatars = () => {
+    setIsLoading(true);
+
+    // Simulate network delay for better UX
+    setTimeout(() => {
+      setAvatarUrls(getAvatarUrls(selectedCategory, avatarCount));
+      setIsLoading(false);
+    }, 600);
+  };
+
+  const items = avatarStyles.map((style) => {
+    let label: string;
+    switch (style) {
+      case "boy":
+        label = "Male";
+        break;
+      case "girl":
+        label = "Female";
+        break;
+      case "public":
+      default:
+        label = "Random";
+    }
+
+    return {
+      label,
+      key: style,
+      children: (
+        <div>
+          <div style={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            minHeight: "300px", // Add min height to prevent layout shift
+            position: "relative"
+          }}>
+            {isLoading ? (
+              <div style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)"
+              }}>
+                <Spin size="large" tip="Loading avatars..." />
+              </div>
+            ) : (
+              avatarUrls.map((avatarUrl, index) => (
+                <Avatar
+                  key={index}
+                  src={avatarUrl}
+                  size={70}
+                  alt={`Avatar ${index + 1}`}
+                  style={{
+                    cursor: "pointer",
+                    border: "1px solid #e8e8e8",
+                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
+                    margin: "10px",
+                    borderRadius: "50%"
+                  }}
+                  onClick={() => {
+                    handleAvatarSelection(avatarUrl);
+                  }}
+                />
+              ))
+            )}
+          </div>
+        </div>
+      ),
+    };
+  });
 
   const handleTabClick = (category: string) => {
     setSelectedCategory(category);
   };
+
   return (
     <Modal
       style={{ textAlign: "center" }}
@@ -89,7 +150,25 @@ const ChooseAvatarModal = ({
       }
       open={isModalOpen}
       centered
-      footer={null}
+      footer={
+        <div className="flex justify-center">
+          <button
+            onClick={refreshAvatars}
+            disabled={isLoading}
+            style={{
+              padding: "5px 10px",
+              borderRadius: "4px",
+              backgroundColor: "#1890ff",
+              color: "white",
+              border: "none",
+              cursor: isLoading ? "not-allowed" : "pointer",
+              opacity: isLoading ? 0.7 : 1
+            }}
+          >
+            {isLoading ? "Loading..." : "Refresh Avatars"}
+          </button>
+        </div>
+      }
       closable={true}
       onCancel={() => {
         setIsModalOpen(false);
@@ -97,7 +176,7 @@ const ChooseAvatarModal = ({
       width={600}
     >
       <Tabs
-        style={{ height: "400px" }}
+        style={{ height: "450px" }}
         tabPosition={"left"}
         items={items}
         onTabClick={handleTabClick}

@@ -11,18 +11,20 @@ import UserProfile from "./components/UserProfile/UserProfile";
 import React from "react";
 import HeaderPage from "./components/HeaderPage/HeaderPage";
 import AboutMe from "./components/AboutMe/AboutMe";
+import Footer from "./components/Footer/Footer";
 
 function App() {
   return (
     <Router>
-      <div className="flex flex-col min-h-screen">
+      <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
         <HeaderPage />
-        <div className="flex flex-1 pt-16">
+        <div className="flex flex-1 pt-16 content-container">
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/" element={<Home />} />
             <Route path="/about-me" element={<AboutMe />} />
+            <Route path="/about" element={<AboutMe />} />
             <Route
               path="/user-dashboard"
               element={
@@ -51,6 +53,7 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
+        <Footer />
       </div>
     </Router>
   );

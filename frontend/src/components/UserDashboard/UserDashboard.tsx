@@ -99,7 +99,7 @@ const UserDashboard = () => {
   };
 
   return (
-    <div className="flex w-full h-full">
+    <div className="flex w-full h-full dashboard-bg">
       {/* Render Sidebar based on showSidebar state */}
       {showSidebar && (
         <div ref={sideBarRef} className="flex z-20 sidebar-container">
@@ -107,13 +107,13 @@ const UserDashboard = () => {
         </div>
       )}
 
-      <div className={`flex-1 flex flex-col overflow-auto ${showSidebar ? 'sm:main-content' : ''}`}>
+      <div className={`flex-1 flex flex-col overflow-auto content-container ${showSidebar ? 'sm:main-content' : ''}`}>
         <TaskManager />
       </div>
       {/* Conditionally render button only on small screens */}
       <button
         onClick={toggleSidebar}
-        className="sm:hidden fixed bottom-4 left-4 bg-blue-500 text-white px-4 py-2 rounded-full shadow-md z-50"
+        className="sm:hidden fixed bottom-4 left-4 bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-4 py-2 rounded-full shadow-md z-50 hover:shadow-lg hover:from-indigo-700 hover:to-blue-700 transition-all duration-300"
       >
         {showSidebar ? (
           <DoubleLeftOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
@@ -146,7 +146,7 @@ const UserDashboard = () => {
               )
             }
             onClick={toggleFilter}
-            className=" fixed bottom-24 right-4 bg-blue-500 text-white rounded-full shadow-md z-50"
+            className="fixed bottom-24 right-4 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-full shadow-md z-50 hover:shadow-lg hover:from-indigo-700 hover:to-blue-700 transition-all duration-300"
           ></Button>
         </Popover>
       </Badge>
@@ -159,9 +159,9 @@ const UserDashboard = () => {
           )
         }
         onClick={toggleAddTaskFunc}
-        className="fixed bottom-14 right-4 bg-blue-500 text-white rounded-full shadow-md z-50"
+        className="fixed bottom-14 right-4 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-full shadow-md z-50 hover:shadow-lg hover:from-indigo-700 hover:to-blue-700 transition-all duration-300"
       ></Button>
-      <Switch className="fixed bottom-4 right-4 te bg-gray-700 xt-white ml-4 mt-5" checkedChildren="Card" unCheckedChildren="List" onClick={toggleTaskView} />
+      <Switch className="fixed bottom-4 right-4 bg-gray-800 text-white border-indigo-500/30 shadow-md" checkedChildren="Card" unCheckedChildren="List" onClick={toggleTaskView} />
     </div>
   );
 };
