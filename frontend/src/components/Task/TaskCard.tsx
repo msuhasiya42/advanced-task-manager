@@ -1,22 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TaskType, TasksProps } from "./Types/types";
 import { taskAPI } from "../../Api";
 import {
+  Avatar,
+  Badge,
   Button,
+  Calendar,
   Card,
+  DatePicker,
   Dropdown,
   MenuProps,
   Popconfirm,
   Popover,
+  Space,
+  Tag,
   Tooltip,
   message,
 } from "antd";
 import EditTaskModal from "./EditTaskModal";
 import {
   AlignLeftOutlined,
+  CalendarOutlined,
+  CheckCircleFilled,
   CheckCircleOutlined,
   ClockCircleOutlined,
   DeleteOutlined,
+  EditOutlined,
   LinkOutlined,
 } from "@ant-design/icons";
 import { convertToIndianTime, getPriorityIcon, taskPriorities } from "./utils";
@@ -24,6 +33,8 @@ import { deleteDesc, deleteText } from "../../utils/strings";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Store/store";
 import { updateTaskInStore } from "../../Store/reducers/taskSlice";
+import { motion } from "framer-motion";
+import dayjs from "dayjs";
 
 const TaskCard = ({ task, handleDelete }: TasksProps) => {
   const {
@@ -42,191 +53,504 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
   } = task;
 
   const [showModal, setShowModal] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [priorityDropdownOpen, setPriorityDropdownOpen] = useState(false);
 
   const taskDate = new Date(dueDate);
   const currentDate = new Date();
 
   const taskDueDay = taskDate.getDay();
   const currentDay = currentDate.getDay();
+  const isPastDue = taskDate < currentDate && !done;
 
-  const redOrYellow = () => (taskDueDay < currentDay ? "red" : "yellow");
-  const dateColor = task.done ? "green" : redOrYellow();
-  const classNameDueDate = `text-xs ml-1 w-18 text-black font-medium inline-flex items-center px-2.5 py-0.5 rounded bg-${dateColor}-400 text-white border border-white-600  `;
+  // Calculate if the due date is today
+  const isToday =
+    taskDate.getDate() === currentDate.getDate() &&
+    taskDate.getMonth() === currentDate.getMonth() &&
+    taskDate.getFullYear() === currentDate.getFullYear();
+
+  // Function to get the appropriate color for date badge
+  const getDateColor = () => {
+    if (done) return "success";
+    if (isPastDue) return "error";
+    if (isToday) return "warning";
+    return "processing";
+  };
 
   const { view } = useSelector((state: RootState) => state.tasks);
   const { user } = useSelector((state: RootState) => state.auth)
   const dispatch = useDispatch();
 
-  const toggleTaskDone = () => {
-    task.done = !done;
-    updateTask(_id, task);
-  };
+  /**
+   * IMPORTANT NOTE ON STATE MANAGEMENT:
+   * 
+   * We're using an "optimistic update" pattern for all task modifications:
+   * 1. First update the Redux store immediately for a responsive UI
+   * 2. Then make the API call to persist changes
+   * 3. If API call succeeds, update the local task object for future operations
+   * 4. If API call fails, revert the Redux store to the original state
+   * 
+   * This approach gives users immediate feedback while ensuring data consistency.
+   * Even if the API call fails, the database might still have been updated,
+   * which will be reflected on the next page refresh.
+   */
 
-  const handlePriority: MenuProps["onClick"] = (e) => {
-    task.priority = e.key;
+  // Toggle task completion status
+  const toggleTaskDone = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+
+    const newDoneState = !done;
+    const originalDoneState = task.done;
+
+    // Create a copy of the task with the updated status
+    const updatedTask = { ...task, done: newDoneState };
+
+    // Update UI immediately (optimistic update)
+    dispatch(updateTaskInStore({ category: status, taskId: _id, updatedTask: { ...updatedTask } }));
+
     taskAPI
-      .updateTask(_id, task)
+      .updateTask(_id, updatedTask)
       .then(() => {
-        dispatch(updateTaskInStore({ category: status, taskId: _id, updatedTask: task }));
+        // Update the local task object
+        task.done = newDoneState;
+        void message.success(newDoneState ? "Task marked as done" : "Task marked as incomplete");
       })
       .catch((err) => {
-        void message.error("Err in changing priority: ", err);
+        console.error("Error updating task status:", err);
+
+        // Revert the UI state
+        dispatch(updateTaskInStore({
+          category: status,
+          taskId: _id,
+          updatedTask: { ...task, done: originalDoneState }
+        }));
+
+        void message.error("Failed to update task status on server, but will try again");
       });
   };
 
-  const items: MenuProps["items"] = taskPriorities.map((priority) => ({
-    label: priority,
-    key: priority,
-    icon: getPriorityIcon(priority),
+  // Handle priority change from dropdown
+  const handlePriority: MenuProps["onClick"] = (e) => {
+    // Stop propagation to prevent opening the edit modal
+    e.domEvent.stopPropagation();
+
+    // Close the dropdown first for better UX
+    setPriorityDropdownOpen(false);
+
+    const newPriority = e.key as string;
+
+    // Don't update if it's the same priority
+    if (newPriority === priority) {
+      return;
+    }
+
+    // Update the UI optimistically first
+    const originalPriority = task.priority;
+    const updatedTask = { ...task, priority: newPriority };
+
+    // Update state in UI immediately (optimistic update)
+    dispatch(updateTaskInStore({ category: status, taskId: _id, updatedTask: { ...updatedTask } }));
+
+    // Show loading message
+    const hideLoading = message.loading(`Setting priority to ${newPriority}...`, 0);
+
+    taskAPI
+      .updateTask(_id, updatedTask)
+      .then(() => {
+        // Clear loading message
+        hideLoading();
+
+        // Update the local task object (for future operations)
+        task.priority = newPriority;
+        void message.success(`Priority set to ${newPriority}`);
+      })
+      .catch((err) => {
+        // Clear loading message
+        hideLoading();
+
+        console.error("Error updating priority:", err);
+
+        // Revert the UI state on error
+        dispatch(updateTaskInStore({
+          category: status,
+          taskId: _id,
+          updatedTask: { ...task, priority: originalPriority }
+        }));
+
+        void message.error("Failed to update priority on server, but will try again");
+
+        // Even though API call failed, the database might have been updated
+        // The next refresh will show the correct state
+      });
+  };
+
+  const items: MenuProps["items"] = taskPriorities.map((priorityItem) => ({
+    label: priorityItem,
+    key: priorityItem,
+    icon: getPriorityIcon(priorityItem),
   }));
 
   const priorityOptions = {
     items,
     onClick: handlePriority,
-    selectable: true,
-    defaultSelectedKeys: [priority],
+    selectedKeys: [priority],
   };
 
-  const updateTask = (id: string, updatedTask: TaskType) => {
-    taskAPI
-      .updateTask(id, updatedTask)
-      .then(() => {
-        updatedTask.done
-          ? void message.success("Task set to done.")
-          : void message.warning("Task set to undone.");
-        dispatch(updateTaskInStore({ category: status, taskId: id, updatedTask }));
-      })
-      .catch((err) => {
-        console.log("err in updating to done:", err);
-      });
-  };
-
-  const handleDeleteFun = () => {
+  const handleDeleteFun = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
     handleDelete(task);
+  };
+
+  // Handle date change from date picker
+  const handleDateChange = (date: dayjs.Dayjs | null, dateString: string) => {
+    if (date) {
+      // Close the date picker immediately
+      setShowDatePicker(false);
+
+      const newDate = date.toISOString();
+      const originalDate = task.dueDate;
+
+      // Create a copy of the task with the updated due date
+      const updatedTask = { ...task, dueDate: newDate };
+
+      // Update UI immediately (optimistic update)
+      dispatch(updateTaskInStore({ category: status, taskId: _id, updatedTask: { ...updatedTask } }));
+
+      // Show loading message
+      const hideLoading = message.loading("Updating due date...", 0);
+
+      taskAPI
+        .updateTask(_id, updatedTask)
+        .then(() => {
+          // Clear loading message
+          hideLoading();
+
+          // Update the local task reference (for future operations)
+          task.dueDate = newDate;
+          void message.success("Due date updated successfully");
+        })
+        .catch((err) => {
+          // Clear loading message
+          hideLoading();
+
+          console.error("Error updating due date:", err);
+
+          // Revert the UI state
+          dispatch(updateTaskInStore({
+            category: status,
+            taskId: _id,
+            updatedTask: { ...task, dueDate: originalDate }
+          }));
+
+          void message.error("Failed to update due date on server, but will try again");
+
+          // Even though API call failed, the database might have been updated
+          // The next refresh will show the correct state
+        });
+    }
   };
 
   const indianTime = convertToIndianTime(dueDate);
 
   const content = (
-    <Card onClick={(e) => e.stopPropagation()}>
+    <Card onClick={(e) => e.stopPropagation()} className="max-w-md">
       <div
         dangerouslySetInnerHTML={{ __html: description }}
-        className="text-black"
+        className="text-black prose prose-sm"
       />
     </Card>
+  );
+
+  const datePickerContent = (
+    <div
+      onClick={(e) => e.stopPropagation()}
+      onMouseDown={(e) => e.stopPropagation()}
+      style={{ padding: '12px', backgroundColor: '#1f2937', borderRadius: '8px' }}
+    >
+      <DatePicker
+        onChange={handleDateChange}
+        defaultValue={dayjs(dueDate)}
+        allowClear={false}
+        format="YYYY-MM-DD"
+        className="dark-datepicker"
+        style={{
+          backgroundColor: '#374151',
+          color: 'white',
+          borderColor: '#4B5563',
+          borderRadius: '6px',
+          boxShadow: '0 1px 2px rgba(0, 0, 0, 0.3)'
+        }}
+        popupStyle={{
+          backgroundColor: '#1f2937',
+          borderRadius: '8px',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.5)'
+        }}
+        autoFocus
+      />
+    </div>
   );
 
   const editAccessToCurrentUser = task.collaborators?.find(
     (collaborator) => String(collaborator.user?._id) === String(user?._id)
   )?.permissionType === "read" ? false : true;
 
-  return (
-    <div>
-      <div
-        style={{ cursor: "pointer" }}
-        onClick={(e) => {
-          e.stopPropagation(), setShowModal(true);
-        }}
-      >
-        <div className="p-1 font-thin w-full mb-2 overflow-hidden rounded-lg shadow-lg bg-gray-800 border hover:border-cyan-400 border-solid border-transparent transition duration-300 ease-in-out ">
-          {/* <img
-            className="w-full h-48 mt-2"
-            src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=320&q=80"
-            alt="NIKE AIR"
-          /> */}
-          <div className="ml-2">
-            <div className="flex justify-between">
-              <div className="w-30">
-                {view === "cardView" && <div className="mb-3 flex flex-wrap">
-                  {tags &&
-                    tags?.length !== 0 &&
-                    tags?.map((tag) => (
-                      <span
-                        key={tag.name}
-                        className="text-xxs font-thin text-center px-2 py-1 mt-2 mr-1 rounded-xl text-white"
-                        style={{ backgroundColor: tag.color }}
-                      >
-                        {tag?.name}
-                      </span>
-                    ))}
-                </div>}
-                {/* task title */}
-                <h1 className="text-sm font-extralight text-gray-300">
-                  {title}
-                </h1>
-              </div>
-              {view === "cardView" && <div onClick={(e) => e.stopPropagation()}>
-                <Dropdown menu={priorityOptions} disabled={!editAccessToCurrentUser}>
-                  <Button style={{ border: "none" }}>
-                    {getPriorityIcon(priority)}
-                  </Button>
-                </Dropdown>
-              </div>}
-            </div>
+  // Get border color based on priority
+  const getPriorityBorderColor = () => {
+    switch (priority) {
+      case "Urgent":
+        return "border-rose-500";
+      case "High":
+        return "border-amber-500";
+      case "Medium":
+        return "border-blue-500";
+      default:
+        return "border-emerald-500";
+    }
+  };
 
-            {view === "cardView" && <div className="mt-1 text-sm text-gray-400">
-              {description && description?.replace(/<[^>]*>/g, "") !== "" && (
-                <Popover content={content} trigger="hover">
-                  <AlignLeftOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
-                </Popover>
-              )}
-            </div>}
+  // Get background gradient based on status and completion
+  const getCardBackground = () => {
+    if (done) return "bg-gradient-to-br from-slate-800 to-slate-900";
+
+    switch (status) {
+      case "todo":
+        return "bg-gradient-to-br from-slate-800 to-slate-900";
+      case "inProgress":
+        return "bg-gradient-to-br from-slate-800 to-slate-900";
+      case "completed":
+        return "bg-gradient-to-br from-slate-800 to-slate-900";
+      default:
+        return "bg-gradient-to-br from-slate-800 to-slate-900";
+    }
+  };
+
+  // Add useEffect to clean up when component unmounts
+  useEffect(() => {
+    return () => {
+      // Clean up any open popovers, dropdowns, etc when component unmounts
+      const datePickerDropdown = document.querySelector('.ant-picker-dropdown');
+      if (datePickerDropdown) {
+        datePickerDropdown.remove();
+      }
+    };
+  }, []);
+
+  // Prevent double-clicks from triggering edit modal twice
+  const handleCardClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault(); // Add this to be extra safe
+    if (!showModal) {
+      setShowModal(true);
+    }
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 5 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      whileHover={{ scale: 1.01 }}
+    >
+      <div
+        className={`cursor-pointer relative overflow-hidden rounded-lg shadow-md ${getCardBackground()} hover:shadow-lg transition-all duration-300 ${getPriorityBorderColor()} border-l-4`}
+        onClick={handleCardClick}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        {/* Priority indicator at top right */}
+        <div
+          className="absolute top-2 right-2 z-10"
+          onClick={(e) => e.stopPropagation()}
+          onMouseDown={(e) => e.stopPropagation()}
+        >
+          <Dropdown
+            menu={priorityOptions}
+            disabled={!editAccessToCurrentUser}
+            trigger={['click']}
+            open={priorityDropdownOpen}
+            onOpenChange={(visible) => {
+              if (editAccessToCurrentUser) {
+                setPriorityDropdownOpen(visible);
+              }
+            }}
+          >
+            <Button
+              type="text"
+              size="small"
+              className="flex items-center text-gray-400 hover:text-white hover:bg-gray-700 transition-all"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (editAccessToCurrentUser) {
+                  setPriorityDropdownOpen(!priorityDropdownOpen);
+                }
+              }}
+            >
+              {getPriorityIcon(priority)}
+            </Button>
+          </Dropdown>
+        </div>
+
+        {/* Task content */}
+        <div className="p-3">
+          {/* Tags */}
+          {view === "cardView" && tags && tags.length > 0 && (
+            <div className="mb-2 flex flex-wrap">
+              {tags.map((tag) => (
+                <Tag
+                  key={tag.name}
+                  color={tag.color}
+                  className="mr-1 mb-1 text-xs rounded-full px-2 py-0"
+                >
+                  {tag.name}
+                </Tag>
+              ))}
+            </div>
+          )}
+
+          {/* Task Title - with done indicator */}
+          <div className="flex items-start mb-2">
+            {done && (
+              <CheckCircleFilled
+                className="text-green-500 mt-1 mr-2 text-sm"
+                onPointerEnterCapture={undefined}
+                onPointerLeaveCapture={undefined}
+              />
+            )}
+            <h3 className={`text-sm font-medium ${done ? 'text-gray-400 line-through' : 'text-gray-200'}`}>
+              {title}
+            </h3>
           </div>
 
-          {view === "cardView" && <div className="flex items-center justify-between ml-1 py-2 bg-transparent">
-            {/* Due Date */}
-            <Tooltip title={!editAccessToCurrentUser ? "Read Only: You don't have access to edit" : ""}>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation(), toggleTaskDone();
-                }}
-                disabled={!editAccessToCurrentUser}
-              >
-                <span className={classNameDueDate}>
-                  {dateColor === "green" ? (
-                    <CheckCircleOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
-                  ) : (
-                    <ClockCircleOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
-                  )}
-                  <p className="ml-1">{indianTime}</p>
-                </span>
-              </button>
-            </Tooltip>
-
-            {/* links badge */}
-            <div className="flex flex-row ml-2">
-              {attachments?.length > 0 && (
-                <>
-                  <LinkOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
-                  <span
-                    className=" mr-3 ml-2 text-left whitespace-nowrap"
-                  // sidebar-toggle-item
-                  >
-                    {attachments?.length}
-                  </span>
-                </>
-              )}
+          {/* Description indicator */}
+          {view === "cardView" && description && description.replace(/<[^>]*>/g, "") !== "" && (
+            <div className="mb-2 text-xs text-gray-400" onClick={(e) => e.stopPropagation()}>
+              <Popover content={content} trigger="hover" placement="right">
+                <div className="flex items-center cursor-pointer hover:text-gray-200">
+                  <AlignLeftOutlined className="mr-1" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
+                  <span>View details</span>
+                </div>
+              </Popover>
             </div>
+          )}
 
-            <Popconfirm
-              placement="bottomLeft"
-              title={deleteText}
-              description={deleteDesc}
-              okText={<span className="bg-blue-500 px-3 rounded-sm ">Yes</span>}
-              onConfirm={(e) => {
-                e?.stopPropagation();
-                handleDeleteFun();
-              }}
-              onCancel={(e) => {
-                e?.stopPropagation();
-              }}
-              cancelText="No"
-            >
-              {editAccessToCurrentUser && <DeleteOutlined
-                className="mr-4"
-                onClick={(e) => e.stopPropagation()} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />}
-            </Popconfirm>
-          </div>}
+          {/* Footer with metadata */}
+          {view === "cardView" && (
+            <div className="flex items-center justify-between mt-3 pt-2 border-t border-gray-700">
+              {/* Due date with DatePicker */}
+              <div
+                onClick={(e) => e.stopPropagation()}
+                onMouseDown={(e) => e.stopPropagation()}
+              >
+                <Popover
+                  content={datePickerContent}
+                  trigger="click"
+                  open={showDatePicker}
+                  onOpenChange={(visible) => {
+                    setShowDatePicker(visible);
+                    // Reset event handlers when popover closes
+                    if (!visible) {
+                      setTimeout(() => {
+                        const datePickerDropdown = document.querySelector('.ant-picker-dropdown');
+                        if (datePickerDropdown) {
+                          datePickerDropdown.remove();
+                        }
+                      }, 100);
+                    }
+                  }}
+                  overlayStyle={{ zIndex: 1050 }}
+                  destroyTooltipOnHide
+                >
+                  <Badge
+                    status={getDateColor()}
+                    text={
+                      <button
+                        className={`text-xs flex items-center ${done ? 'text-green-400' : isPastDue ? 'text-red-400' : 'text-gray-400'} hover:text-white transition-colors disabled:opacity-50`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (editAccessToCurrentUser) {
+                            setShowDatePicker(true);
+                          }
+                        }}
+                        disabled={!editAccessToCurrentUser}
+                      >
+                        <CalendarOutlined className="mr-1" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
+                        {indianTime}
+                      </button>
+                    }
+                  />
+                </Popover>
+              </div>
+
+              {/* Action buttons that appear on hover */}
+              <Space>
+                {/* Attachments indicator */}
+                {attachments?.length > 0 && (
+                  <Tooltip title={`${attachments.length} attachment${attachments.length > 1 ? 's' : ''}`}>
+                    <span onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                      <Badge count={attachments.length} size="small">
+                        <LinkOutlined className="text-gray-400" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
+                      </Badge>
+                    </span>
+                  </Tooltip>
+                )}
+
+                {/* Mark as done button */}
+                {editAccessToCurrentUser && (
+                  <Tooltip title={done ? "Mark as incomplete" : "Mark as complete"}>
+                    <Button
+                      type="text"
+                      size="small"
+                      icon={done ?
+                        <ClockCircleOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} /> :
+                        <CheckCircleOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
+                      }
+                      className={`text-gray-400 hover:text-green-400 hover:bg-gray-700 transition-all ${isHovered ? 'opacity-100' : 'opacity-0'}`}
+                      onClick={toggleTaskDone}
+                    />
+                  </Tooltip>
+                )}
+
+                {/* Edit button */}
+                <Tooltip title="Edit task">
+                  <Button
+                    type="text"
+                    size="small"
+                    icon={<EditOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />}
+                    className={`text-gray-400 hover:text-blue-400 hover:bg-gray-700 transition-all ${isHovered ? 'opacity-100' : 'opacity-0'}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowModal(true);
+                    }}
+                  />
+                </Tooltip>
+
+                {/* Delete button */}
+                {editAccessToCurrentUser && (
+                  <Popconfirm
+                    placement="bottomLeft"
+                    title={deleteText}
+                    description={deleteDesc}
+                    okText={<span className="bg-blue-500 px-3 rounded-sm">Yes</span>}
+                    onConfirm={handleDeleteFun}
+                    onCancel={(e) => {
+                      if (e) e.stopPropagation();
+                    }}
+                    cancelText="No"
+                  >
+                    <Button
+                      type="text"
+                      size="small"
+                      danger
+                      icon={<DeleteOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />}
+                      className={`hover:text-red-500 hover:bg-gray-700 transition-all ${isHovered ? 'opacity-100' : 'opacity-0'}`}
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  </Popconfirm>
+                )}
+              </Space>
+            </div>
+          )}
         </div>
       </div>
       <EditTaskModal
@@ -234,7 +558,7 @@ const TaskCard = ({ task, handleDelete }: TasksProps) => {
         showModal={showModal}
         setShowModal={setShowModal}
       />
-    </div>
+    </motion.div>
   );
 };
 
